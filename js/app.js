@@ -466,15 +466,6 @@ function renderBatch(container) {
             <h3 class="section-title">⚡ Admin: Generate Teams</h3>
             <div class="team-controls">
                 <div class="filter-group">
-                    <label>Team Size</label>
-                    <select id="team-size-select" class="filter-select">
-                        <option value="3">3 per team</option>
-                        <option value="4">4 per team</option>
-                        <option value="5" selected>5 per team</option>
-                        <option value="6">6 per team</option>
-                    </select>
-                </div>
-                <div class="filter-group">
                     <label>Formation Mode</label>
                     <select id="formation-mode" class="filter-select">
                         <option value="random">🎲 Random Balanced</option>
@@ -483,7 +474,7 @@ function renderBatch(container) {
                     </select>
                 </div>
                 <button class="btn-primary" style="width:auto;padding:10px 20px" 
-                    onclick="generateAndShowTeams('${deptCode}',${batchYear}, parseInt(document.getElementById('team-size-select').value), document.getElementById('formation-mode').value)">
+                    onclick="generateAndShowTeams('${deptCode}',${batchYear}, null, document.getElementById('formation-mode').value)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                     </svg>
@@ -909,13 +900,18 @@ function buildTeams(students, teamSize, mode) {
     shuffle(males);
     shuffle(females);
 
-    // Calculate team count — must be divisible by 3
-    let numTeams = Math.floor(allStudents.length / teamSize);
+    // Determine the most optimal number of teams automatically.
+    // Constraints: 
+    // 1. Max members per team <= 6.
+    // 2. Number of teams MUST be a multiple of 3 for role rotations.
+    const minTeamsToKeepLimit6 = Math.ceil(allStudents.length / 6);
+    let numTeams = minTeamsToKeepLimit6;
+
+    // Always bump up to the nearest multiple of 3 to guarantee both constraints (divisible by 3 AND max size <= 6)
     if (numTeams % 3 !== 0) {
-        const down = Math.floor(numTeams / 3) * 3;
-        const up = Math.ceil(numTeams / 3) * 3;
-        numTeams = (down >= 3) ? down : up;
+        numTeams = Math.ceil(numTeams / 3) * 3;
     }
+
     if (numTeams < 3) numTeams = 3;
 
     if (mode === 'cgpa') {
@@ -927,15 +923,18 @@ function buildTeams(students, teamSize, mode) {
         const teams = Array.from({ length: numTeams }, (_, i) => ({ id: i + 1, members: [] }));
         let teamIdx = 0, direction = 1;
         withCgpa.forEach(s => {
-            if (teams[teamIdx].members.length < 6) teams[teamIdx].members.push(s);
+            teams[teamIdx].members.push(s);
             teamIdx += direction;
             if (teamIdx >= numTeams) { teamIdx = numTeams - 1; direction = -1; }
             if (teamIdx < 0) { teamIdx = 0; direction = 1; }
         });
         shuffle(withoutCgpa);
         withoutCgpa.forEach(s => {
-            const smallest = teams.reduce((a, b) => a.members.length <= b.members.length ? a : b);
-            if (smallest.members.length < 6) smallest.members.push(s);
+            const validTeams = teams.filter(t => t.members.length < 6);
+            if (validTeams.length > 0) {
+                const smallest = validTeams.reduce((a, b) => a.members.length < b.members.length ? a : b);
+                smallest.members.push(s);
+            }
         });
         return teams;
     }
@@ -966,13 +965,10 @@ function buildTeams(students, teamSize, mode) {
     if (leftover > 0) {
         const extras = pool.slice(idx);
         shuffle(extras);
-        const teamIndices = Array.from({ length: numTeams }, (_, i) => i);
-        shuffle(teamIndices);
-        extras.forEach((s, e) => {
-            const target = teamIndices.find(ti => teams[ti].members.length < 6);
-            if (target !== undefined) teams[target].members.push(s);
-            else {
-                const smallest = teams.reduce((a, b) => a.members.length <= b.members.length ? a : b);
+        extras.forEach(s => {
+            const validTeams = teams.filter(t => t.members.length < 6);
+            if (validTeams.length > 0) {
+                const smallest = validTeams.reduce((a, b) => a.members.length < b.members.length ? a : b);
                 smallest.members.push(s);
             }
         });
