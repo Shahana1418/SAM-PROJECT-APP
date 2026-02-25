@@ -16,6 +16,29 @@ let navState = {
     teams: null,
 };
 
+// ===== Academic Info Helper =====
+function getBatchAcademicInfo(batchYear) {
+    const joiningYear = batchYear - 4;
+    const passingYear = batchYear;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // 1-12
+
+    // Semester calculation (Aug = odd sem start, Jan = even sem start)
+    let semester;
+    if (currentMonth >= 7) {
+        semester = (currentYear - joiningYear) * 2 + 1;
+    } else {
+        semester = (currentYear - joiningYear - 1) * 2 + 2;
+    }
+    semester = Math.max(1, Math.min(8, semester)); // Clamp 1-8
+
+    const academicYear = Math.ceil(semester / 2); // 1st, 2nd, 3rd, 4th year
+    const yearSuffix = ['', '1st', '2nd', '3rd', '4th'][academicYear] || `${academicYear}th`;
+
+    return { joiningYear, passingYear, semester, academicYear, yearSuffix };
+}
+
 // ===== Initialization =====
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
@@ -387,6 +410,7 @@ function renderDepartment(container) {
     const grid = document.getElementById('batch-grid');
     batchesWithDept.forEach((batch, i) => {
         const color = colors[i % colors.length];
+        const info = getBatchAcademicInfo(batch.year);
         const card = document.createElement('div');
         card.className = 'dept-card';
         card.style.animationDelay = `${i * 0.06}s`;
@@ -404,8 +428,8 @@ function renderDepartment(container) {
                         </svg>
                     </div>
                     <div class="dept-card-info">
-                        <div class="dept-card-name">${batch.year} Batch</div>
-                        <div class="dept-card-code">${deptCode} · BATCH ${batch.year}</div>
+                        <div class="dept-card-name">${batch.year} Batch — ${info.yearSuffix} Year</div>
+                        <div class="dept-card-code">Joined ${info.joiningYear} · Passing ${info.passingYear} · Sem ${info.semester}</div>
                     </div>
                 </div>
                 <div class="dept-card-footer">
@@ -413,6 +437,7 @@ function renderDepartment(container) {
                         <span class="dept-pill dept-pill-total">${batch.totalStudents} Students</span>
                         <span class="dept-pill dept-pill-male">♂ ${batch.males}</span>
                         <span class="dept-pill dept-pill-female">♀ ${batch.females}</span>
+                        <span class="dept-pill" style="background:rgba(234,88,12,0.08);color:#ea580c">Sem ${info.semester}</span>
                     </div>
                     <svg class="dept-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9 18 15 12 9 6"/>
@@ -434,6 +459,7 @@ function renderBatch(container) {
     const students = batchData.students.filter(s => s.department === deptCode);
     const males = students.filter(s => s.gender === 'M').length;
     const females = students.filter(s => s.gender === 'F').length;
+    const batchInfo = getBatchAcademicInfo(batchYear);
 
     const adminActions = isAdmin ? `
         <div class="admin-actions">
@@ -476,9 +502,9 @@ function renderBatch(container) {
                     <path d="M23 21v-2a4 4 0 00-3-3.87"/>
                     <path d="M16 3.13a4 4 0 010 7.75"/>
                 </svg>
-                ${getDeptShortName(deptCode)} — ${batchYear} Batch
+                ${getDeptShortName(deptCode)} — ${batchYear} Batch (${batchInfo.yearSuffix} Year)
             </h2>
-            <p class="page-subtitle">${students.length} students · ${deptCode}</p>
+            <p class="page-subtitle">${students.length} students · ${deptCode} · Joined ${batchInfo.joiningYear} · Passing ${batchInfo.passingYear} · Semester ${batchInfo.semester}</p>
         </div>
 
         <div class="stats-grid">
@@ -510,6 +536,14 @@ function renderBatch(container) {
                     <span class="stat-detail">${Math.round(females / students.length * 100)}%</span>
                 </div>
                 <div class="stat-icon">♀</div>
+            </div>
+            <div class="stat-card stat-orange">
+                <div class="stat-info">
+                    <span class="stat-label">Current Semester</span>
+                    <span class="stat-value">Sem ${batchInfo.semester}</span>
+                    <span class="stat-detail">${batchInfo.yearSuffix} Year · ${batchInfo.joiningYear}–${batchInfo.passingYear}</span>
+                </div>
+                <div class="stat-icon">📚</div>
             </div>
         </div>
 
