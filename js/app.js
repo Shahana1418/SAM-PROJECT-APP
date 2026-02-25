@@ -632,8 +632,8 @@ function renderTeams(container) {
     // Session timing calculation — 30 min per round
     const presenterMin = 15;
     const reviewerMin = 5;
-    const audienceMin = 7;
-    const feedbackMin = 3;
+    const audienceMin = 6;
+    const feedbackMin = 4;
     const perRoundMin = 30; // Fixed 30 min per round
     const totalSessionMin = numGroups * perRoundMin;
     const totalSessionHrs = Math.floor(totalSessionMin / 60);
@@ -689,12 +689,12 @@ function renderTeams(container) {
                         <span class="round-role-icon">💬</span>
                         <span class="round-role-label">Feedback</span>
                         <span class="round-role-team">Team ${t3 + 1}</span>
-                        <span class="round-role-time">3 min</span>
+                        <span class="round-role-time">4 min</span>
                     </div>
                 </div>
                 <div class="round-audience">
                     <span class="audience-icon">👥</span>
-                    <span class="audience-label">Audience (7 min):</span>
+                    <span class="audience-label">Audience (6 min):</span>
                     <span class="audience-teams">${audienceStr}</span>
                 </div>
             </div>
@@ -789,7 +789,7 @@ function renderTeams(container) {
                     <div class="role-overview-emoji">💬</div>
                     <div class="role-overview-info">
                         <div class="role-overview-name">Feedback Team</div>
-                        <div class="role-overview-time">3 min</div>
+                        <div class="role-overview-time">4 min</div>
                     </div>
                     <div class="role-overview-desc">Gives constructive feedback</div>
                 </div>
@@ -797,7 +797,7 @@ function renderTeams(container) {
                     <div class="role-overview-emoji">👥</div>
                     <div class="role-overview-info">
                         <div class="role-overview-name">Audience</div>
-                        <div class="role-overview-time">7 min</div>
+                        <div class="role-overview-time">6 min</div>
                     </div>
                     <div class="role-overview-desc">All other teams — observe, participate in Q&A</div>
                 </div>
