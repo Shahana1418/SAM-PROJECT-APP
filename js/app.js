@@ -629,12 +629,12 @@ function renderTeams(container) {
     const totalRotations = teams.length; // Each team gets a turn as presenter
     const audienceTeams = teams.length - 3; // teams acting as audience per round
 
-    // Session timing calculation
+    // Session timing calculation — 30 min per round
     const presenterMin = 15;
     const reviewerMin = 5;
-    const audienceMin = 6; // avg of 5-7
+    const audienceMin = 7;
     const feedbackMin = 3;
-    const perRoundMin = presenterMin + reviewerMin + audienceMin + feedbackMin; // ~29 min
+    const perRoundMin = 30; // Fixed 30 min per round
     const totalSessionMin = numGroups * perRoundMin;
     const totalSessionHrs = Math.floor(totalSessionMin / 60);
     const totalSessionRemMin = totalSessionMin % 60;
@@ -694,7 +694,7 @@ function renderTeams(container) {
                 </div>
                 <div class="round-audience">
                     <span class="audience-icon">👥</span>
-                    <span class="audience-label">Audience (5–7 min):</span>
+                    <span class="audience-label">Audience (7 min):</span>
                     <span class="audience-teams">${audienceStr}</span>
                 </div>
             </div>
@@ -797,7 +797,7 @@ function renderTeams(container) {
                     <div class="role-overview-emoji">👥</div>
                     <div class="role-overview-info">
                         <div class="role-overview-name">Audience</div>
-                        <div class="role-overview-time">5–7 min</div>
+                        <div class="role-overview-time">7 min</div>
                     </div>
                     <div class="role-overview-desc">All other teams — observe, participate in Q&A</div>
                 </div>
