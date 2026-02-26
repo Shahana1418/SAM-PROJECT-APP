@@ -1069,11 +1069,6 @@ function renderSessions(container) {
             </div>
         </div>
 
-        <!-- Session Detail Cards -->
-        <h3 class="section-title" style="margin-top:2rem;margin-bottom:1rem;">Session Details</h3>
-        <div class="sess-detail-grid">
-            ${sessionCards}
-        </div>
     `;
 }
 
