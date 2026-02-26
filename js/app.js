@@ -465,7 +465,7 @@ function renderDepartment(container) {
     const colors = ['blue', 'green', 'purple', 'orange', 'cyan'];
 
     container.innerHTML = `
-            < div class="page-header" >
+            <div class="page-header">
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
@@ -474,7 +474,7 @@ function renderDepartment(container) {
                 ${deptName}
             </h2>
             <p class="page-subtitle">${deptCode} · ${totalStudents} students across ${batchesWithDept.length} batch${batchesWithDept.length > 1 ? 'es' : ''}</p>
-        </div >
+        </div>
 
         <div class="stats-grid">
             <div class="stat-card stat-blue">
@@ -517,10 +517,10 @@ function renderDepartment(container) {
         const info = getBatchAcademicInfo(batch.year);
         const card = document.createElement('div');
         card.className = 'dept-card';
-        card.style.animationDelay = `${i * 0.06} s`;
+        card.style.animationDelay = `${i * 0.06}s`;
         card.onclick = () => navigateTo('batch', deptCode, batch.year);
         card.innerHTML = `
-            < div class="dept-card-accent-left" style = "background: var(--gradient-${color})" ></div >
+            <div class="dept-card-accent-left" style="background: var(--gradient-${color})"></div>
                 <div class="dept-card-main">
                     <div class="dept-card-body">
                         <div class="dept-card-icon" style="background: var(--gradient-${color})">
@@ -566,7 +566,7 @@ function renderBatch(container) {
     const batchInfo = getBatchAcademicInfo(batchYear);
 
     const adminActions = (currentUser && currentUser.canGenerate) ? `
-            < div class="admin-actions" >
+            <div class="admin-actions">
             <h3 class="section-title">⚡ Admin: Generate Teams</h3>
             <div class="team-controls">
                 <div class="filter-group">
@@ -593,11 +593,11 @@ function renderBatch(container) {
                     Generate Teams
                 </button>
             </div>
-        </div >
+        </div>
             ` : '';
 
     container.innerHTML = `
-            < div class="page-header" >
+            <div class="page-header">
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -608,7 +608,7 @@ function renderBatch(container) {
                 ${getDeptShortName(deptCode)} — ${batchYear} Batch (${batchInfo.yearSuffix} Year)
             </h2>
             <p class="page-subtitle">${students.length} students · ${deptCode} · Joined ${batchInfo.joiningYear} · Passing ${batchInfo.passingYear} · Semester ${batchInfo.semester}</p>
-        </div >
+        </div>
 
             <div class="stats-grid">
                 <div class="stat-card stat-blue">
@@ -694,13 +694,13 @@ function renderBatch(container) {
 function renderStudentRows(students) {
     const tbody = document.getElementById('student-tbody');
     tbody.innerHTML = students.map((s, i) => `
-            < tr >
+            <tr>
             <td>${i + 1}</td>
             <td><strong>${s.id}</strong></td>
             <td>${s.name}</td>
             <td><span class="gender-badge gender-${s.gender.toLowerCase()}">${s.gender === 'M' ? '♂ Male' : '♀ Female'}</span></td>
             <td>${s.email || '—'}</td>
-        </tr >
+        </tr>
             `).join('');
 }
 
