@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert all batch Excel files to unified JSON for the SAM web app."""
+"""Convert all batch Excel files to unified JSON for the SAM app."""
 
 import openpyxl
 import json
@@ -15,7 +15,7 @@ DEPT_NAMES = {
     'ATE': 'Automobile Engineering',
     'CSE': 'Computer Science and Engineering',
     'CVE': 'Civil Engineering',
-    'DSC': 'Data Science',
+    'CDS': 'Data Science',
     'ECE': 'Electronics and Communication Engineering',
     'EEE': 'Electrical and Electronics Engineering',
     'IMT': 'Information Technology',
@@ -25,7 +25,16 @@ DEPT_NAMES = {
 def extract_students(filepath, dept_code, batch_year):
     """Extract student records from an Excel file."""
     wb = openpyxl.load_workbook(filepath, data_only=True)
-    ws = wb['Student_Roster']
+    
+    # Try common sheet names
+    sheet_names = wb.sheetnames
+    ws = None
+    for name in ['Student_Roster', 'Sheet1', sheet_names[0]]:
+        if name in sheet_names:
+            ws = wb[name]
+            break
+    if ws is None:
+        ws = wb[sheet_names[0]]
     
     students = []
     for row in range(2, ws.max_row + 1):
@@ -40,6 +49,10 @@ def extract_students(filepath, dept_code, batch_year):
         
         if not name or not str(name).strip():
             continue
+        
+        # Clean up name
+        name_str = str(name).strip()
+        name_str = ' '.join(name_str.split())  # Normalize whitespace
         
         gender_raw = str(gender).strip().upper() if gender else 'U'
         if gender_raw.startswith('M'):
@@ -56,11 +69,17 @@ def extract_students(filepath, dept_code, batch_year):
         except (ValueError, TypeError):
             pass
         
+        # Clean email
+        email_str = ''
+        if email:
+            email_str = str(email).strip()
+            email_str = email_str.replace(' ', '')  # Remove spaces in emails
+        
         students.append({
             'id': str(student_id).strip(),
-            'name': str(name).strip(),
+            'name': name_str,
             'gender': gender_norm,
-            'email': str(email).strip() if email else '',
+            'email': email_str,
             'cgpa': cgpa_val,
             'department': dept_code,
             'batch': batch_year,
@@ -107,7 +126,10 @@ def main():
         
         for xlsx_file in xlsx_files:
             # Extract dept code: e.g. "2027_CSE.xlsx" -> "CSE"
-            dept_code = xlsx_file.replace(f'{batch_year}_', '').replace('.xlsx', '')
+            raw_code = xlsx_file.replace(f'{batch_year}_', '').replace('.xlsx', '')
+            # Remap old codes to new standardized codes
+            CODE_REMAP = {'DSC': 'CDS'}
+            dept_code = CODE_REMAP.get(raw_code, raw_code)
             dept_name = DEPT_NAMES.get(dept_code, dept_code)
             
             filepath = os.path.join(batch_path, xlsx_file)
@@ -143,7 +165,7 @@ def main():
     # Save JS (for file:// CORS workaround)
     js_path = os.path.join(OUTPUT_DIR, 'students_data.js')
     with open(js_path, 'w') as f:
-        f.write('// Auto-generated — all batch data for SAM webapp\n')
+        f.write('// Auto-generated — all batch data for SAM app\n')
         f.write('const STUDENT_DATA = ')
         json.dump(all_data, f)
         f.write(';\n')

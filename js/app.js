@@ -5,8 +5,29 @@
 
 // ===== Global State =====
 let appData = null;
-let isAdmin = false;
-const ADMIN_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // 'admin'
+let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
+
+// Default passwords generated using SHA-256
+const ROLE_PASSWORDS = {
+    'principal': '69e03750027e6b1e9f95bd21d227613c0024ec799ebfb7fe281371e1153f9bda', // 'principal'
+    'alumni': 'aa388760daaa3ebb1ee7ae48b315a39f48b4e30dd84b4b169b68d0bdfcb699da', // 'alumni'
+    'hod_ATE': 'fc1bacb25bdde7fcf0612e7f93e2c64f1bb4d329f8426f279ab7c1093dc99f2d', // 'hod_ATE'
+    'hod_CSE': '2782c72176f264ce01dfbcdcedc19b5061fe7ffbe399d9fbf0ccd6ae274c2dc1', // 'hod_CSE'
+    'hod_CVE': 'a21737838929f1403a5b4b6dd6ed838ff8ebbf9ee4c0a2739e348ddca219bd4b', // 'hod_CVE'
+    'hod_CDS': '99728753a4de90a4edb10905b5452c42a5107d8d9b9984f2fec87c6891ff45de', // 'hod_CDS'
+    'hod_ECE': '8f59017762321c34e60bda175c81564ebbe03a0ca38efbba8fab4edefa5341dd', // 'hod_ECE'
+    'hod_EEE': '6f159dfd3d148acd83a01a8a48f477a29773e05853743798486ccbbf401f7045', // 'hod_EEE'
+    'hod_IMT': '63263137bcff3b61ce68a51e62686b47fc425ff8a8b52a9f7683220ba6ab4e59', // 'hod_IMT'
+    'hod_MCE': 'c9f3f2f691786fc18b146da88e8e625634e8f7a8b82f88f26fd4073f0f617d85', // 'hod_MCE'
+    'faculty_ATE': '7d35eed06900d90fc88120a76154e7e1693b07a22cdecfdd57c96e7a40171cfd', // 'faculty_ATE'
+    'faculty_CSE': 'ac530d67401747f89f8aefe8b7cda0477bc0dd3c4bfd3dd4f6c60b92705a1970', // 'faculty_CSE'
+    'faculty_CVE': 'a3e2a9f2c434032e0febdb4ac09c01fa829bde3a775abd47109c527331c37ae8', // 'faculty_CVE'
+    'faculty_CDS': '823a5f274c9b041258f03946de83fc654de399aa2244208a089520a4083484cb', // 'faculty_CDS'
+    'faculty_ECE': '38afa4e0fccd6700f08d7804bb391cb0c5db2499352c7a0172b4e9954df1a2fb', // 'faculty_ECE'
+    'faculty_EEE': '5f9b7dae6333120301a258c095a3a8ab952a387b64a88f2ec90e4a9eeef10396', // 'faculty_EEE'
+    'faculty_IMT': '762c2e1ca22cf7ade73ebf89926c39bcc77ebf8d5175b1e28f2c752065a587c6', // 'faculty_IMT'
+    'faculty_MCE': 'b49dc2b874403892a1c26026f8d6143bdae9b0881c2ff02215d6a3a01da87d93'  // 'faculty_MCE'
+};
 
 // Navigation state
 let navState = {
@@ -62,37 +83,114 @@ async function sha256(message) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// ===== Admin Auth =====
+// ===== Role-based Admin Auth =====
+let loginState = { role: null, dept: null };
+
 function toggleAdminLogin() {
-    if (isAdmin) {
-        isAdmin = false;
-        document.getElementById('admin-btn-text').textContent = 'Admin';
-        document.getElementById('admin-toggle').classList.remove('admin-active');
+    if (currentUser) {
+        // Logout
+        currentUser = null;
+        updateUserBadge();
+        navState = { level: 'college', dept: null, batch: null, teams: null };
         render();
         return;
     }
     document.getElementById('admin-modal').style.display = 'flex';
-    document.getElementById('admin-password').value = '';
-    document.getElementById('admin-password').focus();
+    loginState = { role: null, dept: null };
+    showLoginStep(1);
+    document.getElementById('login-error').style.display = 'none';
+}
+
+function showLoginStep(step) {
+    document.getElementById('login-step-1').style.display = step === 1 ? 'block' : 'none';
+    document.getElementById('login-step-2').style.display = step === 2 ? 'block' : 'none';
+    document.getElementById('login-step-3').style.display = step === 3 ? 'block' : 'none';
+    document.getElementById('login-step-indicator').textContent = `Step ${step} of 3`;
+}
+
+function selectRole(role) {
+    loginState.role = role;
+    if (role === 'Principal' || role === 'Alumni') {
+        loginState.dept = null; // No dept needed
+        document.getElementById('login-final-text').textContent = `Enter ${role} password:`;
+        showLoginStep(3);
+        document.getElementById('login-step-indicator').textContent = 'Step 2 of 2';
+    } else {
+        document.getElementById('login-dept').value = '';
+        showLoginStep(2);
+    }
+}
+
+function selectDept() {
+    const d = document.getElementById('login-dept').value;
+    if (!d) return;
+    loginState.dept = d;
+    document.getElementById('login-final-text').textContent = `Enter ${loginState.role} password for ${d}:`;
+    showLoginStep(3);
+}
+
+function loginBackTo(step) {
+    showLoginStep(step);
     document.getElementById('login-error').style.display = 'none';
 }
 
 async function attemptLogin() {
     const pw = document.getElementById('admin-password').value;
     const hash = await sha256(pw);
-    if (hash === ADMIN_HASH) {
-        isAdmin = true;
-        document.getElementById('admin-btn-text').textContent = 'Logout';
-        document.getElementById('admin-toggle').classList.add('admin-active');
-        closeModal();
-        render();
+
+    let key = '';
+    if (loginState.role === 'Principal') key = 'principal';
+    else if (loginState.role === 'Alumni') key = 'alumni';
+    else if (loginState.role === 'HOD') key = 'hod_' + loginState.dept;
+    else if (loginState.role === 'Faculty') key = 'faculty_' + loginState.dept;
+
+    if (hash === ROLE_PASSWORDS[key]) {
+        currentUser = {
+            role: loginState.role,
+            dept: loginState.dept,
+            canGenerate: true // All users can generate teams according to request
+        };
+        updateUserBadge();
+        closeAdminLogin();
+
+        // If they are HOD or Faculty, take them straight to their dept
+        if (currentUser.dept) {
+            navigateTo('department', currentUser.dept);
+        } else {
+            navigateTo('college');
+        }
     } else {
         document.getElementById('login-error').style.display = 'block';
     }
 }
 
-function closeModal() {
+function closeAdminLogin() {
     document.getElementById('admin-modal').style.display = 'none';
+    document.getElementById('admin-password').value = '';
+}
+
+function updateUserBadge() {
+    const badge = document.getElementById('user-badge');
+    const btnText = document.getElementById('admin-btn-text');
+    const btn = document.getElementById('admin-toggle');
+
+    if (currentUser) {
+        let text = '';
+        let emoji = '';
+        if (currentUser.role === 'Principal') { text = 'Principal'; emoji = '🏛️'; }
+        if (currentUser.role === 'Alumni') { text = 'Alumni'; emoji = '👤'; }
+        if (currentUser.role === 'HOD') { text = `HOD · ${currentUser.dept}`; emoji = '🏫'; }
+        if (currentUser.role === 'Faculty') { text = `Faculty · ${currentUser.dept}`; emoji = '👩‍🏫'; }
+
+        badge.innerHTML = `<span>${emoji}</span> ${text}`;
+        badge.style.display = 'inline-flex';
+        btnText.textContent = 'Logout';
+        btn.classList.add('admin-active');
+    } else {
+        badge.style.display = 'none';
+        btnText.textContent = 'Login';
+        btn.classList.remove('admin-active');
+    }
 }
 
 // ===== Navigation =====
@@ -169,7 +267,7 @@ function getDeptName(code) {
         'ATE': 'Automobile Engineering',
         'CSE': 'Computer Science & Engineering',
         'CVE': 'Civil Engineering',
-        'DSC': 'Data Science',
+        'CDS': 'Data Science',
         'ECE': 'Electronics & Communication Engineering',
         'EEE': 'Electrical & Electronics Engineering',
         'IMT': 'Information Technology',
@@ -183,7 +281,7 @@ function getDeptShortName(code) {
         'ATE': 'Automobile Engg.',
         'CSE': 'Computer Science',
         'CVE': 'Civil Engg.',
-        'DSC': 'Data Science',
+        'CDS': 'Data Science',
         'ECE': 'ECE',
         'EEE': 'EEE',
         'IMT': 'Info. Technology',
@@ -236,7 +334,13 @@ function renderCollege(container) {
         });
     });
 
-    const activeDepts = Object.values(deptTotals).filter(d => d.students > 0);
+    let activeDepts = Object.values(deptTotals).filter(d => d.students > 0);
+
+    // Filter departments if user has department-level restriction (HOD/Faculty)
+    if (currentUser && currentUser.dept) {
+        activeDepts = activeDepts.filter(d => d.code === currentUser.dept);
+    }
+
     const colors = ['blue', 'green', 'purple', 'orange', 'cyan', 'blue', 'green', 'purple'];
 
     container.innerHTML = `
@@ -461,10 +565,18 @@ function renderBatch(container) {
     const females = students.filter(s => s.gender === 'F').length;
     const batchInfo = getBatchAcademicInfo(batchYear);
 
-    const adminActions = isAdmin ? `
+    const adminActions = (currentUser && currentUser.canGenerate) ? `
         <div class="admin-actions">
             <h3 class="section-title">⚡ Admin: Generate Teams</h3>
             <div class="team-controls">
+                <div class="filter-group">
+                    <label>Members per Team</label>
+                    <select id="team-size" class="filter-select">
+                        <option value="3">3 members</option>
+                        <option value="4" selected>4 members</option>
+                        <option value="5">5 members</option>
+                    </select>
+                </div>
                 <div class="filter-group">
                     <label>Formation Mode</label>
                     <select id="formation-mode" class="filter-select">
@@ -474,7 +586,7 @@ function renderBatch(container) {
                     </select>
                 </div>
                 <button class="btn-primary" style="width:auto;padding:10px 20px" 
-                    onclick="generateAndShowTeams('${deptCode}',${batchYear}, null, document.getElementById('formation-mode').value)">
+                    onclick="generateAndShowTeams('${deptCode}',${batchYear}, parseInt(document.getElementById('team-size').value), document.getElementById('formation-mode').value)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                     </svg>
@@ -635,7 +747,7 @@ function renderTeams(container) {
         ? 'background:var(--gradient-green);width:auto;padding:10px 20px'
         : 'background:var(--gradient-orange);width:auto;padding:10px 20px';
 
-    const adminBtns = isAdmin ? `
+    const adminBtns = (currentUser && currentUser.canGenerate) ? `
         <button class="btn-primary" style="${editBtnStyle}" onclick="toggleEditMode()">
             ${editBtnLabel}
         </button>
@@ -885,12 +997,15 @@ function renderTeams(container) {
 
 // ===== Team Generation Algorithm =====
 // Teams must be divisible by 3 for role rotation
-// Supports modes: random (gender-balanced), cgpa (CGPA-balanced), manual (random + edit)
+// Each team must have EXACTLY 3 or 4 members (never < 3 or > 4)
 function buildTeams(students, teamSize, mode) {
     if (students.length === 0) return [];
-    if (!teamSize || teamSize < 2) teamSize = 5;
-    if (teamSize > 6) teamSize = 6;
+    if (!teamSize || teamSize < 3) teamSize = 4;
+    if (teamSize > 5) teamSize = 5;
     mode = mode || 'random';
+
+    const MIN_PER_TEAM = 3;
+    const MAX_PER_TEAM = 4; // Hard cap: max 4 members per team
 
     const allStudents = [...students];
     shuffle(allStudents);
@@ -900,18 +1015,23 @@ function buildTeams(students, teamSize, mode) {
     shuffle(males);
     shuffle(females);
 
-    // Determine the most optimal number of teams automatically.
-    // Constraints: 
-    // 1. Max members per team <= 6.
-    // 2. Number of teams MUST be a multiple of 3 for role rotations.
-    const minTeamsToKeepLimit6 = Math.ceil(allStudents.length / 6);
-    let numTeams = minTeamsToKeepLimit6;
+    // Calculate number of teams:
+    // Must be multiple of 3, and all teams must have 3-4 members.
+    // minTeams: ceil(n / MAX_PER_TEAM) — ensures no team exceeds 4
+    // maxTeams: floor(n / MIN_PER_TEAM) — ensures no team falls below 3
+    // We pick numTeams as the highest multiple-of-3 that is <= maxTeams
+    // and >= minTeams (rounded up to next mult of 3 if needed).
+    const minTeams = Math.ceil(allStudents.length / MAX_PER_TEAM);
+    const maxTeams = Math.floor(allStudents.length / MIN_PER_TEAM);
 
-    // Always bump up to the nearest multiple of 3 to guarantee both constraints (divisible by 3 AND max size <= 6)
-    if (numTeams % 3 !== 0) {
-        numTeams = Math.ceil(numTeams / 3) * 3;
-    }
+    // Start at minTeams, round up to multiple of 3
+    let numTeams = minTeams;
+    if (numTeams % 3 !== 0) numTeams = Math.ceil(numTeams / 3) * 3;
 
+    // If after rounding up we exceed maxTeams, step down by 3
+    while (numTeams > maxTeams && numTeams >= 3) numTeams -= 3;
+
+    // Absolute minimum: 3 teams
     if (numTeams < 3) numTeams = 3;
 
     if (mode === 'cgpa') {
@@ -930,19 +1050,19 @@ function buildTeams(students, teamSize, mode) {
         });
         shuffle(withoutCgpa);
         withoutCgpa.forEach(s => {
-            const validTeams = teams.filter(t => t.members.length < 6);
+            const validTeams = teams.filter(t => t.members.length < MAX_PER_TEAM);
             if (validTeams.length > 0) {
                 const smallest = validTeams.reduce((a, b) => a.members.length < b.members.length ? a : b);
                 smallest.members.push(s);
             }
         });
-        return teams;
+        return enforceMinSize(teams, MIN_PER_TEAM, MAX_PER_TEAM);
     }
 
     // Default: Random gender-balanced (also used for 'manual' mode)
     const pool = [];
     let mi = 0, fi = 0;
-    const maleRatio = males.length / allStudents.length;
+    const maleRatio = males.length / (allStudents.length || 1);
     for (let i = 0; i < allStudents.length; i++) {
         const targetMales = Math.round((i + 1) * maleRatio);
         if (mi < males.length && (mi < targetMales || fi >= females.length)) {
@@ -952,29 +1072,45 @@ function buildTeams(students, teamSize, mode) {
         }
     }
 
+    // Distribute evenly: base fill, then spread extras one per team
     const baseSize = Math.floor(pool.length / numTeams);
     const leftover = pool.length - (baseSize * numTeams);
     const teams = [];
     let idx = 0;
     for (let t = 0; t < numTeams; t++) {
-        const members = pool.slice(idx, idx + baseSize);
-        teams.push({ id: t + 1, members });
-        idx += baseSize;
+        // Give extra 1 student to the first `leftover` teams
+        const extra = t < leftover ? 1 : 0;
+        const size = baseSize + extra;
+        teams.push({ id: t + 1, members: pool.slice(idx, idx + size) });
+        idx += size;
     }
 
-    if (leftover > 0) {
-        const extras = pool.slice(idx);
-        shuffle(extras);
-        extras.forEach(s => {
-            const validTeams = teams.filter(t => t.members.length < 6);
-            if (validTeams.length > 0) {
-                const smallest = validTeams.reduce((a, b) => a.members.length < b.members.length ? a : b);
-                smallest.members.push(s);
-            }
-        });
-    }
+    return enforceMinSize(teams, MIN_PER_TEAM, MAX_PER_TEAM);
+}
 
-    return teams;
+// Ensures no team has fewer than MIN members by absorbing tiny teams into larger ones
+function enforceMinSize(teams, min, max) {
+    // Separate undersized teams
+    const ok = teams.filter(t => t.members.length >= min);
+    const tooSmall = teams.filter(t => t.members.length < min);
+
+    // Collect members of undersized teams
+    const orphans = [];
+    tooSmall.forEach(t => orphans.push(...t.members));
+    shuffle(orphans);
+
+    // Try to absorb orphans into teams that still have room
+    orphans.forEach(s => {
+        const room = ok.filter(t => t.members.length < max);
+        if (room.length > 0) {
+            const smallest = room.reduce((a, b) => a.members.length < b.members.length ? a : b);
+            smallest.members.push(s);
+        }
+    });
+
+    // Re-number teams after potential merges
+    ok.forEach((t, i) => t.id = i + 1);
+    return ok;
 }
 
 function shuffle(arr) {
