@@ -833,22 +833,6 @@ function renderTeams(container) {
             </div>
         </div>
 
-        <!-- Session CTA Banner -->
-        <div class="session-cta-banner" onclick="navigateToSessions()">
-            <div class="cta-left">
-                <div class="cta-icon">📋</div>
-                <div class="cta-text">
-                    <div class="cta-title">View Session Schedule</div>
-                    <div class="cta-sub">${numSessions} sessions · ${hrs > 0 ? hrs + 'h ' : ''}${remMin}m total · Round-Robin format</div>
-                </div>
-            </div>
-            <div class="cta-arrow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="9 18 15 12 9 6"/>
-                </svg>
-            </div>
-        </div>
-
         <!-- Team Rosters -->
         <div class="rt-section">
             <div class="rt-section-header">
@@ -864,6 +848,22 @@ function renderTeams(container) {
                 <div style="display:flex;gap:8px;flex-wrap:wrap">${adminBtns}</div>
             </div>
             <div class="teams-container" id="teams-container"></div>
+        </div>
+
+        <!-- Session CTA Banner -->
+        <div class="session-cta-banner" onclick="navigateToSessions()">
+            <div class="cta-left">
+                <div class="cta-icon">📋</div>
+                <div class="cta-text">
+                    <div class="cta-title">View Session Schedule</div>
+                    <div class="cta-sub">${numSessions} sessions · ${hrs > 0 ? hrs + 'h ' : ''}${remMin}m total · Round-Robin format</div>
+                </div>
+            </div>
+            <div class="cta-arrow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
         </div>
     `;
 
@@ -941,7 +941,7 @@ function renderSessions(container) {
             : '<span style="color:var(--text-muted);font-style:italic;font-size:0.75rem">—</span>';
 
         const audChipsLg = audienceTeams.length > 0
-            ? audienceTeams.map(n => `<span class="sess-aud-chip">Team ${n}</span>`).join('')
+            ? audienceTeams.map(n => `<span class="sess-aud-chip">T${n}</span>`).join('')
             : '<span style="color:var(--text-muted);font-style:italic">None</span>';
 
         tableRows += `
