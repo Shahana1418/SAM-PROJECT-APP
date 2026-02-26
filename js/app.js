@@ -765,46 +765,60 @@ function renderTeams(container) {
     // Build role rotation schedule (Strict Mathematically Complete Logic)
     let rotationHTML = '';
     const N = teams.length;
+    const sessionColors = ['blue', 'green', 'purple', 'orange', 'cyan'];
 
     for (let s = 0; s < numSessions; s++) {
         const pt = s;                     // Presenter Team
         const rt = (s + 1) % N;           // Reviewer Team
         const ft = (s + 2) % N;           // Feedback Team
+        const sColor = sessionColors[s % sessionColors.length];
 
         const audienceTeams = [];
         for (let i = 0; i < N; i++) {
             if (i !== pt && i !== rt && i !== ft) {
-                audienceTeams.push(i + 1); // Team numbers are 1-indexed
+                audienceTeams.push(i + 1);
             }
         }
 
-        let audienceStr = audienceTeams.length > 0 ? `Teams ${audienceTeams.join(', ')}` : 'None';
+        const audienceStr = audienceTeams.length > 0
+            ? audienceTeams.map(n => `<span class="aud-chip">Team ${n}</span>`).join('')
+            : '<span class="aud-chip aud-none">None</span>';
 
         rotationHTML += `
-            <div class="rotation-round">
-                <div class="round-header" style="background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 16px; font-weight:700; color:#1e293b;">Session ${String(s + 1).padStart(3, '0')}</div>
-                <div class="round-roles" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; padding:16px;">
-                    <div class="round-role role-presenter" style="background:rgba(37,99,235,0.05); border:1px solid rgba(37,99,235,0.1); border-radius:8px; padding:12px; text-align:center;">
-                        <div class="round-role-icon" style="font-size:1.5rem; margin-bottom:4px;">🎤</div>
-                        <div class="round-role-label" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Presenter Team (PT)</div>
-                        <div class="round-role-team" style="font-size:1.1rem; font-weight:800; color:#1e293b; margin:4px 0;">Team ${pt + 1}</div>
+            <div class="sess-card">
+                <div class="sess-card-header">
+                    <div class="sess-number-badge sess-badge-${sColor}">${s + 1}</div>
+                    <div class="sess-card-title">Session ${s + 1}</div>
+                    <div class="sess-timer">⏱ ${perRoundMin} min</div>
+                </div>
+                <div class="sess-roles">
+                    <div class="sess-role-pill pill-presenter">
+                        <span class="pill-icon">🎤</span>
+                        <div class="pill-content">
+                            <div class="pill-label">Presenter</div>
+                            <div class="pill-team">Team ${pt + 1}</div>
+                        </div>
                     </div>
-                    <div class="round-role role-reviewer" style="background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.1); border-radius:8px; padding:12px; text-align:center;">
-                        <div class="round-role-icon" style="font-size:1.5rem; margin-bottom:4px;">🔍</div>
-                        <div class="round-role-label" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Review Team (RT)</div>
-                        <div class="round-role-team" style="font-size:1.1rem; font-weight:800; color:#1e293b; margin:4px 0;">Team ${rt + 1}</div>
+                    <div class="sess-role-pill pill-reviewer">
+                        <span class="pill-icon">🔍</span>
+                        <div class="pill-content">
+                            <div class="pill-label">Reviewer</div>
+                            <div class="pill-team">Team ${rt + 1}</div>
+                        </div>
                     </div>
-                    <div class="round-role role-feedback" style="background:rgba(139,92,246,0.05); border:1px solid rgba(139,92,246,0.1); border-radius:8px; padding:12px; text-align:center;">
-                        <div class="round-role-icon" style="font-size:1.5rem; margin-bottom:4px;">💬</div>
-                        <div class="round-role-label" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Feedback Team (FT)</div>
-                        <div class="round-role-team" style="font-size:1.1rem; font-weight:800; color:#1e293b; margin:4px 0;">Team ${ft + 1}</div>
+                    <div class="sess-role-pill pill-feedback">
+                        <span class="pill-icon">💬</span>
+                        <div class="pill-content">
+                            <div class="pill-label">Feedback</div>
+                            <div class="pill-team">Team ${ft + 1}</div>
+                        </div>
                     </div>
                 </div>
-                <div class="round-audience" style="background:#f1f5f9; padding:12px 16px; font-size:0.95rem; color:#475569; display:flex; align-items:center; gap:8px;">
-                    <span class="audience-icon" style="font-size:1.2rem;">👥</span>
-                    <strong style="color:#1e293b;">Audience (A):</strong>
-                    <span class="audience-teams">${audienceStr}</span>
-                </div>
+                ${audienceTeams.length > 0 ? `
+                <div class="sess-audience">
+                    <span class="sess-aud-label">👥 Audience</span>
+                    <div class="sess-aud-chips">${audienceStr}</div>
+                </div>` : ''}
             </div>
         `;
     }
@@ -926,7 +940,7 @@ function renderTeams(container) {
                 </svg>
                 Strict Rotation Schedule
             </h3>
-            <div class="rotation-schedule" id="rotation-schedule" style="display:flex; flex-direction:column; gap:16px;">
+            <div class="rotation-schedule" id="rotation-schedule">
                 ${rotationHTML}
             </div>
         </div>

@@ -1561,110 +1561,207 @@ body {
     color: var(--text-primary);
 }
 
-/* Rotation Schedule */
+/* ===== Rotation Schedule — Premium Session Cards ===== */
 .rotation-schedule {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
 }
 
-.rotation-round {
+/* Session Card */
+.sess-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     overflow: hidden;
     transition: var(--transition);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
+    animation: slideUp 0.35s ease backwards;
 }
 
-.rotation-round:hover {
-    transform: translateY(-3px);
+.sess-card:hover {
+    transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
+    border-color: rgba(37, 99, 235, 0.12);
 }
 
-.round-header {
-    padding: 10px 16px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: white;
+/* Session Card Header */
+.sess-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: #fafbfc;
+}
+
+.sess-number-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.sess-badge-blue {
+    background: var(--gradient-blue);
+}
+
+.sess-badge-green {
+    background: var(--gradient-green);
+}
+
+.sess-badge-purple {
     background: var(--gradient-purple);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
-.round-roles {
+.sess-badge-orange {
+    background: var(--gradient-orange);
+}
+
+.sess-badge-cyan {
+    background: var(--gradient-cyan);
+}
+
+.sess-card-title {
+    flex: 1;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+}
+
+.sess-timer {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: rgba(15, 23, 42, 0.05);
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+/* Role Pills Row */
+.sess-roles {
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 0;
 }
 
-.round-role {
-    display: grid;
-    grid-template-columns: 32px 85px 1fr auto;
+.sess-role-pill {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
+    gap: 12px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border-color);
-    font-size: 0.82rem;
+    transition: background 0.2s;
 }
 
-.round-role-icon {
-    font-size: 1.1rem;
+.sess-role-pill:last-child {
+    border-bottom: none;
+}
+
+.pill-icon {
+    font-size: 1.25rem;
+    width: 28px;
     text-align: center;
+    flex-shrink: 0;
 }
 
-.round-role-label {
-    font-weight: 600;
-    color: var(--text-primary);
+.pill-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.round-role-team {
+.pill-label {
+    font-size: 0.7rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
 }
 
-.role-presenter .round-role-team {
+.pill-team {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+.pill-presenter {
+    background: rgba(37, 99, 235, 0.04);
+}
+
+.pill-presenter:hover {
+    background: rgba(37, 99, 235, 0.07);
+}
+
+.pill-presenter .pill-team {
     color: var(--accent-blue);
 }
 
-.role-reviewer .round-role-team {
+.pill-reviewer {
+    background: rgba(5, 150, 105, 0.04);
+}
+
+.pill-reviewer:hover {
+    background: rgba(5, 150, 105, 0.07);
+}
+
+.pill-reviewer .pill-team {
     color: var(--accent-green);
 }
 
-.role-feedback .round-role-team {
+.pill-feedback {
+    background: rgba(124, 58, 237, 0.04);
+}
+
+.pill-feedback:hover {
+    background: rgba(124, 58, 237, 0.07);
+}
+
+.pill-feedback .pill-team {
     color: var(--accent-purple);
 }
 
-.round-role-time {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-align: right;
-}
-
-.round-audience {
-    padding: 10px 16px;
-    font-size: 0.78rem;
-    color: var(--text-secondary);
+/* Audience Row */
+.sess-audience {
     display: flex;
     align-items: center;
-    gap: 6px;
     flex-wrap: wrap;
-    background: rgba(217, 119, 6, 0.04);
+    gap: 6px;
+    padding: 10px 16px;
+    background: #f8fafc;
+    border-top: 1px solid var(--border-color);
 }
 
-.audience-icon {
-    font-size: 1rem;
-}
-
-.audience-label {
-    font-weight: 600;
+.sess-aud-label {
+    font-size: 0.72rem;
+    font-weight: 700;
     color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+    white-space: nowrap;
 }
 
-.audience-teams {
-    color: var(--accent-orange);
+.aud-chip {
+    font-size: 0.7rem;
     font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--text-secondary);
+}
+
+.aud-none {
+    color: var(--text-muted);
+    font-style: italic;
 }
 
 /* Team Card Role Badges */
