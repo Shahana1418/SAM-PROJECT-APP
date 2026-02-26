@@ -762,64 +762,33 @@ function renderTeams(container) {
         </button>
     ` : '';
 
-    // Build role rotation schedule (Strict Mathematically Complete Logic)
-    let rotationHTML = '';
+    // Build compact rotation table rows
+    let tableRows = '';
     const N = teams.length;
     const sessionColors = ['blue', 'green', 'purple', 'orange', 'cyan'];
 
     for (let s = 0; s < numSessions; s++) {
-        const pt = s;                     // Presenter Team
-        const rt = (s + 1) % N;           // Reviewer Team
-        const ft = (s + 2) % N;           // Feedback Team
+        const pt = s;
+        const rt = (s + 1) % N;
+        const ft = (s + 2) % N;
         const sColor = sessionColors[s % sessionColors.length];
 
         const audienceTeams = [];
         for (let i = 0; i < N; i++) {
-            if (i !== pt && i !== rt && i !== ft) {
-                audienceTeams.push(i + 1);
-            }
+            if (i !== pt && i !== rt && i !== ft) audienceTeams.push(i + 1);
         }
+        const audStr = audienceTeams.length > 0
+            ? audienceTeams.map(n => `<span class="rt-aud-chip">T${n}</span>`).join('')
+            : '<span style="color:var(--text-muted);font-style:italic;font-size:0.75rem">—</span>';
 
-        const audienceStr = audienceTeams.length > 0
-            ? audienceTeams.map(n => `<span class="aud-chip">Team ${n}</span>`).join('')
-            : '<span class="aud-chip aud-none">None</span>';
-
-        rotationHTML += `
-            <div class="sess-card">
-                <div class="sess-card-header">
-                    <div class="sess-number-badge sess-badge-${sColor}">${s + 1}</div>
-                    <div class="sess-card-title">Session ${s + 1}</div>
-                    <div class="sess-timer">⏱ ${perRoundMin} min</div>
-                </div>
-                <div class="sess-roles">
-                    <div class="sess-role-pill pill-presenter">
-                        <span class="pill-icon">🎤</span>
-                        <div class="pill-content">
-                            <div class="pill-label">Presenter</div>
-                            <div class="pill-team">Team ${pt + 1}</div>
-                        </div>
-                    </div>
-                    <div class="sess-role-pill pill-reviewer">
-                        <span class="pill-icon">🔍</span>
-                        <div class="pill-content">
-                            <div class="pill-label">Reviewer</div>
-                            <div class="pill-team">Team ${rt + 1}</div>
-                        </div>
-                    </div>
-                    <div class="sess-role-pill pill-feedback">
-                        <span class="pill-icon">💬</span>
-                        <div class="pill-content">
-                            <div class="pill-label">Feedback</div>
-                            <div class="pill-team">Team ${ft + 1}</div>
-                        </div>
-                    </div>
-                </div>
-                ${audienceTeams.length > 0 ? `
-                <div class="sess-audience">
-                    <span class="sess-aud-label">👥 Audience</span>
-                    <div class="sess-aud-chips">${audienceStr}</div>
-                </div>` : ''}
-            </div>
+        tableRows += `
+            <tr class="rt-row">
+                <td><span class="rt-sess-badge rt-badge-${sColor}">${String(s + 1).padStart(2, '0')}</span></td>
+                <td><span class="rt-team-chip rt-presenter">🎤 Team ${pt + 1}</span></td>
+                <td><span class="rt-team-chip rt-reviewer">🔍 Team ${rt + 1}</span></td>
+                <td><span class="rt-team-chip rt-feedback">💬 Team ${ft + 1}</span></td>
+                <td class="rt-aud-cell">${audStr}</td>
+            </tr>
         `;
     }
 
@@ -833,7 +802,7 @@ function renderTeams(container) {
                 </svg>
                 Teams — ${getDeptShortName(deptCode)} · ${batchYear}
             </h2>
-            <p class="page-subtitle">${teams.length} teams · ${totalStudents} students · ${numSessions} Strict Round-Robin Sessions</p>
+            <p class="page-subtitle">${teams.length} teams · ${totalStudents} students · ${numSessions} round-robin sessions · ${totalSessionHrs > 0 ? totalSessionHrs + 'h ' : ''}${totalSessionRemMin}m total</p>
         </div>
 
         <div class="stats-grid">
@@ -841,7 +810,7 @@ function renderTeams(container) {
                 <div class="stat-info">
                     <span class="stat-label">Teams</span>
                     <span class="stat-value">${teams.length}</span>
-                    <span class="stat-detail">${teams[0]?.members.length || 0} per team</span>
+                    <span class="stat-detail">${teams[0]?.members.length || 0} members/team</span>
                 </div>
                 <div class="stat-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -865,92 +834,73 @@ function renderTeams(container) {
             </div>
             <div class="stat-card stat-green">
                 <div class="stat-info">
-                    <span class="stat-label">Rotation Sessions</span>
+                    <span class="stat-label">Sessions</span>
                     <span class="stat-value">${numSessions}</span>
-                    <span class="stat-detail">Strict 1-Turn-Per-Team</span>
+                    <span class="stat-detail">Each team presents once</span>
                 </div>
                 <div class="stat-icon">🔄</div>
             </div>
             <div class="stat-card stat-orange">
                 <div class="stat-info">
-                    <span class="stat-label">Est. Completion Time</span>
+                    <span class="stat-label">Total Duration</span>
                     <span class="stat-value">${totalSessionHrs > 0 ? totalSessionHrs + 'h ' : ''}${totalSessionRemMin}m</span>
-                    <span class="stat-detail">Fixed ${perRoundMin} min per session</span>
+                    <span class="stat-detail">${perRoundMin} min per session</span>
                 </div>
                 <div class="stat-icon">⏱️</div>
             </div>
         </div>
 
-        <!--Session Role Structure-->
-        <div class="info-section">
-            <h3 class="info-section-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                </svg>
-                SAM Session Structure (30 minutes total)
-            </h3>
-            <div class="session-role-overview">
-                <div class="role-overview-card role-presenter-bg">
-                    <div class="role-overview-emoji">🎤</div>
-                    <div class="role-overview-info">
-                        <div class="role-overview-name">Presenter Team (PT)</div>
-                        <div class="role-overview-time">${presenterMin} min</div>
-                    </div>
-                    <div class="role-overview-desc">Presents the central topic to the audience.</div>
+        <!-- Round-Robin Schedule Table -->
+        <div class="rt-section">
+            <div class="rt-section-header">
+                <div class="rt-section-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                    </svg>
+                    Round-Robin Schedule
                 </div>
-                <div class="role-overview-card role-reviewer-bg">
-                    <div class="role-overview-emoji">🔍</div>
-                    <div class="role-overview-info">
-                        <div class="role-overview-name">Review Team (RT)</div>
-                        <div class="role-overview-time">${reviewerMin} min</div>
-                    </div>
-                    <div class="role-overview-desc">Questions the presentation & validates claims.</div>
-                </div>
-                <div class="role-overview-card role-feedback-bg">
-                    <div class="role-overview-emoji">💬</div>
-                    <div class="role-overview-info">
-                        <div class="role-overview-name">Feedback Team (FT)</div>
-                        <div class="role-overview-time">${feedbackMin} min</div>
-                    </div>
-                    <div class="role-overview-desc">Provides actionable, constructive input.</div>
-                </div>
-                <div class="role-overview-card role-audience-bg">
-                    <div class="role-overview-emoji">👥</div>
-                    <div class="role-overview-info">
-                        <div class="role-overview-name">Audience (A)</div>
-                        <div class="role-overview-time">${audienceMin} min</div>
-                    </div>
-                    <div class="role-overview-desc">All other teams observe & participate in open Q&A.</div>
+                <div class="rt-legend">
+                    <span class="rt-legend-chip rt-presenter">🎤 PT</span>
+                    <span class="rt-legend-chip rt-reviewer">🔍 RT</span>
+                    <span class="rt-legend-chip rt-feedback">💬 FT</span>
+                    <span class="rt-legend-chip rt-aud-leg">👥 Aud</span>
                 </div>
             </div>
-            <div class="session-note">
-                <strong>🔄 Round-Robin Protocol:</strong> There are exactly as many sessions as there are teams (${numSessions}). Every team will serve as PT exactly once, RT exactly once, and FT exactly once.
+            <div class="rt-table-wrap">
+                <table class="rt-table">
+                    <thead>
+                        <tr>
+                            <th>Session</th>
+                            <th>🎤 Presenter</th>
+                            <th>🔍 Reviewer</th>
+                            <th>💬 Feedback</th>
+                            <th>👥 Audience</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
             </div>
         </div>
 
-        <!--Role Rotation Schedule-->
-        <div class="info-section">
-            <h3 class="info-section-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                </svg>
-                Strict Rotation Schedule
-            </h3>
-            <div class="rotation-schedule" id="rotation-schedule">
-                ${rotationHTML}
+        <!-- Team Rosters -->
+        <div class="rt-section">
+            <div class="rt-section-header">
+                <div class="rt-section-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    Team Rosters
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">${adminBtns}</div>
             </div>
+            <div class="teams-container" id="teams-container"></div>
         </div>
-
-        <div class="section-title-row">
-            <h3 class="section-title">Team Rosters</h3>
-            ${adminBtns}
-        </div>
-
-        <div class="teams-container" id="teams-container"></div>
     `;
 
     const tc = document.getElementById('teams-container');
@@ -963,13 +913,13 @@ function renderTeams(container) {
         const card = document.createElement('div');
         card.className = 'team-card';
         card.innerHTML = `
-            <div class="team-card-header" style="background: var(--gradient-${color})">
+        <div class="team-card-header" style="background: var(--gradient-${color})">
                 <span class="team-card-title" style="color:#fff">Team ${i + 1}</span>
                 <span class="badge" style="background:rgba(255,255,255,0.2);color:#fff">${team.members.length} members</span>
             </div>
-            <div class="team-card-role-row">
-                <span class="team-gender-ratio" style="margin-left:auto;">♂${maleCount} ♀${femaleCount}</span>
-            </div>
+        <div class="team-card-role-row">
+            <span class="team-gender-ratio" style="margin-left:auto;">♂${maleCount} ♀${femaleCount}</span>
+        </div>
             ${team.members.map(m => {
             const moveDropdown = navState.editMode ? `
                     <select class="move-select" onchange="moveStudent('${m.id}', ${i}, parseInt(this.value))">
@@ -989,8 +939,9 @@ function renderTeams(container) {
                         ${moveDropdown}
                     </div>
                 `;
-        }).join('')}
-        `;
+        }).join('')
+            }
+    `;
         tc.appendChild(card);
     });
 }
