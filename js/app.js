@@ -341,71 +341,68 @@ function renderCollege(container) {
         activeDepts = activeDepts.filter(d => d.code === currentUser.dept);
     }
 
-    const colors = ['blue', 'green', 'purple', 'orange', 'cyan', 'blue', 'green', 'purple'];
+    // If user is restricted to a single department, go straight to it
+    if (currentUser && currentUser.dept && activeDepts.length === 1) {
+        navigateTo('department', activeDepts[0].code);
+        return;
+    }
 
     container.innerHTML = `
-        <div class="page-header">
-            <h2 class="page-title">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="hero-header">
+            <h2 class="hero-title">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
                 Government College of Engineering, Erode
             </h2>
-            <p class="page-subtitle">Student Alumni Mentorship (SAM) System</p>
+            <p class="hero-subtitle">Student Alumni Mentorship (SAM) System</p>
+            
+            <div class="hero-stats-row">
+                <div class="hero-stat-pill">
+                    <span class="pill-value">${totalStudents}</span>
+                    <span class="pill-label">Students</span>
+                </div>
+                <div class="hero-stat-pill">
+                    <span class="pill-value">${activeDepts.length}</span>
+                    <span class="pill-label">Departments</span>
+                </div>
+                <div class="hero-stat-pill">
+                    <span class="pill-value">${appData.batches.length}</span>
+                    <span class="pill-label">Batches</span>
+                </div>
+            </div>
+
+            <button class="btn-primary" style="margin-top: 2rem; padding: 14px 32px; font-size: 1.05rem;" onclick="renderDepartmentGrid()">
+                Browse Departments
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </button>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card stat-blue">
-                <div class="stat-info">
-                    <span class="stat-label">Departments</span>
-                    <span class="stat-value">${activeDepts.length}</span>
-                    <span class="stat-detail">Active departments</span>
-                </div>
-                <div class="stat-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                        <polyline points="9 22 9 12 15 12 15 22"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="stat-card stat-green">
-                <div class="stat-info">
-                    <span class="stat-label">Total Students</span>
-                    <span class="stat-value">${totalStudents}</span>
-                    <span class="stat-detail">M: ${totalMales} | F: ${totalFemales}</span>
-                </div>
-                <div class="stat-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="stat-card stat-orange">
-                <div class="stat-info">
-                    <span class="stat-label">Batches</span>
-                    <span class="stat-value">${appData.batches.length}</span>
-                    <span class="stat-detail">${appData.batches.map(b => b.year).join(', ')}</span>
-                </div>
-                <div class="stat-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                </div>
-            </div>
+        <div id="dept-grid-container" style="display:none; margin-top:3rem;">
+            <h3 class="section-title">Select a Department</h3>
+            <div class="dept-grid" id="dept-grid"></div>
         </div>
-
-        <h3 class="section-title">Select a Department</h3>
-        <div class="dept-grid" id="dept-grid"></div>
     `;
 
-    // Render department cards
+    // Store activeDepts to window so renderDepartmentGrid can access it
+    window.currentActiveDepts = activeDepts;
+}
+
+function renderDepartmentGrid() {
+    const activeDepts = window.currentActiveDepts || [];
+    const container = document.getElementById('dept-grid-container');
     const grid = document.getElementById('dept-grid');
+    if (!container || !grid) return;
+
+    container.style.display = 'block';
+    grid.innerHTML = '';
+
+    const colors = ['blue', 'green', 'purple', 'orange', 'cyan', 'blue', 'green', 'purple'];
+
+    // Render department cards
     activeDepts.forEach((dept, i) => {
         const color = colors[i % colors.length];
         const card = document.createElement('div');
@@ -441,6 +438,9 @@ function renderCollege(container) {
         `;
         grid.appendChild(card);
     });
+
+    // Scroll down to show it
+    window.scrollBy({ top: 400, behavior: 'smooth' });
 }
 
 // ===== Level 2: Department → Batch Cards =====
@@ -465,7 +465,7 @@ function renderDepartment(container) {
     const colors = ['blue', 'green', 'purple', 'orange', 'cyan'];
 
     container.innerHTML = `
-        <div class="page-header">
+            < div class="page-header" >
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
@@ -474,7 +474,7 @@ function renderDepartment(container) {
                 ${deptName}
             </h2>
             <p class="page-subtitle">${deptCode} · ${totalStudents} students across ${batchesWithDept.length} batch${batchesWithDept.length > 1 ? 'es' : ''}</p>
-        </div>
+        </div >
 
         <div class="stats-grid">
             <div class="stat-card stat-blue">
@@ -509,7 +509,7 @@ function renderDepartment(container) {
 
         <h3 class="section-title">Select a Batch</h3>
         <div class="batch-grid" id="batch-grid"></div>
-    `;
+        `;
 
     const grid = document.getElementById('batch-grid');
     batchesWithDept.forEach((batch, i) => {
@@ -517,37 +517,37 @@ function renderDepartment(container) {
         const info = getBatchAcademicInfo(batch.year);
         const card = document.createElement('div');
         card.className = 'dept-card';
-        card.style.animationDelay = `${i * 0.06}s`;
+        card.style.animationDelay = `${i * 0.06} s`;
         card.onclick = () => navigateTo('batch', deptCode, batch.year);
         card.innerHTML = `
-            <div class="dept-card-accent-left" style="background: var(--gradient-${color})"></div>
-            <div class="dept-card-main">
-                <div class="dept-card-body">
-                    <div class="dept-card-icon" style="background: var(--gradient-${color})">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2"/>
-                            <line x1="16" y1="2" x2="16" y2="6"/>
-                            <line x1="8" y1="2" x2="8" y2="6"/>
-                            <line x1="3" y1="10" x2="21" y2="10"/>
+            < div class="dept-card-accent-left" style = "background: var(--gradient-${color})" ></div >
+                <div class="dept-card-main">
+                    <div class="dept-card-body">
+                        <div class="dept-card-icon" style="background: var(--gradient-${color})">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                        </div>
+                        <div class="dept-card-info">
+                            <div class="dept-card-name">${batch.year} Batch — ${info.yearSuffix} Year</div>
+                            <div class="dept-card-code">Joined ${info.joiningYear} · Passing ${info.passingYear} · Sem ${info.semester}</div>
+                        </div>
+                    </div>
+                    <div class="dept-card-footer">
+                        <div class="dept-card-stat-pills">
+                            <span class="dept-pill dept-pill-total">${batch.totalStudents} Students</span>
+                            <span class="dept-pill dept-pill-male">♂ ${batch.males}</span>
+                            <span class="dept-pill dept-pill-female">♀ ${batch.females}</span>
+                            <span class="dept-pill" style="background:rgba(234,88,12,0.08);color:#ea580c">Sem ${info.semester}</span>
+                        </div>
+                        <svg class="dept-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6" />
                         </svg>
                     </div>
-                    <div class="dept-card-info">
-                        <div class="dept-card-name">${batch.year} Batch — ${info.yearSuffix} Year</div>
-                        <div class="dept-card-code">Joined ${info.joiningYear} · Passing ${info.passingYear} · Sem ${info.semester}</div>
-                    </div>
                 </div>
-                <div class="dept-card-footer">
-                    <div class="dept-card-stat-pills">
-                        <span class="dept-pill dept-pill-total">${batch.totalStudents} Students</span>
-                        <span class="dept-pill dept-pill-male">♂ ${batch.males}</span>
-                        <span class="dept-pill dept-pill-female">♀ ${batch.females}</span>
-                        <span class="dept-pill" style="background:rgba(234,88,12,0.08);color:#ea580c">Sem ${info.semester}</span>
-                    </div>
-                    <svg class="dept-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                </div>
-            </div>
         `;
         grid.appendChild(card);
     });
@@ -566,7 +566,7 @@ function renderBatch(container) {
     const batchInfo = getBatchAcademicInfo(batchYear);
 
     const adminActions = (currentUser && currentUser.canGenerate) ? `
-        <div class="admin-actions">
+            < div class="admin-actions" >
             <h3 class="section-title">⚡ Admin: Generate Teams</h3>
             <div class="team-controls">
                 <div class="filter-group">
@@ -593,11 +593,11 @@ function renderBatch(container) {
                     Generate Teams
                 </button>
             </div>
-        </div>
-    ` : '';
+        </div >
+            ` : '';
 
     container.innerHTML = `
-        <div class="page-header">
+            < div class="page-header" >
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -608,47 +608,47 @@ function renderBatch(container) {
                 ${getDeptShortName(deptCode)} — ${batchYear} Batch (${batchInfo.yearSuffix} Year)
             </h2>
             <p class="page-subtitle">${students.length} students · ${deptCode} · Joined ${batchInfo.joiningYear} · Passing ${batchInfo.passingYear} · Semester ${batchInfo.semester}</p>
-        </div>
+        </div >
 
-        <div class="stats-grid">
-            <div class="stat-card stat-blue">
-                <div class="stat-info">
-                    <span class="stat-label">Students</span>
-                    <span class="stat-value">${students.length}</span>
-                    <span class="stat-detail">${deptCode} · ${batchYear}</span>
+            <div class="stats-grid">
+                <div class="stat-card stat-blue">
+                    <div class="stat-info">
+                        <span class="stat-label">Students</span>
+                        <span class="stat-value">${students.length}</span>
+                        <span class="stat-detail">${deptCode} · ${batchYear}</span>
+                    </div>
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                        </svg>
+                    </div>
                 </div>
-                <div class="stat-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                    </svg>
+                <div class="stat-card stat-green">
+                    <div class="stat-info">
+                        <span class="stat-label">Male</span>
+                        <span class="stat-value">${males}</span>
+                        <span class="stat-detail">${Math.round(males / students.length * 100)}%</span>
+                    </div>
+                    <div class="stat-icon">♂</div>
+                </div>
+                <div class="stat-card stat-purple">
+                    <div class="stat-info">
+                        <span class="stat-label">Female</span>
+                        <span class="stat-value">${females}</span>
+                        <span class="stat-detail">${Math.round(females / students.length * 100)}%</span>
+                    </div>
+                    <div class="stat-icon">♀</div>
+                </div>
+                <div class="stat-card stat-orange">
+                    <div class="stat-info">
+                        <span class="stat-label">Current Semester</span>
+                        <span class="stat-value">Sem ${batchInfo.semester}</span>
+                        <span class="stat-detail">${batchInfo.yearSuffix} Year · ${batchInfo.joiningYear}–${batchInfo.passingYear}</span>
+                    </div>
+                    <div class="stat-icon">📚</div>
                 </div>
             </div>
-            <div class="stat-card stat-green">
-                <div class="stat-info">
-                    <span class="stat-label">Male</span>
-                    <span class="stat-value">${males}</span>
-                    <span class="stat-detail">${Math.round(males / students.length * 100)}%</span>
-                </div>
-                <div class="stat-icon">♂</div>
-            </div>
-            <div class="stat-card stat-purple">
-                <div class="stat-info">
-                    <span class="stat-label">Female</span>
-                    <span class="stat-value">${females}</span>
-                    <span class="stat-detail">${Math.round(females / students.length * 100)}%</span>
-                </div>
-                <div class="stat-icon">♀</div>
-            </div>
-            <div class="stat-card stat-orange">
-                <div class="stat-info">
-                    <span class="stat-label">Current Semester</span>
-                    <span class="stat-value">Sem ${batchInfo.semester}</span>
-                    <span class="stat-detail">${batchInfo.yearSuffix} Year · ${batchInfo.joiningYear}–${batchInfo.passingYear}</span>
-                </div>
-                <div class="stat-icon">📚</div>
-            </div>
-        </div>
 
         ${adminActions}
 
@@ -686,7 +686,7 @@ function renderBatch(container) {
                 <tbody id="student-tbody"></tbody>
             </table>
         </div>
-    `;
+        `;
 
     renderStudentRows(students);
 }
@@ -694,14 +694,14 @@ function renderBatch(container) {
 function renderStudentRows(students) {
     const tbody = document.getElementById('student-tbody');
     tbody.innerHTML = students.map((s, i) => `
-        <tr>
+            < tr >
             <td>${i + 1}</td>
             <td><strong>${s.id}</strong></td>
             <td>${s.name}</td>
             <td><span class="gender-badge gender-${s.gender.toLowerCase()}">${s.gender === 'M' ? '♂ Male' : '♀ Female'}</span></td>
             <td>${s.email || '—'}</td>
-        </tr>
-    `).join('');
+        </tr >
+            `).join('');
 }
 
 function filterStudentTable() {
@@ -728,17 +728,18 @@ function renderTeams(container) {
     const batchYear = navState.batch;
     const totalStudents = teams.reduce((s, t) => s + t.members.length, 0);
     const colors = ['blue', 'green', 'purple', 'orange', 'cyan'];
-    const numGroups = Math.floor(teams.length / 3);
-    const totalRotations = teams.length; // Each team gets a turn as presenter
-    const audienceTeams = teams.length - 3; // teams acting as audience per round
+
+    // Strict Round-Robin: Total sessions = Number of Teams (N)
+    const numSessions = teams.length;
+    const audienceTeamsPerSession = Math.max(0, teams.length - 3);
 
     // Session timing calculation — 30 min per round
     const presenterMin = 15;
     const reviewerMin = 5;
-    const audienceMin = 6;
     const feedbackMin = 4;
+    const audienceMin = 6;
     const perRoundMin = 30; // Fixed 30 min per round
-    const totalSessionMin = numGroups * perRoundMin;
+    const totalSessionMin = numSessions * perRoundMin;
     const totalSessionHrs = Math.floor(totalSessionMin / 60);
     const totalSessionRemMin = totalSessionMin % 60;
 
@@ -753,51 +754,55 @@ function renderTeams(container) {
         </button>
         <button class="btn-primary" style="width:auto;padding:10px 20px;margin-left:auto" onclick="exportCSV()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
             Export CSV
         </button>
     ` : '';
 
-    // Build role rotation schedule
+    // Build role rotation schedule (Strict Mathematically Complete Logic)
     let rotationHTML = '';
-    for (let g = 0; g < numGroups; g++) {
-        const t1 = g * 3;
-        const t2 = g * 3 + 1;
-        const t3 = g * 3 + 2;
-        const otherTeams = [];
-        for (let x = 0; x < teams.length; x++) {
-            if (x !== t1 && x !== t2 && x !== t3) otherTeams.push(x + 1);
+    const N = teams.length;
+
+    for (let s = 0; s < numSessions; s++) {
+        const pt = s;                     // Presenter Team
+        const rt = (s + 1) % N;           // Reviewer Team
+        const ft = (s + 2) % N;           // Feedback Team
+
+        const audienceTeams = [];
+        for (let i = 0; i < N; i++) {
+            if (i !== pt && i !== rt && i !== ft) {
+                audienceTeams.push(i + 1); // Team numbers are 1-indexed
+            }
         }
-        const audienceStr = otherTeams.length > 0 ? `Teams ${otherTeams.join(', ')}` : 'None';
+
+        let audienceStr = audienceTeams.length > 0 ? `Teams ${audienceTeams.join(', ')}` : 'None';
+
         rotationHTML += `
             <div class="rotation-round">
-                <div class="round-header">Round ${g + 1}</div>
-                <div class="round-roles">
-                    <div class="round-role role-presenter">
-                        <span class="round-role-icon">🎤</span>
-                        <span class="round-role-label">Presenter</span>
-                        <span class="round-role-team">Team ${t1 + 1}</span>
-                        <span class="round-role-time">15 min</span>
+                <div class="round-header" style="background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 16px; font-weight:700; color:#1e293b;">Session ${String(s + 1).padStart(3, '0')}</div>
+                <div class="round-roles" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; padding:16px;">
+                    <div class="round-role role-presenter" style="background:rgba(37,99,235,0.05); border:1px solid rgba(37,99,235,0.1); border-radius:8px; padding:12px; text-align:center;">
+                        <div class="round-role-icon" style="font-size:1.5rem; margin-bottom:4px;">🎤</div>
+                        <div class="round-role-label" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Presenter Team (PT)</div>
+                        <div class="round-role-team" style="font-size:1.1rem; font-weight:800; color:#1e293b; margin:4px 0;">Team ${pt + 1}</div>
                     </div>
-                    <div class="round-role role-reviewer">
-                        <span class="round-role-icon">🔍</span>
-                        <span class="round-role-label">Reviewer</span>
-                        <span class="round-role-team">Team ${t2 + 1}</span>
-                        <span class="round-role-time">4–5 min</span>
+                    <div class="round-role role-reviewer" style="background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.1); border-radius:8px; padding:12px; text-align:center;">
+                        <div class="round-role-icon" style="font-size:1.5rem; margin-bottom:4px;">🔍</div>
+                        <div class="round-role-label" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Review Team (RT)</div>
+                        <div class="round-role-team" style="font-size:1.1rem; font-weight:800; color:#1e293b; margin:4px 0;">Team ${rt + 1}</div>
                     </div>
-                    <div class="round-role role-feedback">
-                        <span class="round-role-icon">💬</span>
-                        <span class="round-role-label">Feedback</span>
-                        <span class="round-role-team">Team ${t3 + 1}</span>
-                        <span class="round-role-time">4 min</span>
+                    <div class="round-role role-feedback" style="background:rgba(139,92,246,0.05); border:1px solid rgba(139,92,246,0.1); border-radius:8px; padding:12px; text-align:center;">
+                        <div class="round-role-icon" style="font-size:1.5rem; margin-bottom:4px;">💬</div>
+                        <div class="round-role-label" style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Feedback Team (FT)</div>
+                        <div class="round-role-team" style="font-size:1.1rem; font-weight:800; color:#1e293b; margin:4px 0;">Team ${ft + 1}</div>
                     </div>
                 </div>
-                <div class="round-audience">
-                    <span class="audience-icon">👥</span>
-                    <span class="audience-label">Audience (6 min):</span>
+                <div class="round-audience" style="background:#f1f5f9; padding:12px 16px; font-size:0.95rem; color:#475569; display:flex; align-items:center; gap:8px;">
+                    <span class="audience-icon" style="font-size:1.2rem;">👥</span>
+                    <strong style="color:#1e293b;">Audience (A):</strong>
                     <span class="audience-teams">${audienceStr}</span>
                 </div>
             </div>
@@ -814,7 +819,7 @@ function renderTeams(container) {
                 </svg>
                 Teams — ${getDeptShortName(deptCode)} · ${batchYear}
             </h2>
-            <p class="page-subtitle">${teams.length} teams (divisible by 3) · ${totalStudents} students · ${numGroups} rotation rounds</p>
+            <p class="page-subtitle">${teams.length} teams · ${totalStudents} students · ${numSessions} Strict Round-Robin Sessions</p>
         </div>
 
         <div class="stats-grid">
@@ -846,71 +851,71 @@ function renderTeams(container) {
             </div>
             <div class="stat-card stat-green">
                 <div class="stat-info">
-                    <span class="stat-label">Rotation Rounds</span>
-                    <span class="stat-value">${numGroups}</span>
-                    <span class="stat-detail">3 roles per round</span>
+                    <span class="stat-label">Rotation Sessions</span>
+                    <span class="stat-value">${numSessions}</span>
+                    <span class="stat-detail">Strict 1-Turn-Per-Team</span>
                 </div>
                 <div class="stat-icon">🔄</div>
             </div>
             <div class="stat-card stat-orange">
                 <div class="stat-info">
-                    <span class="stat-label">Est. Session Time</span>
+                    <span class="stat-label">Est. Completion Time</span>
                     <span class="stat-value">${totalSessionHrs > 0 ? totalSessionHrs + 'h ' : ''}${totalSessionRemMin}m</span>
-                    <span class="stat-detail">~${perRoundMin} min per round</span>
+                    <span class="stat-detail">Fixed ${perRoundMin} min per session</span>
                 </div>
                 <div class="stat-icon">⏱️</div>
             </div>
         </div>
 
-        <!-- Session Role Structure -->
+        <!--Session Role Structure-->
         <div class="info-section">
             <h3 class="info-section-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                 </svg>
-                SAM Session Structure
+                SAM Session Structure (30 minutes total)
             </h3>
             <div class="session-role-overview">
                 <div class="role-overview-card role-presenter-bg">
                     <div class="role-overview-emoji">🎤</div>
                     <div class="role-overview-info">
-                        <div class="role-overview-name">Presenter Team</div>
-                        <div class="role-overview-time">15 min max</div>
+                        <div class="role-overview-name">Presenter Team (PT)</div>
+                        <div class="role-overview-time">${presenterMin} min</div>
                     </div>
-                    <div class="role-overview-desc">Presents the topic to all teams</div>
+                    <div class="role-overview-desc">Presents the central topic to the audience.</div>
                 </div>
                 <div class="role-overview-card role-reviewer-bg">
                     <div class="role-overview-emoji">🔍</div>
                     <div class="role-overview-info">
-                        <div class="role-overview-name">Reviewer Team</div>
-                        <div class="role-overview-time">4–5 min</div>
+                        <div class="role-overview-name">Review Team (RT)</div>
+                        <div class="role-overview-time">${reviewerMin} min</div>
                     </div>
-                    <div class="role-overview-desc">Reviews & questions the presentation</div>
+                    <div class="role-overview-desc">Questions the presentation & validates claims.</div>
                 </div>
                 <div class="role-overview-card role-feedback-bg">
                     <div class="role-overview-emoji">💬</div>
                     <div class="role-overview-info">
-                        <div class="role-overview-name">Feedback Team</div>
-                        <div class="role-overview-time">4 min</div>
+                        <div class="role-overview-name">Feedback Team (FT)</div>
+                        <div class="role-overview-time">${feedbackMin} min</div>
                     </div>
-                    <div class="role-overview-desc">Gives constructive feedback</div>
+                    <div class="role-overview-desc">Provides actionable, constructive input.</div>
                 </div>
                 <div class="role-overview-card role-audience-bg">
                     <div class="role-overview-emoji">👥</div>
                     <div class="role-overview-info">
-                        <div class="role-overview-name">Audience</div>
-                        <div class="role-overview-time">6 min</div>
+                        <div class="role-overview-name">Audience (A)</div>
+                        <div class="role-overview-time">${audienceMin} min</div>
                     </div>
-                    <div class="role-overview-desc">All other teams — observe, participate in Q&A</div>
+                    <div class="role-overview-desc">All other teams observe & participate in open Q&A.</div>
                 </div>
             </div>
             <div class="session-note">
-                <strong>🔄 Role Rotation:</strong> Every round, 3 teams rotate through Presenter → Reviewer → Feedback. All remaining ${audienceTeams > 0 ? audienceTeams : ''} teams act as Audience. Total: <strong>${numGroups} rounds</strong> covering all ${teams.length} teams.
+                <strong>🔄 Round-Robin Protocol:</strong> There are exactly as many sessions as there are teams (${numSessions}). Every team will serve as PT exactly once, RT exactly once, and FT exactly once.
             </div>
         </div>
 
-        <!-- Role Rotation Schedule -->
+        <!--Role Rotation Schedule-->
         <div class="info-section">
             <h3 class="info-section-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -919,42 +924,24 @@ function renderTeams(container) {
                     <line x1="8" y1="2" x2="8" y2="6"/>
                     <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
-                Role Rotation Schedule
+                Strict Rotation Schedule
             </h3>
-            <div class="rotation-schedule" id="rotation-schedule">
+            <div class="rotation-schedule" id="rotation-schedule" style="display:flex; flex-direction:column; gap:16px;">
                 ${rotationHTML}
             </div>
         </div>
 
         <div class="section-title-row">
-            <h3 class="section-title">Generated Teams</h3>
+            <h3 class="section-title">Team Rosters</h3>
             ${adminBtns}
         </div>
 
         <div class="teams-container" id="teams-container"></div>
     `;
 
-    // Determine role labels for each team based on rotation
-    const teamRoles = {}; // teamIndex -> [{round, role}]
-    for (let g = 0; g < numGroups; g++) {
-        const t1 = g * 3;
-        const t2 = g * 3 + 1;
-        const t3 = g * 3 + 2;
-        if (!teamRoles[t1]) teamRoles[t1] = [];
-        if (!teamRoles[t2]) teamRoles[t2] = [];
-        if (!teamRoles[t3]) teamRoles[t3] = [];
-        teamRoles[t1].push({ round: g + 1, role: 'Presenter', emoji: '🎤', cls: 'presenter' });
-        teamRoles[t2].push({ round: g + 1, role: 'Reviewer', emoji: '🔍', cls: 'reviewer' });
-        teamRoles[t3].push({ round: g + 1, role: 'Feedback', emoji: '💬', cls: 'feedback' });
-    }
-
     const tc = document.getElementById('teams-container');
     teams.forEach((team, i) => {
         const color = colors[i % colors.length];
-        const roles = teamRoles[i] || [];
-        const roleBadge = roles.length > 0
-            ? roles.map(r => `<span class="team-role-badge team-role-${r.cls}">${r.emoji} ${r.role} (R${r.round})</span>`).join('')
-            : '<span class="team-role-badge team-role-audience">👥 Audience</span>';
 
         const maleCount = team.members.filter(m => m.gender === 'M').length;
         const femaleCount = team.members.filter(m => m.gender === 'F').length;
@@ -967,8 +954,7 @@ function renderTeams(container) {
                 <span class="badge" style="background:rgba(255,255,255,0.2);color:#fff">${team.members.length} members</span>
             </div>
             <div class="team-card-role-row">
-                ${roleBadge}
-                <span class="team-gender-ratio">♂${maleCount} ♀${femaleCount}</span>
+                <span class="team-gender-ratio" style="margin-left:auto;">♂${maleCount} ♀${femaleCount}</span>
             </div>
             ${team.members.map(m => {
             const moveDropdown = navState.editMode ? `
@@ -978,16 +964,16 @@ function renderTeams(container) {
                     </select>
                 ` : '';
             return `
-                <div class="team-member ${navState.editMode ? 'edit-mode' : ''}">
-                    <div class="member-avatar avatar-${m.gender.toLowerCase()}">
-                        ${m.gender === 'M' ? '♂' : '♀'}
+                    <div class="team-member ${navState.editMode ? 'edit-mode' : ''}">
+                        <div class="member-avatar avatar-${m.gender.toLowerCase()}">
+                            ${m.gender === 'M' ? '♂' : '♀'}
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">${m.name}</div>
+                            <div class="member-id">${m.id}</div>
+                        </div>
+                        ${moveDropdown}
                     </div>
-                    <div class="member-info">
-                        <div class="member-name">${m.name}</div>
-                        <div class="member-id">${m.id}</div>
-                    </div>
-                    ${moveDropdown}
-                </div>
                 `;
         }).join('')}
         `;
@@ -1145,7 +1131,7 @@ function exportCSV() {
     let csv = 'Team,Student ID,Name,Gender,Email\n';
     teams.forEach((team, i) => {
         team.members.forEach(m => {
-            csv += `Team ${i + 1},${m.id},"${m.name}",${m.gender},${m.email || ''}\n`;
+            csv += `Team ${i + 1},${m.id}, "${m.name}", ${m.gender},${m.email || ''} \n`;
         });
     });
 
