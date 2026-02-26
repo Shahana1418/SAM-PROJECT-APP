@@ -167,6 +167,25 @@ async function attemptLogin() {
 function closeAdminLogin() {
     document.getElementById('admin-modal').style.display = 'none';
     document.getElementById('admin-password').value = '';
+    // Reset eye to hidden
+    const inp = document.getElementById('admin-password');
+    if (inp) inp.type = 'password';
+    const svg = document.getElementById('eye-icon');
+    if (svg) svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+function togglePwEye() {
+    const inp = document.getElementById('admin-password');
+    const svg = document.getElementById('eye-icon');
+    if (!inp || !svg) return;
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        // Eye-off icon
+        svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+        inp.type = 'password';
+        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
 }
 
 function updateUserBadge() {
@@ -867,16 +886,24 @@ function renderTeams(container) {
         </div>
     `;
 
+    // Build a map: teamIndex -> presenter session number (1-indexed)
+    const presenterSession = {};
+    for (let s = 0; s < teams.length; s++) {
+        presenterSession[s] = s + 1; // team s is presenter in session s+1
+    }
+
     const tc = document.getElementById('teams-container');
     teams.forEach((team, i) => {
         const color = colors[i % colors.length];
         const maleCount = team.members.filter(m => m.gender === 'M').length;
         const femaleCount = team.members.filter(m => m.gender === 'F').length;
+        const sessNum = String(presenterSession[i]).padStart(2, '0');
         const card = document.createElement('div');
         card.className = 'team-card';
         card.innerHTML = `
         <div class="team-card-header" style="background: var(--gradient-${color})">
                 <span class="team-card-title" style="color:#fff">Team ${i + 1}</span>
+                <span class="team-sess-id">Session ${sessNum}</span>
                 <span class="badge" style="background:rgba(255,255,255,0.2);color:#fff">${team.members.length} members</span>
             </div>
         <div class="team-card-role-row">

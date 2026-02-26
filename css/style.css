@@ -2228,3 +2228,42 @@ body {
     .sess-detail-grid { grid-template-columns: 1fr; }
     .session-cta-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
+
+/* ===== Password Eye Toggle ===== */
+.pw-wrapper {
+    position: relative;
+    width: 100%;
+}
+.pw-wrapper .modal-input {
+    width: 100%;
+    padding-right: 44px;
+}
+.pw-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    transition: color 0.15s;
+}
+.pw-eye:hover { color: var(--accent-blue); }
+
+/* ===== Team Card Session Badge ===== */
+.team-sess-id {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    margin-left: auto;
+}
