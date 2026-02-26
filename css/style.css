@@ -2068,3 +2068,163 @@ body {
 @media (max-width: 600px) {
     .rt-section-header { flex-direction: column; align-items: flex-start; }
 }
+
+/* ===== Session CTA Banner ===== */
+.session-cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+    animation: slideUp 0.4s ease backwards;
+}
+.session-cta-banner:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(37,99,235,0.4);
+}
+.cta-left { display: flex; align-items: center; gap: 16px; }
+.cta-icon { font-size: 2rem; }
+.cta-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.2px;
+}
+.cta-sub {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.75);
+    margin-top: 3px;
+}
+.cta-arrow { color: rgba(255,255,255,0.8); }
+.cta-arrow svg { display: block; }
+
+/* ===== Session Detail Grid ===== */
+.sess-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.sess-detail-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    animation: slideUp 0.4s ease backwards;
+}
+.sess-detail-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.sess-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.sess-dh-blue   { background: var(--gradient-blue); }
+.sess-dh-green  { background: var(--gradient-green); }
+.sess-dh-purple { background: var(--gradient-purple); }
+.sess-dh-orange { background: var(--gradient-orange); }
+.sess-dh-cyan   { background: var(--gradient-cyan); }
+
+.sess-detail-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+}
+.sess-detail-title {
+    flex: 1;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+}
+.sess-detail-time {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.15);
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.sess-detail-roles { display: flex; flex-direction: column; }
+.sess-detail-role {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s;
+}
+.sess-detail-role:last-child { border-bottom: none; }
+.sdr-icon { font-size: 1.2rem; width: 24px; text-align: center; flex-shrink: 0; }
+.sdr-info { display: flex; flex-direction: column; gap: 1px; }
+.sdr-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); }
+.sdr-team  { font-size: 0.95rem; font-weight: 800; letter-spacing: -0.2px; }
+
+.sdr-presenter { background: rgba(37,99,235,0.03); }
+.sdr-presenter:hover { background: rgba(37,99,235,0.06); }
+.sdr-presenter .sdr-team { color: var(--accent-blue); }
+
+.sdr-reviewer { background: rgba(5,150,105,0.03); }
+.sdr-reviewer:hover { background: rgba(5,150,105,0.06); }
+.sdr-reviewer .sdr-team { color: var(--accent-green); }
+
+.sdr-feedback { background: rgba(124,58,237,0.03); }
+.sdr-feedback:hover { background: rgba(124,58,237,0.06); }
+.sdr-feedback .sdr-team { color: var(--accent-purple); }
+
+.sess-detail-aud {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 9px 16px;
+    background: #f8fafc;
+    border-top: 1px solid var(--border-color);
+}
+.sess-aud-label-sm {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+    white-space: nowrap;
+}
+.sess-aud-chips-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.sess-aud-chip {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(15,23,42,0.06);
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .sess-detail-grid { grid-template-columns: 1fr; }
+    .session-cta-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
+}

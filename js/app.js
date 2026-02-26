@@ -198,7 +198,20 @@ function navigateTo(level, dept, batch) {
     navState.level = level;
     navState.dept = dept || null;
     navState.batch = batch || null;
-    navState.teams = null;
+    // Keep teams data when navigating to sessions or back to teams
+    if (level !== 'sessions' && level !== 'teams') navState.teams = null;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navigateToSessions() {
+    navState.level = 'sessions';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navigateBackToTeams() {
+    navState.level = 'teams';
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -250,13 +263,20 @@ function renderBreadcrumb() {
 
     if (navState.batch) {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item ${navState.level === 'batch' || navState.level === 'teams' ? 'active' : 'clickable'}" 
+        const isOnBatch = navState.level === 'batch';
+        items.push(`<span class="breadcrumb-item ${isOnBatch ? 'active' : 'clickable'}" 
             onclick="navigateTo('batch','${navState.dept}',${navState.batch})">${navState.batch} Batch</span>`);
     }
 
-    if (navState.level === 'teams') {
+    if (navState.level === 'teams' || navState.level === 'sessions') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item active">Teams</span>`);
+        items.push(`<span class="breadcrumb-item ${navState.level === 'teams' ? 'active' : 'clickable'}" 
+            onclick="navigateBackToTeams()">Teams</span>`);
+    }
+
+    if (navState.level === 'sessions') {
+        items.push(`<span class="breadcrumb-sep">›</span>`);
+        items.push(`<span class="breadcrumb-item active">Session Schedule</span>`);
     }
 
     bc.innerHTML = items.join('');
@@ -300,6 +320,7 @@ function render() {
         case 'department': renderDepartment(main); break;
         case 'batch': renderBatch(main); break;
         case 'teams': renderTeams(main); break;
+        case 'sessions': renderSessions(main); break;
     }
 }
 
@@ -719,7 +740,7 @@ function filterStudentTable() {
     if (countEl) countEl.textContent = `${students.length} students`;
 }
 
-// ===== Level 4: Teams View =====
+// ===== Level 4: Teams View (Rosters only) =====
 function renderTeams(container) {
     const teams = navState.teams;
     if (!teams || teams.length === 0) return;
@@ -728,20 +749,11 @@ function renderTeams(container) {
     const batchYear = navState.batch;
     const totalStudents = teams.reduce((s, t) => s + t.members.length, 0);
     const colors = ['blue', 'green', 'purple', 'orange', 'cyan'];
-
-    // Strict Round-Robin: Total sessions = Number of Teams (N)
     const numSessions = teams.length;
-    const audienceTeamsPerSession = Math.max(0, teams.length - 3);
-
-    // Session timing calculation — 30 min per round
-    const presenterMin = 15;
-    const reviewerMin = 5;
-    const feedbackMin = 4;
-    const audienceMin = 6;
-    const perRoundMin = 30; // Fixed 30 min per round
-    const totalSessionMin = numSessions * perRoundMin;
-    const totalSessionHrs = Math.floor(totalSessionMin / 60);
-    const totalSessionRemMin = totalSessionMin % 60;
+    const perRoundMin = 30;
+    const totalMin = numSessions * perRoundMin;
+    const hrs = Math.floor(totalMin / 60);
+    const remMin = totalMin % 60;
 
     const editBtnLabel = navState.editMode ? '✅ Done Editing' : '✏️ Edit Teams';
     const editBtnStyle = navState.editMode
@@ -752,57 +764,28 @@ function renderTeams(container) {
         <button class="btn-primary" style="${editBtnStyle}" onclick="toggleEditMode()">
             ${editBtnLabel}
         </button>
-        <button class="btn-primary" style="width:auto;padding:10px 20px;margin-left:auto" onclick="exportCSV()">
+        <button class="btn-primary" style="width:auto;padding:10px 20px" onclick="exportCSV()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
             Export CSV
         </button>
     ` : '';
 
-    // Build compact rotation table rows
-    let tableRows = '';
-    const N = teams.length;
-    const sessionColors = ['blue', 'green', 'purple', 'orange', 'cyan'];
-
-    for (let s = 0; s < numSessions; s++) {
-        const pt = s;
-        const rt = (s + 1) % N;
-        const ft = (s + 2) % N;
-        const sColor = sessionColors[s % sessionColors.length];
-
-        const audienceTeams = [];
-        for (let i = 0; i < N; i++) {
-            if (i !== pt && i !== rt && i !== ft) audienceTeams.push(i + 1);
-        }
-        const audStr = audienceTeams.length > 0
-            ? audienceTeams.map(n => `<span class="rt-aud-chip">T${n}</span>`).join('')
-            : '<span style="color:var(--text-muted);font-style:italic;font-size:0.75rem">—</span>';
-
-        tableRows += `
-            <tr class="rt-row">
-                <td><span class="rt-sess-badge rt-badge-${sColor}">${String(s + 1).padStart(2, '0')}</span></td>
-                <td><span class="rt-team-chip rt-presenter">🎤 Team ${pt + 1}</span></td>
-                <td><span class="rt-team-chip rt-reviewer">🔍 Team ${rt + 1}</span></td>
-                <td><span class="rt-team-chip rt-feedback">💬 Team ${ft + 1}</span></td>
-                <td class="rt-aud-cell">${audStr}</td>
-            </tr>
-        `;
-    }
-
     container.innerHTML = `
         <div class="page-header">
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                    <path d="M2 17l10 5 10-5"/>
-                    <path d="M2 12l10 5 10-5"/>
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 010 7.75"/>
                 </svg>
-                Teams — ${getDeptShortName(deptCode)} · ${batchYear}
+                Team Rosters — ${getDeptShortName(deptCode)} · ${batchYear}
             </h2>
-            <p class="page-subtitle">${teams.length} teams · ${totalStudents} students · ${numSessions} round-robin sessions · ${totalSessionHrs > 0 ? totalSessionHrs + 'h ' : ''}${totalSessionRemMin}m total</p>
+            <p class="page-subtitle">${teams.length} teams · ${totalStudents} students · ${numSessions} sessions</p>
         </div>
 
         <div class="stats-grid">
@@ -843,45 +826,26 @@ function renderTeams(container) {
             <div class="stat-card stat-orange">
                 <div class="stat-info">
                     <span class="stat-label">Total Duration</span>
-                    <span class="stat-value">${totalSessionHrs > 0 ? totalSessionHrs + 'h ' : ''}${totalSessionRemMin}m</span>
+                    <span class="stat-value">${hrs > 0 ? hrs + 'h ' : ''}${remMin}m</span>
                     <span class="stat-detail">${perRoundMin} min per session</span>
                 </div>
                 <div class="stat-icon">⏱️</div>
             </div>
         </div>
 
-        <!-- Round-Robin Schedule Table -->
-        <div class="rt-section">
-            <div class="rt-section-header">
-                <div class="rt-section-title">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <rect x="3" y="4" width="18" height="18" rx="2"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                    </svg>
-                    Round-Robin Schedule
-                </div>
-                <div class="rt-legend">
-                    <span class="rt-legend-chip rt-presenter">🎤 PT</span>
-                    <span class="rt-legend-chip rt-reviewer">🔍 RT</span>
-                    <span class="rt-legend-chip rt-feedback">💬 FT</span>
-                    <span class="rt-legend-chip rt-aud-leg">👥 Aud</span>
+        <!-- Session CTA Banner -->
+        <div class="session-cta-banner" onclick="navigateToSessions()">
+            <div class="cta-left">
+                <div class="cta-icon">📋</div>
+                <div class="cta-text">
+                    <div class="cta-title">View Session Schedule</div>
+                    <div class="cta-sub">${numSessions} sessions · ${hrs > 0 ? hrs + 'h ' : ''}${remMin}m total · Round-Robin format</div>
                 </div>
             </div>
-            <div class="rt-table-wrap">
-                <table class="rt-table">
-                    <thead>
-                        <tr>
-                            <th>Session</th>
-                            <th>🎤 Presenter</th>
-                            <th>🔍 Reviewer</th>
-                            <th>💬 Feedback</th>
-                            <th>👥 Audience</th>
-                        </tr>
-                    </thead>
-                    <tbody>${tableRows}</tbody>
-                </table>
+            <div class="cta-arrow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
             </div>
         </div>
 
@@ -906,10 +870,8 @@ function renderTeams(container) {
     const tc = document.getElementById('teams-container');
     teams.forEach((team, i) => {
         const color = colors[i % colors.length];
-
         const maleCount = team.members.filter(m => m.gender === 'M').length;
         const femaleCount = team.members.filter(m => m.gender === 'F').length;
-
         const card = document.createElement('div');
         card.className = 'team-card';
         card.innerHTML = `
@@ -939,16 +901,156 @@ function renderTeams(container) {
                         ${moveDropdown}
                     </div>
                 `;
-        }).join('')
-            }
+        }).join('')}
     `;
         tc.appendChild(card);
     });
 }
 
-// ===== Team Generation Algorithm =====
-// Teams must be divisible by 3 for role rotation
-// Each team must have EXACTLY 3 or 4 members (never < 3 or > 4)
+// ===== Level 5: Session Schedule =====
+function renderSessions(container) {
+    const teams = navState.teams;
+    if (!teams || teams.length === 0) { navigateBackToTeams(); return; }
+
+    const deptCode = navState.dept;
+    const batchYear = navState.batch;
+    const N = teams.length;
+    const numSessions = N;
+    const perRoundMin = 30;
+    const totalMin = numSessions * perRoundMin;
+    const hrs = Math.floor(totalMin / 60);
+    const remMin = totalMin % 60;
+    const sessionColors = ['blue', 'green', 'purple', 'orange', 'cyan'];
+
+    let tableRows = '';
+    let sessionCards = '';
+
+    for (let s = 0; s < numSessions; s++) {
+        const pt = s;
+        const rt = (s + 1) % N;
+        const ft = (s + 2) % N;
+        const sColor = sessionColors[s % sessionColors.length];
+
+        const audienceTeams = [];
+        for (let i = 0; i < N; i++) {
+            if (i !== pt && i !== rt && i !== ft) audienceTeams.push(i + 1);
+        }
+
+        const audChipsSm = audienceTeams.length > 0
+            ? audienceTeams.map(n => `<span class="rt-aud-chip">T${n}</span>`).join('')
+            : '<span style="color:var(--text-muted);font-style:italic;font-size:0.75rem">—</span>';
+
+        const audChipsLg = audienceTeams.length > 0
+            ? audienceTeams.map(n => `<span class="sess-aud-chip">Team ${n}</span>`).join('')
+            : '<span style="color:var(--text-muted);font-style:italic">None</span>';
+
+        tableRows += `
+            <tr class="rt-row">
+                <td><span class="rt-sess-badge rt-badge-${sColor}">${String(s + 1).padStart(2, '0')}</span></td>
+                <td><span class="rt-team-chip rt-presenter">🎤 Team ${pt + 1}</span></td>
+                <td><span class="rt-team-chip rt-reviewer">🔍 Team ${rt + 1}</span></td>
+                <td><span class="rt-team-chip rt-feedback">💬 Team ${ft + 1}</span></td>
+                <td class="rt-aud-cell">${audChipsSm}</td>
+            </tr>
+        `;
+
+        sessionCards += `
+            <div class="sess-detail-card" style="animation-delay:${s * 0.05}s">
+                <div class="sess-detail-header sess-dh-${sColor}">
+                    <div class="sess-detail-num">${String(s + 1).padStart(2, '0')}</div>
+                    <div class="sess-detail-title">Session ${s + 1}</div>
+                    <div class="sess-detail-time">⏱ ${perRoundMin} min</div>
+                </div>
+                <div class="sess-detail-roles">
+                    <div class="sess-detail-role sdr-presenter">
+                        <span class="sdr-icon">🎤</span>
+                        <div class="sdr-info">
+                            <div class="sdr-label">Presenter</div>
+                            <div class="sdr-team">Team ${pt + 1}</div>
+                        </div>
+                    </div>
+                    <div class="sess-detail-role sdr-reviewer">
+                        <span class="sdr-icon">🔍</span>
+                        <div class="sdr-info">
+                            <div class="sdr-label">Reviewer</div>
+                            <div class="sdr-team">Team ${rt + 1}</div>
+                        </div>
+                    </div>
+                    <div class="sess-detail-role sdr-feedback">
+                        <span class="sdr-icon">💬</span>
+                        <div class="sdr-info">
+                            <div class="sdr-label">Feedback</div>
+                            <div class="sdr-team">Team ${ft + 1}</div>
+                        </div>
+                    </div>
+                </div>
+                ${audienceTeams.length > 0 ? `
+                <div class="sess-detail-aud">
+                    <span class="sess-aud-label-sm">👥 Audience</span>
+                    <div class="sess-aud-chips-row">${audChipsLg}</div>
+                </div>` : ''}
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <div class="page-header">
+            <h2 class="page-title">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                </svg>
+                Session Schedule — ${getDeptShortName(deptCode)} · ${batchYear}
+            </h2>
+            <p class="page-subtitle">${numSessions} sessions · ${hrs > 0 ? hrs + 'h ' : ''}${remMin}m total · Every team presents exactly once</p>
+        </div>
+
+        <!-- Compact Table Overview -->
+        <div class="rt-section">
+            <div class="rt-section-header">
+                <div class="rt-section-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                    </svg>
+                    At a Glance
+                </div>
+                <div class="rt-legend">
+                    <span class="rt-legend-chip rt-presenter">🎤 Presenter</span>
+                    <span class="rt-legend-chip rt-reviewer">🔍 Reviewer</span>
+                    <span class="rt-legend-chip rt-feedback">💬 Feedback</span>
+                    <span class="rt-legend-chip rt-aud-leg">👥 Audience</span>
+                </div>
+            </div>
+            <div class="rt-table-wrap">
+                <table class="rt-table">
+                    <thead>
+                        <tr>
+                            <th>Session</th>
+                            <th>🎤 Presenter</th>
+                            <th>🔍 Reviewer</th>
+                            <th>💬 Feedback</th>
+                            <th>👥 Audience</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Session Detail Cards -->
+        <h3 class="section-title" style="margin-top:2rem;margin-bottom:1rem;">Session Details</h3>
+        <div class="sess-detail-grid">
+            ${sessionCards}
+        </div>
+    `;
+}
+
+
 function buildTeams(students, teamSize, mode) {
     if (students.length === 0) return [];
     if (!teamSize || teamSize < 3) teamSize = 4;
