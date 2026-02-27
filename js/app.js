@@ -1598,8 +1598,8 @@ function renderAssessments(container) {
             </div>
             <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:0.85rem;color:var(--text-secondary);">
                 <span>✅ Topics drawn from <strong>${regulation} Syllabus</strong></span>
-                <span>✅ <strong>${numTeams} teams</strong> · <strong>12 topics</strong> mapped unit-wise</span>
-                <span>✅ 5 units · ~2–3 topics per unit</span>
+                <span>✅ <strong>${numTeams} teams</strong> · <strong>${numTeams} topics</strong> assigned</span>
+                <span>✅ Distributed across 5 units (cycles if > 12 teams)</span>
                 <span>✅ Each team presents <strong>once</strong></span>
             </div>
         </div>
