@@ -145,10 +145,19 @@ async function attemptLogin() {
     else if (loginState.role === 'Faculty') key = 'faculty_' + loginState.dept;
 
     if (hash === ROLE_PASSWORDS[key]) {
+        // Role-based permission matrix:
+        // Principal  → All departments, can generate teams & view all
+        // Alumni     → All departments, READ ONLY (cannot generate teams)
+        // HOD        → Own department only, can generate teams
+        // Faculty    → Own department only, READ ONLY (cannot generate teams)
+        const role = loginState.role;
+        const canGenerate = (role === 'Principal' || role === 'HOD');
+        const allDepts = (role === 'Principal' || role === 'Alumni');
+
         currentUser = {
-            role: loginState.role,
-            dept: loginState.dept,
-            canGenerate: true // All users can generate teams according to request
+            role: role,
+            dept: allDepts ? null : loginState.dept, // null = access to all depts
+            canGenerate: canGenerate
         };
         updateUserBadge();
         closeAdminLogin();
@@ -1083,15 +1092,15 @@ function renderSessions(container) {
         </div>
 
         <!-- Assessment CTA Banner -->
-        <div class="session-cta-banner" onclick="navigateToAssessments()" style="margin-top:1.5rem; background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(124,58,237,0.15)); border-color:rgba(124,58,237,0.2);">
+        <div class="session-cta-banner" onclick="navigateToAssessments()" style="margin-top:1.5rem; background:linear-gradient(135deg,#4c1d95,#7c3aed); border:none; color:#fff; cursor:pointer;">
             <div class="cta-left">
-                <div class="cta-icon">📋</div>
+                <div class="cta-icon" style="font-size:1.6rem;">📋</div>
                 <div class="cta-text">
-                    <div class="cta-title">View Assessment Assignment</div>
-                    <div class="cta-sub">Each team has been automatically assigned a unique syllabus topic unit-wise</div>
+                    <div class="cta-title" style="color:#fff; font-size:1.05rem;">View Assessment Assignment</div>
+                    <div class="cta-sub" style="color:rgba(255,255,255,0.8);">Each team has been automatically assigned a unique syllabus topic unit-wise</div>
                 </div>
             </div>
-            <div class="cta-arrow">
+            <div class="cta-arrow" style="color:#fff;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="9 18 15 12 9 6"/>
                 </svg>
@@ -1580,25 +1589,37 @@ function renderAssessments(container) {
         'Hard': 'background:rgba(220,38,38,0.12);color:#dc2626'
     };
 
+    const unitColors = [
+        'background:rgba(37,99,235,0.1);color:#1d4ed8',
+        'background:rgba(5,150,105,0.1);color:#047857',
+        'background:rgba(217,119,6,0.1);color:#b45309',
+        'background:rgba(220,38,38,0.1);color:#b91c1c',
+        'background:rgba(124,58,237,0.1);color:#6d28d9'
+    ];
+
     let assessmentRows = assignments.map((a, i) => {
-        const teamName = teams[i] ? `Team ${i + 1}` : `Team ${i + 1}`;
         const cStyle = complexityColors[a.complexity] || complexityColors['Medium'];
+        const unitNum = parseInt(a.unit.replace('Unit ', '')) || 1;
+        const uStyle = unitColors[(unitNum - 1) % unitColors.length];
+        const rowBg = i % 2 === 0 ? '' : 'background:#f9fafb;';
         return `
-            <tr class="assessment-row">
-                <td style="font-weight:700; color:var(--accent-blue)">${a.assessId}</td>
-                <td>
-                    <span style="font-weight:600; color:var(--text-primary); font-size:0.92rem;">${teamName}</span>
+            <tr class="assessment-row" style="${rowBg}">
+                <td style="padding:18px 16px; border-bottom:1px solid var(--border-color); white-space:nowrap;">
+                    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);text-transform:uppercase;">Session ${i + 1}</div>
+                    <div style="font-size:1rem;font-weight:700;color:var(--accent-blue);margin-top:2px;">Team ${i + 1}</div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);margin-top:1px;">${a.assessId}</div>
                 </td>
-                <td>
-                    <span style="display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--accent-purple)">
-                        📋 ${a.title}
-                    </span>
+                <td style="padding:18px 16px; border-bottom:1px solid var(--border-color);">
+                    <div style="font-weight:600;color:var(--text-primary);font-size:0.95rem;line-height:1.4;">${a.title}</div>
+                    <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <span style="padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:700;${uStyle};white-space:nowrap;">${a.unit}</span>
+                        <span style="padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:700;${cStyle};white-space:nowrap;">${a.complexity}</span>
+                        <span style="font-size:0.75rem;color:var(--text-muted);">${a.co} · ${a.duration}</span>
+                    </div>
                 </td>
-                <td><span class="badge" style="background:rgba(37,99,235,0.10);color:var(--accent-blue)">${a.unit}</span></td>
-                <td><span class="badge" style="${cStyle}">${a.complexity}</span></td>
-                <td style="color:var(--text-secondary); font-size:0.85rem;">${a.co}</td>
-                <td style="color:var(--text-muted); white-space:nowrap; font-size:0.82rem;">${a.duration}</td>
-                <td><span class="badge badge-purple">${a.type}</span></td>
+                <td style="padding:18px 16px; border-bottom:1px solid var(--border-color); white-space:nowrap;">
+                    <span class="badge badge-purple">${a.type}</span>
+                </td>
             </tr>
         `;
     }).join('');
@@ -1648,17 +1669,12 @@ function renderAssessments(container) {
         </div>
 
         <div class="table-container" style="overflow-x:auto;">
-            <table class="data-table" id="assessment-table" style="min-width: 900px;">
+            <table class="data-table" id="assessment-table" style="min-width: 600px;">
                 <thead>
-                    <tr>
-                        <th style="width:120px;">Assessment ID</th>
-                        <th style="width:100px;">Team</th>
-                        <th>Presentation Topic</th>
-                        <th style="width:80px;">Unit</th>
-                        <th style="width:90px;">Complexity</th>
-                        <th style="width:80px;">Outcome</th>
-                        <th style="width:110px;">Duration</th>
-                        <th style="width:130px;">Type</th>
+                    <tr style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);">
+                        <th style="width:150px;color:#fff;font-size:0.75rem;letter-spacing:0.5px;padding:14px 16px;">TEAM / SESSION</th>
+                        <th style="color:#fff;font-size:0.75rem;letter-spacing:0.5px;padding:14px 16px;">PRESENTATION TOPIC &amp; DETAILS</th>
+                        <th style="width:130px;color:#fff;font-size:0.75rem;letter-spacing:0.5px;padding:14px 16px;">TYPE</th>
                     </tr>
                 </thead>
                 <tbody>
