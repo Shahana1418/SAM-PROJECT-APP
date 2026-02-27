@@ -31,7 +31,7 @@ const ROLE_PASSWORDS = {
 
 // Navigation state
 let navState = {
-    level: 'college',   // college | department | batch | teams
+    level: 'college',   // college | department | batch | teams | sessions | assessments
     dept: null,
     batch: null,
     teams: null,
@@ -229,6 +229,12 @@ function navigateToSessions() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function navigateToAssessments() {
+    navState.level = 'assessments';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function navigateBackToTeams() {
     navState.level = 'teams';
     render();
@@ -287,7 +293,7 @@ function renderBreadcrumb() {
             onclick="navigateTo('batch','${navState.dept}',${navState.batch})">${navState.batch} Batch</span>`);
     }
 
-    if (navState.level === 'teams' || navState.level === 'sessions') {
+    if (navState.level === 'teams' || navState.level === 'sessions' || navState.level === 'assessments') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
         items.push(`<span class="breadcrumb-item ${navState.level === 'teams' ? 'active' : 'clickable'}" 
             onclick="navigateBackToTeams()">Teams</span>`);
@@ -296,6 +302,9 @@ function renderBreadcrumb() {
     if (navState.level === 'sessions') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
         items.push(`<span class="breadcrumb-item active">Session Schedule</span>`);
+    } else if (navState.level === 'assessments') {
+        items.push(`<span class="breadcrumb-sep">›</span>`);
+        items.push(`<span class="breadcrumb-item active">Assessments</span>`);
     }
 
     bc.innerHTML = items.join('');
@@ -340,6 +349,7 @@ function render() {
         case 'batch': renderBatch(main); break;
         case 'teams': renderTeams(main); break;
         case 'sessions': renderSessions(main); break;
+        case 'assessments': renderAssessments(main); break;
     }
 }
 
@@ -631,6 +641,16 @@ function renderBatch(container) {
                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                     </svg>
                     Generate Teams
+                </button>
+                <button class="btn-secondary" style="width:auto;padding:10px 20px" onclick="navigateToAssessments()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Configure Assessments
                 </button>
             </div>
         </div>
@@ -1232,3 +1252,154 @@ function exportCSV() {
     a.click();
     URL.revokeObjectURL(url);
 }
+
+// ===== Level 6: Assessment Configuration =====
+function getSyllabusPdfPath(deptCode, batchYear) {
+    const isR2025 = batchYear >= 2029; // 2029 batch joins in 2025 (2029 - 4)
+    const folder = isR2025 ? 'R2025' : 'R2021';
+
+    // Mapping object to filenames based on observed folder structures
+    let filename = '';
+
+    if (folder === 'R2021') {
+        const fileMap = {
+            'ATE': 'B.E.Automobile.pdf',
+            'CSE': 'B.E.CSE(R-2021).pdf',
+            'CVE': 'BE.Civil.pdf regulation 2021.pdf',
+            'CDS': 'B.E. CSE(Data Science).pdf',
+            'ECE': 'B.E.ECE.pdf',
+            'EEE': 'BE-EEE (21 reg).pdf',
+            'IMT': 'B.Tech.IT.pdf',
+            'MCE': 'B.E. Mechanical Engineering.pdf'
+        };
+        filename = fileMap[deptCode];
+    } else {
+        const fileMap = {
+            'ATE': 'Padeepz App B.E. Automobile Engineering.pdf',
+            'CSE': 'Padeepz App B.E. CSE.pdf',
+            'CVE': 'Padeepz App B.E. Civil Engineering.pdf',
+            'CDS': 'Padeepz App B.E. CSE (DS).pdf',
+            'ECE': 'Padeepz App B.E. ECE.pdf',
+            'EEE': 'Padeepz App B.E. EEE.pdf',
+            'IMT': 'Padeepz App B.Tech. IT .pdf',
+            'MCE': 'Padeepz App B.E. Mechanical Engineering.pdf'
+        };
+        filename = fileMap[deptCode];
+    }
+
+    return `Syllabus/${folder}/${filename}`;
+}
+
+function renderAssessments(container) {
+    const deptCode = navState.dept;
+    const batchYear = navState.batch;
+    const isR2025 = batchYear >= 2029;
+    const regulation = isR2025 ? 'R2025' : 'R2021';
+
+    const pdfPath = getSyllabusPdfPath(deptCode, batchYear);
+
+    // Pre-fill 12 assessments with default templates (12 sessions, divisible by 3)
+    const assessments = [];
+    for (let i = 1; i <= 12; i++) {
+        const unit = Math.ceil(i / (12 / 5)); // Roughly distribute 12 assessments across 5 units
+        const clampedUnit = Math.min(5, Math.max(1, unit));
+        assessments.push({
+            id: `ASSESS_${String(i).padStart(3, '0')}`,
+            title: `Assessment ${i} Topic`,
+            unit: `Unit ${clampedUnit}`,
+            complexity: i % 3 === 0 ? 'Hard' : 'Medium',
+            learningObj: 'Design and implement...',
+            outcomes: `CO${clampedUnit}`,
+            duration: '15-20 minutes',
+            type: 'Presentation'
+        });
+    }
+
+    let assessmentRows = '';
+    assessments.forEach((a, i) => {
+        assessmentRows += `
+            <tr class="assessment-row">
+                <td style="font-weight:600; color:var(--text-main)">${a.id}</td>
+                <td><input type="text" class="assess-input" value="${a.title}" placeholder="Topic Name"></td>
+                <td>
+                    <select class="assess-select">
+                        ${[1, 2, 3, 4, 5].map(u => `<option value="Unit ${u}" ${a.unit === 'Unit ' + u ? 'selected' : ''}>Unit ${u}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                    <select class="assess-select">
+                        <option value="Hard" ${a.complexity === 'Hard' ? 'selected' : ''}>Hard</option>
+                        <option value="Medium" ${a.complexity === 'Medium' ? 'selected' : ''}>Medium</option>
+                        <option value="Easy" ${a.complexity === 'Easy' ? 'selected' : ''}>Easy</option>
+                    </select>
+                </td>
+                <td><input type="text" class="assess-input" value="${a.learningObj}" placeholder="What students will learn"></td>
+                <td><input type="text" class="assess-input" value="${a.outcomes}" placeholder="e.g. CO1, CO2"></td>
+                <td style="color:var(--text-light); white-space:nowrap;">${a.duration}</td>
+                <td><span class="badge badge-purple">${a.type}</span></td>
+            </tr>
+        `;
+    });
+
+    container.innerHTML = `
+        <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+                <h2 class="page-title">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Assessment Configuration
+                </h2>
+                <p class="page-subtitle">${getDeptName(deptCode)} · ${batchYear} Batch · ${regulation} Regulation</p>
+                <p class="page-subtitle" style="margin-top:4px;">Define 12 presentation topics mapped to the department syllabus.</p>
+            </div>
+            
+            <a href="${pdfPath}" target="_blank" class="btn-primary" style="background:var(--gradient-cyan);text-decoration:none;display:inline-flex;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                View ${regulation} Syllabus PDF
+            </a>
+        </div>
+        
+        <div class="table-container" style="overflow-x:auto;">
+            <table class="data-table" id="assessment-table" style="min-width: 1000px;">
+                <thead>
+                    <tr>
+                        <th>Assessment ID</th>
+                        <th>Title (Topic)</th>
+                        <th>Unit</th>
+                        <th style="width: 120px;">Complexity</th>
+                        <th style="width: 25%;">Learning Objectives</th>
+                        <th>Course Outcomes</th>
+                        <th>Duration</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${assessmentRows}
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin-top: 24px; display:flex; justify-content: flex-end;">
+            <button class="btn-primary" style="padding: 12px 32px;" onclick="saveAssessments()">
+                Save Configuration
+            </button>
+        </div>
+    `;
+}
+
+function saveAssessments() {
+    // In a real app, this would collect the inputs and save to a backend or state
+    alert("Assessment configuration saved successfully!");
+    navigateBackToTeams();
+}
+
