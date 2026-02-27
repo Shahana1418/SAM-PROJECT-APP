@@ -7,27 +7,32 @@
 let appData = null;
 let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
 
-// Default passwords generated using SHA-256
+// Passwords are role-based (4 distinct passwords, one per role type):
+//   Principal : SAMprincipal@2025
+//   Alumni    : SAMalumni@2025
+//   HOD       : SAMhod@2025      (same for all departments)
+//   Faculty   : SAMfaculty@2025  (same for all departments)
 const ROLE_PASSWORDS = {
-    'principal': '69e03750027e6b1e9f95bd21d227613c0024ec799ebfb7fe281371e1153f9bda', // 'principal'
-    'alumni': 'aa388760daaa3ebb1ee7ae48b315a39f48b4e30dd84b4b169b68d0bdfcb699da', // 'alumni'
-    'hod_ATE': 'fc1bacb25bdde7fcf0612e7f93e2c64f1bb4d329f8426f279ab7c1093dc99f2d', // 'hod_ATE'
-    'hod_CSE': '2782c72176f264ce01dfbcdcedc19b5061fe7ffbe399d9fbf0ccd6ae274c2dc1', // 'hod_CSE'
-    'hod_CVE': 'a21737838929f1403a5b4b6dd6ed838ff8ebbf9ee4c0a2739e348ddca219bd4b', // 'hod_CVE'
-    'hod_CDS': '99728753a4de90a4edb10905b5452c42a5107d8d9b9984f2fec87c6891ff45de', // 'hod_CDS'
-    'hod_ECE': '8f59017762321c34e60bda175c81564ebbe03a0ca38efbba8fab4edefa5341dd', // 'hod_ECE'
-    'hod_EEE': '6f159dfd3d148acd83a01a8a48f477a29773e05853743798486ccbbf401f7045', // 'hod_EEE'
-    'hod_IMT': '63263137bcff3b61ce68a51e62686b47fc425ff8a8b52a9f7683220ba6ab4e59', // 'hod_IMT'
-    'hod_MCE': 'c9f3f2f691786fc18b146da88e8e625634e8f7a8b82f88f26fd4073f0f617d85', // 'hod_MCE'
-    'faculty_ATE': '7d35eed06900d90fc88120a76154e7e1693b07a22cdecfdd57c96e7a40171cfd', // 'faculty_ATE'
-    'faculty_CSE': 'ac530d67401747f89f8aefe8b7cda0477bc0dd3c4bfd3dd4f6c60b92705a1970', // 'faculty_CSE'
-    'faculty_CVE': 'a3e2a9f2c434032e0febdb4ac09c01fa829bde3a775abd47109c527331c37ae8', // 'faculty_CVE'
-    'faculty_CDS': '823a5f274c9b041258f03946de83fc654de399aa2244208a089520a4083484cb', // 'faculty_CDS'
-    'faculty_ECE': '38afa4e0fccd6700f08d7804bb391cb0c5db2499352c7a0172b4e9954df1a2fb', // 'faculty_ECE'
-    'faculty_EEE': '5f9b7dae6333120301a258c095a3a8ab952a387b64a88f2ec90e4a9eeef10396', // 'faculty_EEE'
-    'faculty_IMT': '762c2e1ca22cf7ade73ebf89926c39bcc77ebf8d5175b1e28f2c752065a587c6', // 'faculty_IMT'
-    'faculty_MCE': 'b49dc2b874403892a1c26026f8d6143bdae9b0881c2ff02215d6a3a01da87d93'  // 'faculty_MCE'
+    'principal': '4badb13274dcc4c23f3f9cb4509b1dde43d90feef06d776ac1f9435d276e183e', // SAMprincipal@2025
+    'alumni': '2e3609a4b8d4d2b1cb83520a36849c5b7dbd9663be1a5fc3094ecb2d8b2c9c15', // SAMalumni@2025
+    'hod_ATE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'hod_CSE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'hod_CVE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'hod_CDS': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'hod_ECE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'hod_EEE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'hod_IMT': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'hod_MCE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
+    'faculty_ATE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'faculty_CSE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'faculty_CVE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'faculty_CDS': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'faculty_ECE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'faculty_EEE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'faculty_IMT': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'faculty_MCE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
 };
+
 
 // Navigation state
 let navState = {
