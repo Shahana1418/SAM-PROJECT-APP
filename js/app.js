@@ -7,8 +7,8 @@
 let appData = null;
 let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
 
-// Single admin password for all roles: sam@admin2025
-const ADMIN_HASH = '752580045389cdee6421e61f1bbf36e6d16d838a034c9456550e1d6e6b89687d';
+// Single admin password for all roles: sam@admin
+const ADMIN_HASH = '460fed869984ad2465122a0841a35c62c493f5e92c07499fa9c0c57fe86cc146';
 const ROLE_PASSWORDS = {
     'principal': ADMIN_HASH,
     'alumni': ADMIN_HASH,
