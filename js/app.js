@@ -1460,7 +1460,7 @@ function getAutoAssignedAssessments(deptCode, batchYear, numTeams) {
         const topic = topics[i % topics.length]; // cycle if more than 12 teams
         result.push({
             teamIndex: i,
-            assessId: `ASSESS_${String((i % 12) + 1).padStart(3, '0')}`,
+            assessId: `ASSESS_${String(i + 1).padStart(3, '0')}`,
             unit: topic ? `Unit ${topic.unit}` : 'Unit 1',
             title: topic ? topic.title : `Presentation Topic ${i + 1}`,
             co: topic ? topic.co : 'CO1',
