@@ -1253,6 +1253,270 @@ function exportCSV() {
     URL.revokeObjectURL(url);
 }
 
+// ===== Syllabus Data (Unit-wise assessment topics per dept + regulation) =====
+const SYLLABUS_DATA = {
+    R2021: {
+        ATE: [
+            { unit: 1, title: 'Engine Components & Working Principles', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'Fuel Systems and Carburetion', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'Air Intake and Exhaust Systems', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Power Transmission Systems', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'Clutch and Gearbox Mechanisms', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Differential and Drive Shaft', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Steering Geometry and Alignment', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Suspension System Types', co: 'CO3', complexity: 'Easy' },
+            { unit: 3, title: 'Braking Systems and ABS', co: 'CO3', complexity: 'Hard' },
+            { unit: 4, title: 'Vehicle Dynamics and Handling', co: 'CO4', complexity: 'Hard' },
+            { unit: 4, title: 'Automotive Electrical Systems', co: 'CO4', complexity: 'Medium' },
+            { unit: 5, title: 'EV Technologies and Hybrid Vehicles', co: 'CO5', complexity: 'Hard' }
+        ],
+        CSE: [
+            { unit: 1, title: 'Operating System Concepts & Process Management', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'CPU Scheduling Algorithms', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Deadlock Detection and Prevention', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Memory Management and Paging', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'Virtual Memory and Thrashing', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'File System Organization', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Computer Networks – OSI Model', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'TCP/IP Protocol Stack', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Routing Protocols (RIP, OSPF, BGP)', co: 'CO3', complexity: 'Hard' },
+            { unit: 4, title: 'Database Normalization and ER Diagrams', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'SQL Queries and Transactions', co: 'CO4', complexity: 'Easy' },
+            { unit: 5, title: 'Cloud Computing and Virtualization', co: 'CO5', complexity: 'Hard' }
+        ],
+        CVE: [
+            { unit: 1, title: 'Stress, Strain and Elasticity Concepts', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'Types of Beams and Loads', co: 'CO1', complexity: 'Easy' },
+            { unit: 1, title: 'Shear Force and Bending Moment Diagrams', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Torsion in Circular Shafts', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Columns and Struts – Euler\'s Theory', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'Slope and Deflection in Beams', co: 'CO2', complexity: 'Hard' },
+            { unit: 3, title: 'Soil Classification and Compaction', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Seepage and Permeability', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Bearing Capacity of Soil', co: 'CO3', complexity: 'Hard' },
+            { unit: 4, title: 'Design of RCC Beams and Slabs', co: 'CO4', complexity: 'Hard' },
+            { unit: 4, title: 'Design of Columns and Footings', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Surveying Techniques and Instruments', co: 'CO5', complexity: 'Medium' }
+        ],
+        CDS: [
+            { unit: 1, title: 'Python for Data Science – NumPy & Pandas', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'Data Wrangling and Preprocessing', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'Exploratory Data Analysis (EDA)', co: 'CO1', complexity: 'Medium' },
+            { unit: 2, title: 'Supervised Learning – Regression Models', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'Classification Algorithms (KNN, SVM, Trees)', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Model Evaluation Metrics and Cross-Validation', co: 'CO2', complexity: 'Hard' },
+            { unit: 3, title: 'Unsupervised Learning – Clustering', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Dimensionality Reduction (PCA, t-SNE)', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Association Rule Mining', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Deep Learning Fundamentals and CNNs', co: 'CO4', complexity: 'Hard' },
+            { unit: 4, title: 'Natural Language Processing Basics', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Big Data Technologies – Hadoop & Spark', co: 'CO5', complexity: 'Hard' }
+        ],
+        ECE: [
+            { unit: 1, title: 'Semiconductor Devices – Diodes and BJT', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'FET and MOSFET Characteristics', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'Amplifier Circuit Analysis', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Op-Amp Configurations and Applications', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'Oscillators and Signal Generators', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Filters – Active and Passive', co: 'CO2', complexity: 'Hard' },
+            { unit: 3, title: 'Analog Modulation Techniques (AM, FM)', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Digital Modulation (ASK, FSK, PSK)', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Multiplexing and Spread Spectrum', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Microprocessor Architecture (8085)', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'Microcontroller Programming (8051)', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Embedded Systems and IoT Applications', co: 'CO5', complexity: 'Hard' }
+        ],
+        EEE: [
+            { unit: 1, title: 'Circuit Analysis – KVL, KCL, Thevenin', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'AC Circuit Analysis and Phasors', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Three Phase Circuits and Power', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Transformers – Construction and Operation', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'DC Machines – Motors and Generators', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Induction Motor Characteristics', co: 'CO2', complexity: 'Hard' },
+            { unit: 3, title: 'Power Electronics – Rectifiers and Inverters', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'DC-DC Converters and Choppers', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'AC Drives and Variable Speed Control', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Power Systems – Transmission and Distribution', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'Protection Systems and Circuit Breakers', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Renewable Energy Systems and Smart Grid', co: 'CO5', complexity: 'Hard' }
+        ],
+        IMT: [
+            { unit: 1, title: 'Web Technologies – HTML, CSS, JavaScript', co: 'CO1', complexity: 'Easy' },
+            { unit: 1, title: 'React.js Fundamentals and Component Model', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'RESTful API Design and Integration', co: 'CO1', complexity: 'Medium' },
+            { unit: 2, title: 'Database Design and SQL Optimization', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'NoSQL Databases – MongoDB', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'ORM Frameworks and Query Building', co: 'CO2', complexity: 'Hard' },
+            { unit: 3, title: 'Network Security and Cryptography', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Firewall, VPN and Intrusion Detection', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Ethical Hacking Concepts', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Cloud Platforms – AWS / GCP / Azure', co: 'CO4', complexity: 'Hard' },
+            { unit: 4, title: 'DevOps – CI/CD Pipelines and Docker', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Machine Learning Applications in IT', co: 'CO5', complexity: 'Hard' }
+        ],
+        MCE: [
+            { unit: 1, title: 'Thermodynamics Laws and Applications', co: 'CO1', complexity: 'Medium' },
+            { unit: 1, title: 'Properties of Steam and Rankine Cycle', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Gas Cycles – Otto, Diesel, Brayton', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Fluid Mechanics – Bernoulli and Flow', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'Pumps and Turbines – Selection & Analysis', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Hydraulic Machines and Losses', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Kinematics of Mechanisms', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Gear Trains and Velocity Ratio', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Balancing of Rotating Masses', co: 'CO3', complexity: 'Hard' },
+            { unit: 4, title: 'Metal Cutting and Machining Processes', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'CNC Machining and CAD/CAM', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Robotics and Automation in Manufacturing', co: 'CO5', complexity: 'Hard' }
+        ]
+    },
+    R2025: {
+        ATE: [
+            { unit: 1, title: 'Advanced Engine Technologies – GDI & HCCI', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Alternative Fuels and Combustion Analysis', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Emission Control and EURO VI Norms', co: 'CO1', complexity: 'Medium' },
+            { unit: 2, title: 'Advanced Transmission – CVT and DCT', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Electronic Control Units in Drivetrain', co: 'CO2', complexity: 'Medium' },
+            { unit: 2, title: 'AWD and Torque Vectoring Systems', co: 'CO2', complexity: 'Hard' },
+            { unit: 3, title: 'ADAS – Lane Keeping and Collision Avoidance', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Vehicle Telematics and V2X Communication', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Automotive Cybersecurity', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Battery Technology for EVs', co: 'CO4', complexity: 'Hard' },
+            { unit: 4, title: 'Electric Motor Drives – BLDC and PMSM', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Hydrogen Fuel Cell Vehicles', co: 'CO5', complexity: 'Hard' }
+        ],
+        CSE: [
+            { unit: 1, title: 'Modern OS – Containerization with Docker', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Real-Time Systems Scheduling', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Distributed Computing Concepts', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Advanced AI – Transformers and LLMs', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Computer Vision and Object Detection', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Reinforcement Learning Algorithms', co: 'CO2', complexity: 'Hard' },
+            { unit: 3, title: 'Blockchain Technology and Smart Contracts', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Quantum Computing Fundamentals', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: '5G Networks and Edge Computing', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Software Architecture Patterns – Microservices', co: 'CO4', complexity: 'Hard' },
+            { unit: 4, title: 'Agile Methodologies and DevOps', co: 'CO4', complexity: 'Medium' },
+            { unit: 5, title: 'AI Ethics and Responsible Computing', co: 'CO5', complexity: 'Medium' }
+        ],
+        CVE: [
+            { unit: 1, title: 'Finite Element Analysis Fundamentals', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Advanced Structural Analysis Methods', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Composite Materials in Construction', co: 'CO1', complexity: 'Medium' },
+            { unit: 2, title: 'Geotechnical Earthquake Engineering', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Deep Foundations and Pile Design', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Ground Improvement Techniques', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Smart Infrastructure and Digital Twin', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'BIM – Building Information Modelling', co: 'CO3', complexity: 'Medium' },
+            { unit: 3, title: 'Green Building Design and LEED', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Water Resource Management', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'Environmental Impact Assessment', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Disaster Risk Reduction in Construction', co: 'CO5', complexity: 'Hard' }
+        ],
+        CDS: [
+            { unit: 1, title: 'Advanced NLP – Transformers and BERT', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Generative AI and Diffusion Models', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Feature Engineering – Advanced Methods', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'Graph Neural Networks', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Time Series Forecasting Models', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Model Explainability and XAI', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Real-Time Streaming Data with Kafka', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Data Lakehouse Architecture', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'MLOps Pipelines and Model Deployment', co: 'CO3', complexity: 'Hard' },
+            { unit: 4, title: 'AI-Powered Business Intelligence Tools', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'Recommender System Design', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Ethics, Privacy and Bias in AI/ML', co: 'CO5', complexity: 'Medium' }
+        ],
+        ECE: [
+            { unit: 1, title: 'Advanced VLSI Design and FinFET', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'FPGA Architecture and Programming', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'RF and Microwave Circuits', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: '5G Signal Processing and Beamforming', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'OFDM and Massive MIMO Systems', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Channel Coding – LDPC and Turbo Codes', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Image and Video Processing with DL', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Radar and LIDAR Systems', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Satellite Communication Systems', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Wearable IoT Devices and Sensors', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'Edge AI for Embedded Devices', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Quantum Communication and Cryptography', co: 'CO5', complexity: 'Hard' }
+        ],
+        EEE: [
+            { unit: 1, title: 'Smart Grid Architecture and Technologies', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Power Quality and Harmonics Mitigation', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'FACTS Devices – SVC and STATCOM', co: 'CO1', complexity: 'Hard' },
+            { unit: 2, title: 'High Voltage Engineering and Insulation', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Advanced Switchgear and Protection', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Condition Monitoring of Electrical Equipment', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Solar PV System Design and Optimization', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Wind Energy Systems and Grid Integration', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Battery Energy Storage Systems', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'IoT Applications in Energy Management', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'AI in Power Systems – Load Forecasting', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Electric Vehicles and Charging Infrastructure', co: 'CO5', complexity: 'Hard' }
+        ],
+        IMT: [
+            { unit: 1, title: 'Full Stack Development – MERN/MEAN', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Microservices and API Gateway Patterns', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'GraphQL and Modern API Design', co: 'CO1', complexity: 'Medium' },
+            { unit: 2, title: 'Advanced Cloud – Serverless and FaaS', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Kubernetes and Container Orchestration', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Site Reliability Engineering (SRE)', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Zero Trust Security Architecture', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Penetration Testing and Red Teaming', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Compliance – GDPR, ISO 27001', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'AI Governance and Model Risk Management', co: 'CO4', complexity: 'Medium' },
+            { unit: 4, title: 'Digital Transformation Strategies', co: 'CO4', complexity: 'Hard' },
+            { unit: 5, title: 'Metaverse and Extended Reality (XR)', co: 'CO5', complexity: 'Hard' }
+        ],
+        MCE: [
+            { unit: 1, title: 'Additive Manufacturing – 3D Printing', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Advanced Materials and Nanotechnology', co: 'CO1', complexity: 'Hard' },
+            { unit: 1, title: 'Design for Manufacturing and Assembly (DFMA)', co: 'CO1', complexity: 'Medium' },
+            { unit: 2, title: 'Computational Fluid Dynamics (CFD)', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Heat Transfer in Electronic Cooling', co: 'CO2', complexity: 'Hard' },
+            { unit: 2, title: 'Renewable Energy Heat Transfer Applications', co: 'CO2', complexity: 'Medium' },
+            { unit: 3, title: 'Industrial Robotics and Path Planning', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Industry 4.0 and Cyber-Physical Systems', co: 'CO3', complexity: 'Hard' },
+            { unit: 3, title: 'Autonomous Mobile Robots (AMR)', co: 'CO3', complexity: 'Medium' },
+            { unit: 4, title: 'Smart Manufacturing and IIoT', co: 'CO4', complexity: 'Hard' },
+            { unit: 4, title: 'Sustainable Manufacturing Practices', co: 'CO4', complexity: 'Medium' },
+            { unit: 5, title: 'Electric Vehicle Thermal Management', co: 'CO5', complexity: 'Hard' }
+        ]
+    }
+};
+
+/**
+ * Get auto-assigned assessments for all teams.
+ * Distributes 12 assessment topics across N teams cyclically.
+ * Each team index gets 1 assessment (their presentation topic).
+ * @param {string} deptCode
+ * @param {number} batchYear
+ * @param {number} numTeams
+ * @returns {Array} - array of assessment objects (length = numTeams)
+ */
+function getAutoAssignedAssessments(deptCode, batchYear, numTeams) {
+    const regulation = batchYear >= 2029 ? 'R2025' : 'R2021';
+    const topics = (SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
+        ? SYLLABUS_DATA[regulation][deptCode]
+        : [];
+
+    const result = [];
+    for (let i = 0; i < numTeams; i++) {
+        const topic = topics[i % topics.length]; // cycle if more than 12 teams
+        result.push({
+            teamIndex: i,
+            assessId: `ASSESS_${String((i % 12) + 1).padStart(3, '0')}`,
+            unit: topic ? `Unit ${topic.unit}` : 'Unit 1',
+            title: topic ? topic.title : `Presentation Topic ${i + 1}`,
+            co: topic ? topic.co : 'CO1',
+            complexity: topic ? topic.complexity : 'Medium',
+            duration: '15–20 mins',
+            type: 'Team Presentation'
+        });
+    }
+    return result;
+}
+
 // ===== Level 6: Assessment Configuration =====
 function getSyllabusPdfPath(deptCode, batchYear) {
     const isR2025 = batchYear >= 2029; // 2029 batch joins in 2025 (2029 - 4)
@@ -1295,54 +1559,43 @@ function renderAssessments(container) {
     const batchYear = navState.batch;
     const isR2025 = batchYear >= 2029;
     const regulation = isR2025 ? 'R2025' : 'R2021';
+    const teams = navState.teams || [];
+    const numTeams = teams.length || 12;
 
     const pdfPath = getSyllabusPdfPath(deptCode, batchYear);
+    const assignments = getAutoAssignedAssessments(deptCode, batchYear, numTeams);
 
-    // Pre-fill 12 assessments with default templates (12 sessions, divisible by 3)
-    const assessments = [];
-    for (let i = 1; i <= 12; i++) {
-        const unit = Math.ceil(i / (12 / 5)); // Roughly distribute 12 assessments across 5 units
-        const clampedUnit = Math.min(5, Math.max(1, unit));
-        assessments.push({
-            id: `ASSESS_${String(i).padStart(3, '0')}`,
-            title: `Assessment ${i} Topic`,
-            unit: `Unit ${clampedUnit}`,
-            complexity: i % 3 === 0 ? 'Hard' : 'Medium',
-            learningObj: 'Design and implement...',
-            outcomes: `CO${clampedUnit}`,
-            duration: '15-20 minutes',
-            type: 'Presentation'
-        });
-    }
+    const complexityColors = {
+        'Easy': 'background:rgba(5,150,105,0.12);color:#059669',
+        'Medium': 'background:rgba(245,158,11,0.12);color:#d97706',
+        'Hard': 'background:rgba(220,38,38,0.12);color:#dc2626'
+    };
 
-    let assessmentRows = '';
-    assessments.forEach((a, i) => {
-        assessmentRows += `
+    let assessmentRows = assignments.map((a, i) => {
+        const teamName = teams[i] ? `Team ${i + 1}` : `Team ${i + 1}`;
+        const cStyle = complexityColors[a.complexity] || complexityColors['Medium'];
+        return `
             <tr class="assessment-row">
-                <td style="font-weight:600; color:var(--text-main)">${a.id}</td>
-                <td><input type="text" class="assess-input" value="${a.title}" placeholder="Topic Name"></td>
+                <td style="font-weight:700; color:var(--accent-blue)">${a.assessId}</td>
                 <td>
-                    <select class="assess-select">
-                        ${[1, 2, 3, 4, 5].map(u => `<option value="Unit ${u}" ${a.unit === 'Unit ' + u ? 'selected' : ''}>Unit ${u}</option>`).join('')}
-                    </select>
+                    <span style="font-weight:600; color:var(--text-primary); font-size:0.92rem;">${teamName}</span>
                 </td>
                 <td>
-                    <select class="assess-select">
-                        <option value="Hard" ${a.complexity === 'Hard' ? 'selected' : ''}>Hard</option>
-                        <option value="Medium" ${a.complexity === 'Medium' ? 'selected' : ''}>Medium</option>
-                        <option value="Easy" ${a.complexity === 'Easy' ? 'selected' : ''}>Easy</option>
-                    </select>
+                    <span style="display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--accent-purple)">
+                        📋 ${a.title}
+                    </span>
                 </td>
-                <td><input type="text" class="assess-input" value="${a.learningObj}" placeholder="What students will learn"></td>
-                <td><input type="text" class="assess-input" value="${a.outcomes}" placeholder="e.g. CO1, CO2"></td>
-                <td style="color:var(--text-light); white-space:nowrap;">${a.duration}</td>
+                <td><span class="badge" style="background:rgba(37,99,235,0.10);color:var(--accent-blue)">${a.unit}</span></td>
+                <td><span class="badge" style="${cStyle}">${a.complexity}</span></td>
+                <td style="color:var(--text-secondary); font-size:0.85rem;">${a.co}</td>
+                <td style="color:var(--text-muted); white-space:nowrap; font-size:0.82rem;">${a.duration}</td>
                 <td><span class="badge badge-purple">${a.type}</span></td>
             </tr>
         `;
-    });
+    }).join('');
 
     container.innerHTML = `
-        <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
             <div>
                 <h2 class="page-title">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;">
@@ -1352,13 +1605,14 @@ function renderAssessments(container) {
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Assessment Configuration
+                    Assessment Assignment
                 </h2>
                 <p class="page-subtitle">${getDeptName(deptCode)} · ${batchYear} Batch · ${regulation} Regulation</p>
-                <p class="page-subtitle" style="margin-top:4px;">Define 12 presentation topics mapped to the department syllabus.</p>
+                <p class="page-subtitle" style="margin-top:4px;">
+                    Each team is automatically assigned a unique presentation topic from the syllabus, distributed unit-wise.
+                </p>
             </div>
-            
-            <a href="${pdfPath}" target="_blank" class="btn-primary" style="background:var(--gradient-cyan);text-decoration:none;display:inline-flex;">
+            <a href="${pdfPath}" target="_blank" class="btn-primary" style="background:var(--gradient-cyan);text-decoration:none;display:inline-flex;width:auto;padding:10px 20px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
@@ -1368,19 +1622,34 @@ function renderAssessments(container) {
                 View ${regulation} Syllabus PDF
             </a>
         </div>
-        
+
+        <div class="info-section" style="margin-bottom:1.5rem;">
+            <div class="info-section-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                Auto-Assignment Rules
+            </div>
+            <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:0.85rem;color:var(--text-secondary);">
+                <span>✅ Topics drawn from <strong>${regulation} Syllabus</strong></span>
+                <span>✅ <strong>${numTeams} teams</strong> · <strong>12 topics</strong> mapped unit-wise</span>
+                <span>✅ 5 units · ~2–3 topics per unit</span>
+                <span>✅ Each team presents <strong>once</strong></span>
+            </div>
+        </div>
+
         <div class="table-container" style="overflow-x:auto;">
-            <table class="data-table" id="assessment-table" style="min-width: 1000px;">
+            <table class="data-table" id="assessment-table" style="min-width: 900px;">
                 <thead>
                     <tr>
-                        <th>Assessment ID</th>
-                        <th>Title (Topic)</th>
-                        <th>Unit</th>
-                        <th style="width: 120px;">Complexity</th>
-                        <th style="width: 25%;">Learning Objectives</th>
-                        <th>Course Outcomes</th>
-                        <th>Duration</th>
-                        <th>Type</th>
+                        <th style="width:120px;">Assessment ID</th>
+                        <th style="width:100px;">Team</th>
+                        <th>Presentation Topic</th>
+                        <th style="width:80px;">Unit</th>
+                        <th style="width:90px;">Complexity</th>
+                        <th style="width:80px;">Outcome</th>
+                        <th style="width:110px;">Duration</th>
+                        <th style="width:130px;">Type</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1388,18 +1657,38 @@ function renderAssessments(container) {
                 </tbody>
             </table>
         </div>
-        
-        <div style="margin-top: 24px; display:flex; justify-content: flex-end;">
-            <button class="btn-primary" style="padding: 12px 32px;" onclick="saveAssessments()">
-                Save Configuration
+
+        <div style="margin-top: 24px; display:flex; justify-content: flex-end; gap:12px;">
+            <button class="btn-primary" style="padding: 12px 32px;width:auto;" onclick="exportAssessmentsCSV()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export as CSV
             </button>
         </div>
     `;
 }
 
-function saveAssessments() {
-    // In a real app, this would collect the inputs and save to a backend or state
-    alert("Assessment configuration saved successfully!");
-    navigateBackToTeams();
+function exportAssessmentsCSV() {
+    const deptCode = navState.dept;
+    const batchYear = navState.batch;
+    const teams = navState.teams || [];
+    const assignments = getAutoAssignedAssessments(deptCode, batchYear, teams.length || 12);
+
+    let csv = 'Assessment ID,Team,Topic,Unit,Complexity,Course Outcome,Duration,Type\n';
+    assignments.forEach((a, i) => {
+        csv += `${a.assessId},Team ${i + 1},"${a.title}",${a.unit},${a.complexity},${a.co},${a.duration},${a.type}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `assessments_${deptCode}_${batchYear}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
 }
+
 
