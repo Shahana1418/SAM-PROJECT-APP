@@ -299,12 +299,15 @@ function renderBreadcrumb() {
             onclick="navigateBackToTeams()">Teams</span>`);
     }
 
-    if (navState.level === 'sessions') {
+    if (navState.level === 'sessions' || navState.level === 'assessments') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item active">Session Schedule</span>`);
-    } else if (navState.level === 'assessments') {
+        items.push(`<span class="breadcrumb-item ${navState.level === 'sessions' ? 'active' : 'clickable'}" 
+            onclick="navigateToSessions()">Session Schedule</span>`);
+    }
+
+    if (navState.level === 'assessments') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item active">Assessments</span>`);
+        items.push(`<span class="breadcrumb-item active">Assessment Assignment</span>`);
     }
 
     bc.innerHTML = items.join('');
@@ -641,16 +644,6 @@ function renderBatch(container) {
                         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                     </svg>
                     Generate Teams
-                </button>
-                <button class="btn-secondary" style="width:auto;padding:10px 20px" onclick="navigateToAssessments()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                    Configure Assessments
                 </button>
             </div>
         </div>
@@ -1086,6 +1079,22 @@ function renderSessions(container) {
                     </thead>
                     <tbody>${tableRows}</tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Assessment CTA Banner -->
+        <div class="session-cta-banner" onclick="navigateToAssessments()" style="margin-top:1.5rem; background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(124,58,237,0.15)); border-color:rgba(124,58,237,0.2);">
+            <div class="cta-left">
+                <div class="cta-icon">📋</div>
+                <div class="cta-text">
+                    <div class="cta-title">View Assessment Assignment</div>
+                    <div class="cta-sub">Each team has been automatically assigned a unique syllabus topic unit-wise</div>
+                </div>
+            </div>
+            <div class="cta-arrow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
             </div>
         </div>
 
