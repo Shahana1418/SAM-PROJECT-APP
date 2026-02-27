@@ -7,30 +7,27 @@
 let appData = null;
 let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
 
-// Passwords are role-based (4 distinct passwords, one per role type):
-//   Principal : SAMprincipal@2025
-//   Alumni    : SAMalumni@2025
-//   HOD       : SAMhod@2025      (same for all departments)
-//   Faculty   : SAMfaculty@2025  (same for all departments)
+// Single admin password for all roles: sam@admin2025
+const ADMIN_HASH = '752580045389cdee6421e61f1bbf36e6d16d838a034c9456550e1d6e6b89687d';
 const ROLE_PASSWORDS = {
-    'principal': '4badb13274dcc4c23f3f9cb4509b1dde43d90feef06d776ac1f9435d276e183e', // SAMprincipal@2025
-    'alumni': '2e3609a4b8d4d2b1cb83520a36849c5b7dbd9663be1a5fc3094ecb2d8b2c9c15', // SAMalumni@2025
-    'hod_ATE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'hod_CSE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'hod_CVE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'hod_CDS': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'hod_ECE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'hod_EEE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'hod_IMT': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'hod_MCE': 'e707783f0ff76484e62ae0f0049b077e83e8afed385a76516bb948472212d4ce', // SAMhod@2025
-    'faculty_ATE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
-    'faculty_CSE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
-    'faculty_CVE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
-    'faculty_CDS': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
-    'faculty_ECE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
-    'faculty_EEE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
-    'faculty_IMT': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
-    'faculty_MCE': '7abff1d92220e081d7960fd0edf94bcc090a461a824374bb21942fbbffd56ffe', // SAMfaculty@2025
+    'principal': ADMIN_HASH,
+    'alumni': ADMIN_HASH,
+    'hod_ATE': ADMIN_HASH,
+    'hod_CSE': ADMIN_HASH,
+    'hod_CVE': ADMIN_HASH,
+    'hod_CDS': ADMIN_HASH,
+    'hod_ECE': ADMIN_HASH,
+    'hod_EEE': ADMIN_HASH,
+    'hod_IMT': ADMIN_HASH,
+    'hod_MCE': ADMIN_HASH,
+    'faculty_ATE': ADMIN_HASH,
+    'faculty_CSE': ADMIN_HASH,
+    'faculty_CVE': ADMIN_HASH,
+    'faculty_CDS': ADMIN_HASH,
+    'faculty_ECE': ADMIN_HASH,
+    'faculty_EEE': ADMIN_HASH,
+    'faculty_IMT': ADMIN_HASH,
+    'faculty_MCE': ADMIN_HASH,
 };
 
 
