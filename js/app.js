@@ -253,7 +253,7 @@ function renderBreadcrumb() {
 
     if (navState.level === 'assessments') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item active">Assessment Assignment</span>`);
+        items.push(`<span class="breadcrumb-item active">Assessment Generation</span>`);
     }
 
     bc.innerHTML = items.join('');
@@ -1033,7 +1033,7 @@ function renderSessions(container) {
             <div class="cta-left">
                 <div class="cta-icon">📋</div>
                 <div class="cta-text">
-                    <div class="cta-title">View Assessment Assignment</div>
+                    <div class="cta-title">View Assessment Generation</div>
                     <div class="cta-sub">Each team has been automatically assigned a unique syllabus topic unit-wise</div>
                 </div>
             </div>
@@ -1571,7 +1571,7 @@ function renderAssessments(container) {
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    Assessment Assignment
+                    Assessment Generation
                 </h2>
                 <p class="page-subtitle">${getDeptName(deptCode)} · ${batchYear} Batch · ${regulation} Regulation</p>
                 <p class="page-subtitle" style="margin-top:4px;">
