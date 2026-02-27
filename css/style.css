@@ -2524,3 +2524,143 @@ body {
     white-space: nowrap;
     margin-left: auto;
 }
+
+/* ===== Assessment CTA Banner ===== */
+.assess-cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%) !important;
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 24px rgba(124, 58, 237, 0.35);
+    border: none;
+}
+
+.assess-cta-banner:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.5);
+}
+
+.assess-cta-banner .cta-title {
+    color: #fff !important;
+    font-size: 1.05rem;
+}
+
+.assess-cta-banner .cta-sub {
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.assess-cta-banner .cta-arrow {
+    color: #fff !important;
+}
+
+/* ===== Assessment Assignment Table ===== */
+.assess-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.assess-table thead tr {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+}
+
+.assess-table thead th {
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 16px 20px;
+    border: none;
+}
+
+.assess-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.15s;
+}
+
+.assess-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.assess-table tbody tr:hover {
+    background: #f0f4ff;
+}
+
+.assess-table tbody td {
+    padding: 16px 20px;
+    vertical-align: middle;
+}
+
+.assess-team-cell {
+    white-space: nowrap;
+}
+
+.assess-team-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.assess-team-name {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #2563eb;
+    margin-top: 2px;
+}
+
+.assess-team-id {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    margin-top: 1px;
+    font-family: monospace;
+}
+
+.assess-topic-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.4;
+}
+
+.assess-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.assess-pill {
+    padding: 3px 11px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.assess-meta-text {
+    font-size: 0.74rem;
+    color: #94a3b8;
+}
+
+.assess-type-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(124, 58, 237, 0.12);
+    color: #7c3aed;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
