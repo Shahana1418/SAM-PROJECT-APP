@@ -67,80 +67,30 @@
 
     <!-- Admin Login Modal -->
     <div class="modal-overlay" id="admin-modal" style="display:none">
-        <div class="modal-card modal-card-auth" style="max-width: 480px; padding: 32px">
+        <div class="modal-card modal-card-auth" style="max-width: 420px; padding: 36px">
             <div class="modal-header-login">
-                <h3>Login to SAM System</h3>
-                <div class="login-step-indicator" id="login-step-indicator">Step 1 of 3</div>
+                <h3>Admin Login</h3>
+                <p style="color:var(--text-light); font-size:0.88rem; margin-top:6px;">Enter admin password to continue
+                </p>
             </div>
 
-            <!-- Step 1: Role Selection -->
-            <div id="login-step-1">
-                <p style="margin-bottom: 24px; color: var(--text-light)">Select your role to continue:</p>
-                <div class="role-grid">
-                    <div class="role-card" onclick="selectRole('Principal')">
-                        <span class="role-emoji">🏛️</span>
-                        <span class="role-name">Principal</span>
-                    </div>
-                    <div class="role-card" onclick="selectRole('Alumni')">
-                        <span class="role-emoji">👤</span>
-                        <span class="role-name">Alumni</span>
-                    </div>
-                    <div class="role-card" onclick="selectRole('HOD')">
-                        <span class="role-emoji">🏫</span>
-                        <span class="role-name">HOD</span>
-                    </div>
-                    <div class="role-card" onclick="selectRole('Faculty')">
-                        <span class="role-emoji">👩‍🏫</span>
-                        <span class="role-name">Faculty</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 2: Department Selection -->
-            <div id="login-step-2" style="display: none;">
-                <p style="margin-bottom: 20px; color: var(--text-light)">Select your department:</p>
-                <select id="login-dept" class="login-select">
-                    <option value="" disabled selected>Select Department...</option>
-                    <option value="ATE">Automobile Engineering</option>
-                    <option value="CSE">Computer Science & Engineering</option>
-                    <option value="CVE">Civil Engineering</option>
-                    <option value="CDS">Data Science</option>
-                    <option value="ECE">Electronics & Comm. Engineering</option>
-                    <option value="EEE">Electrical & Electronics Engineering</option>
-                    <option value="IMT">Information Technology</option>
-                    <option value="MCE">Mechanical Engineering</option>
-                </select>
-                <div class="login-actions" style="margin-top: 32px;">
-                    <button class="btn-secondary" onclick="loginBackTo(1)"
-                        style="width:auto;padding:12px 24px">Back</button>
-                    <button class="btn-primary" onclick="selectDept()"
-                        style="width:auto;padding:12px 24px;flex:1">Next</button>
-                </div>
-            </div>
-
-            <!-- Step 3: Password Entry -->
-            <div id="login-step-3" style="display: none;">
-                <p style="margin-bottom: 20px; color: var(--text-light)" id="login-final-text">Enter password:</p>
-                <div class="modal-input-group" style="flex-direction: column; gap: 16px;">
-                    <div class="pw-wrapper">
-                        <input type="password" id="admin-password" class="modal-input login-input"
-                            placeholder="Password" onkeypress="if(event.key==='Enter')attemptLogin()">
-                        <button type="button" class="pw-eye" onclick="togglePwEye()" title="Show/hide password">
-                            <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                        </button>
-                    </div>
+            <div style="margin-top: 24px;">
+                <div class="pw-wrapper">
+                    <input type="password" id="admin-password" class="modal-input login-input" placeholder="Password"
+                        onkeypress="if(event.key==='Enter')attemptLogin()">
+                    <button type="button" class="pw-eye" onclick="togglePwEye()" title="Show/hide password">
+                        <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </button>
                 </div>
                 <p class="modal-error" id="login-error" style="display:none; margin-top: 12px; margin-bottom: 0;">
                     Incorrect password. Please try again.</p>
-                <div class="login-actions" style="margin-top: 32px;">
-                    <button class="btn-secondary" onclick="loginBackTo(2)" id="login-back-btn"
-                        style="width:auto;padding:12px 24px">Back</button>
+                <div class="login-actions" style="margin-top: 28px;">
                     <button class="btn-primary" onclick="attemptLogin()"
-                        style="width:auto;padding:12px 24px;flex:1">Login</button>
+                        style="width:100%;padding:13px 24px;">Login</button>
                 </div>
             </div>
 

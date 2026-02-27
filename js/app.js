@@ -90,7 +90,6 @@ let loginState = { role: null, dept: null };
 
 function toggleAdminLogin() {
     if (currentUser) {
-        // Logout
         currentUser = null;
         updateUserBadge();
         navState = { level: 'college', dept: null, batch: null, teams: null };
@@ -98,41 +97,7 @@ function toggleAdminLogin() {
         return;
     }
     document.getElementById('admin-modal').style.display = 'flex';
-    loginState = { role: null, dept: null };
-    showLoginStep(1);
-    document.getElementById('login-error').style.display = 'none';
-}
-
-function showLoginStep(step) {
-    document.getElementById('login-step-1').style.display = step === 1 ? 'block' : 'none';
-    document.getElementById('login-step-2').style.display = step === 2 ? 'block' : 'none';
-    document.getElementById('login-step-3').style.display = step === 3 ? 'block' : 'none';
-    document.getElementById('login-step-indicator').textContent = `Step ${step} of 3`;
-}
-
-function selectRole(role) {
-    loginState.role = role;
-    if (role === 'Principal' || role === 'Alumni') {
-        loginState.dept = null; // No dept needed
-        document.getElementById('login-final-text').textContent = `Enter ${role} password:`;
-        showLoginStep(3);
-        document.getElementById('login-step-indicator').textContent = 'Step 2 of 2';
-    } else {
-        document.getElementById('login-dept').value = '';
-        showLoginStep(2);
-    }
-}
-
-function selectDept() {
-    const d = document.getElementById('login-dept').value;
-    if (!d) return;
-    loginState.dept = d;
-    document.getElementById('login-final-text').textContent = `Enter ${loginState.role} password for ${d}:`;
-    showLoginStep(3);
-}
-
-function loginBackTo(step) {
-    showLoginStep(step);
+    document.getElementById('admin-password').value = '';
     document.getElementById('login-error').style.display = 'none';
 }
 
@@ -140,36 +105,15 @@ async function attemptLogin() {
     const pw = document.getElementById('admin-password').value;
     const hash = await sha256(pw);
 
-    let key = '';
-    if (loginState.role === 'Principal') key = 'principal';
-    else if (loginState.role === 'Alumni') key = 'alumni';
-    else if (loginState.role === 'HOD') key = 'hod_' + loginState.dept;
-    else if (loginState.role === 'Faculty') key = 'faculty_' + loginState.dept;
-
-    if (hash === ROLE_PASSWORDS[key]) {
-        // Role-based permission matrix:
-        // Principal  → All departments, can generate teams & view all
-        // Alumni     → All departments, READ ONLY (cannot generate teams)
-        // HOD        → Own department only, can generate teams
-        // Faculty    → Own department only, READ ONLY (cannot generate teams)
-        const role = loginState.role;
-        const canGenerate = (role === 'Principal' || role === 'HOD');
-        const allDepts = (role === 'Principal' || role === 'Alumni');
-
+    if (hash === ADMIN_HASH) {
         currentUser = {
-            role: role,
-            dept: allDepts ? null : loginState.dept, // null = access to all depts
-            canGenerate: canGenerate
+            role: 'Admin',
+            dept: null,       // admin sees all departments
+            canGenerate: true // admin can generate teams
         };
         updateUserBadge();
         closeAdminLogin();
-
-        // If they are HOD or Faculty, take them straight to their dept
-        if (currentUser.dept) {
-            navigateTo('department', currentUser.dept);
-        } else {
-            navigateTo('college');
-        }
+        navigateTo('college');
     } else {
         document.getElementById('login-error').style.display = 'block';
     }
@@ -178,7 +122,6 @@ async function attemptLogin() {
 function closeAdminLogin() {
     document.getElementById('admin-modal').style.display = 'none';
     document.getElementById('admin-password').value = '';
-    // Reset eye to hidden
     const inp = document.getElementById('admin-password');
     if (inp) inp.type = 'password';
     const svg = document.getElementById('eye-icon');
@@ -191,7 +134,6 @@ function togglePwEye() {
     if (!inp || !svg) return;
     if (inp.type === 'password') {
         inp.type = 'text';
-        // Eye-off icon
         svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
     } else {
         inp.type = 'password';
@@ -205,14 +147,7 @@ function updateUserBadge() {
     const btn = document.getElementById('admin-toggle');
 
     if (currentUser) {
-        let text = '';
-        let emoji = '';
-        if (currentUser.role === 'Principal') { text = 'Principal'; emoji = '🏛️'; }
-        if (currentUser.role === 'Alumni') { text = 'Alumni'; emoji = '👤'; }
-        if (currentUser.role === 'HOD') { text = `HOD · ${currentUser.dept}`; emoji = '🏫'; }
-        if (currentUser.role === 'Faculty') { text = `Faculty · ${currentUser.dept}`; emoji = '👩‍🏫'; }
-
-        badge.innerHTML = `<span>${emoji}</span> ${text}`;
+        badge.innerHTML = `<span>🔑</span> Admin`;
         badge.style.display = 'inline-flex';
         btnText.textContent = 'Logout';
         btn.classList.add('admin-active');
