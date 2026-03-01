@@ -253,7 +253,7 @@ function renderBreadcrumb() {
 
     if (navState.level === 'assessments') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item active">Assessment Generation</span>`);
+        items.push(`<span class="breadcrumb-item active">Assignment Generation</span>`);
     }
 
     bc.innerHTML = items.join('');
@@ -1188,128 +1188,120 @@ function randomiseCalendarRoles() {
 
 function buildTeams(students, teamSize, mode) {
     if (students.length === 0) return [];
-    mode = mode || 'random';
-
-    // Constraints:
-    // Minimum members per team = 4 (no teams of 2 or 3)
-    // Maximum members per team = 5
-    // Maximum number of teams = 15
-    const MIN_PER_TEAM = 4;
-    const MAX_PER_TEAM = 5;
-    const MAX_TEAMS = 15;
 
     const allStudents = [...students];
     shuffle(allStudents);
 
-    // 1. Calculate number of teams
-    // Must not exceed MAX_TEAMS.
-    // Must be able to fit all students such that no team has < MIN_PER_TEAM.
-    let numTeams = Math.ceil(allStudents.length / MAX_PER_TEAM); // Absolute min teams to fit everyone
-    
-    // We want to maximize the number of teams up to MAX_TEAMS, 
-    // BUT we cannot have teams smaller than MIN_PER_TEAM (4).
-    // So the maximum possible teams is floor(students / 4)
-    let possibleMaxTeams = Math.floor(allStudents.length / MIN_PER_TEAM);
-    
-    // Apply hard cap of 15 teams
-    if (possibleMaxTeams > MAX_TEAMS) possibleMaxTeams = MAX_TEAMS;
-
-    // Default to the max possible teams that still allow at least 4 members per team
-    numTeams = possibleMaxTeams;
-    
-    // Safeguard: if there are very few students (e.g., 3), just put them in 1 team 
-    // (though rule says no 3, we can't create teams out of thin air if total < 4)
-    if (allStudents.length > 0 && numTeams < 1) numTeams = 1;
-
-    // 2. Gender ratio preparation
     const males = allStudents.filter(s => s.gender === 'M');
     const females = allStudents.filter(s => s.gender === 'F');
     shuffle(males);
     shuffle(females);
-    const maleRatio = males.length / (allStudents.length || 1);
+
+    // Strict constraints: multiple of 3 teams, sizes 4 or 5
+    // Allowed gender ratios per team: 2:2, 4:0, 0:4 (and 5th person any)
+    
+    // Find valid numTeams (multiple of 3) where sum of sizes (4s and 5s) equals N
+    let numTeams = 3;
+    let found = false;
+    let numSize4 = 0, numSize5 = 0;
+    
+    // Test multiples of 3 down from N/4
+    const maxPoss = Math.floor(allStudents.length / 4);
+    for (let nt = Math.floor(maxPoss/3)*3; nt >= 3; nt -= 3) {
+        // We have nt teams. Can we achieve N using only sizes 4 and 5?
+        // 4x + 5y = N  and x + y = nt
+        // 4(nt - y) + 5y = N => 4nt + y = N => y = N - 4nt
+        let y = allStudents.length - 4 * nt; // number of teams of 5
+        let x = nt - y;                      // number of teams of 4
+        if (y >= 0 && x >= 0) {
+            numTeams = nt;
+            numSize4 = x;
+            numSize5 = y;
+            found = true;
+            break;
+        }
+    }
+    
+    if (!found) {
+        // Fallback if math is impossible (e.g. very few students like 10)
+        numTeams = Math.max(3, Math.ceil(allStudents.length/5));
+        numSize4 = numTeams;
+        numSize5 = 0;
+    }
+
+    const sizes = Array(numTeams).fill(4);
+    for (let i = 0; i < numSize5; i++) sizes[i] = 5;
 
     let teams = Array.from({ length: numTeams }, (_, i) => ({ id: i + 1, members: [] }));
 
-    if (mode === 'cgpa') {
-        const withCgpa = allStudents.filter(s => s.cgpa !== null && s.cgpa !== undefined);
-        const withoutCgpa = allStudents.filter(s => s.cgpa === null || s.cgpa === undefined);
-        withCgpa.sort((a, b) => (b.cgpa || 0) - (a.cgpa || 0));
+    // Prepare gender pairs representing the valid chunks (2M, 2F, 4M, 4F)
+    const pairsM = []; // arrays of 2 males
+    const pairsF = []; // arrays of 2 females
+    while (males.length >= 2) pairsM.push([males.pop(), males.pop()]);
+    while (females.length >= 2) pairsF.push([females.pop(), females.pop()]);
+    
+    // Any leftovers (since odd numbers mean 1 leftover M/F)
+    const leftovers = [...males, ...females];
 
-        let teamIdx = 0, direction = 1;
-        withCgpa.forEach(s => {
-            if (teams[teamIdx].members.length < MAX_PER_TEAM) {
-                teams[teamIdx].members.push(s);
-            } else {
-                // Find next available team
-                const avail = teams.find(t => t.members.length < MAX_PER_TEAM);
-                if (avail) avail.members.push(s);
-            }
-            teamIdx += direction;
-            if (teamIdx >= numTeams) { teamIdx = numTeams - 1; direction = -1; }
-            if (teamIdx < 0) { teamIdx = 0; direction = 1; }
-        });
-        shuffle(withoutCgpa);
-        withoutCgpa.forEach(s => {
-            const validTeams = teams.filter(t => t.members.length < MAX_PER_TEAM);
-            if (validTeams.length > 0) {
-                const smallest = validTeams.reduce((a, b) => a.members.length < b.members.length ? a : b);
-                smallest.members.push(s);
-            }
-        });
-    } else {
-        // Strict gender-balanced distribution per team
-        // Calculate exact target male/female count per team
-        let mIdx = 0, fIdx = 0;
-        
-        // Distribute base sizes to all teams first
-        for (let t = 0; t < numTeams; t++) {
-            let targetSize = Math.floor(allStudents.length / numTeams);
-            if (t < allStudents.length % numTeams) targetSize++; // distribute remainder
-            
-            let targetMales = Math.round(targetSize * maleRatio);
-            
-            // Fill team
-            for (let i = 0; i < targetSize; i++) {
-                if (teams[t].members.filter(m => m.gender === 'M').length < targetMales && mIdx < males.length) {
-                    teams[t].members.push(males[mIdx++]);
-                } else if (fIdx < females.length) {
-                    teams[t].members.push(females[fIdx++]);
-                } else if (mIdx < males.length) {
-                    // Fallback if we run out of females
-                    teams[t].members.push(males[mIdx++]);
-                }
-            }
+    // Build the 4-person cores
+    for (let t = 0; t < numTeams; t++) {
+        // We need to pick two pairs to make a 4-person core
+        // Valid combinations: 2M+2M (4:0), 2F+2F (0:4), or 2M+2F (2:2)
+        if (pairsM.length > 0 && pairsF.length > 0) {
+            // Prefer 2:2 to balance both genders
+            teams[t].members.push(...pairsM.pop(), ...pairsF.pop());
+        } else if (pairsM.length >= 2) {
+            // 4:0
+            teams[t].members.push(...pairsM.pop(), ...pairsM.pop());
+        } else if (pairsF.length >= 2) {
+            // 0:4
+            teams[t].members.push(...pairsF.pop(), ...pairsF.pop());
+        } else {
+            // Out of perfect pairs (e.g., uneven totals), fallback logic just fills whatever is left
+            let needed = 4 - teams[t].members.length;
+            while (needed > 0 && pairsM.length > 0) { teams[t].members.push(...pairsM.pop()); needed -= 2; }
+            while (needed > 0 && pairsF.length > 0) { teams[t].members.push(...pairsF.pop()); needed -= 2; }
+            while (needed > 0 && leftovers.length > 0) { teams[t].members.push(leftovers.pop()); needed--; }
         }
     }
 
-    return enforceMinSize(teams, MIN_PER_TEAM, MAX_PER_TEAM);
+    // Now fill the 5th spots and any holes (from imperfect math) with leftovers
+    // First flatten any remaining pairs back into leftovers
+    while (pairsM.length > 0) leftovers.push(...pairsM.pop());
+    while (pairsF.length > 0) leftovers.push(...pairsF.pop());
+    
+    // Distribute remaining students into teams that need them to reach their target size (sizes[t])
+    for (let t = 0; t < numTeams; t++) {
+        let needed = sizes[t] - teams[t].members.length;
+        while (needed > 0 && leftovers.length > 0) {
+            teams[t].members.push(leftovers.pop());
+            needed--;
+        }
+    }
+    
+    // Final desperate check if we ran out of room but have students (math boundary conditions)
+    let overflowIdx = 0;
+    while (leftovers.length > 0) {
+        teams[overflowIdx % numTeams].members.push(leftovers.pop());
+        overflowIdx++;
+    }
+
+    // Just format it nicely
+    return enforceMinSize(teams, 4, 5);
 }
 
-// Ensures no team has fewer than MIN members by absorbing tiny teams into larger ones
 function enforceMinSize(teams, min, max) {
-    // Separate undersized teams
     const ok = teams.filter(t => t.members.length >= min);
     const tooSmall = teams.filter(t => t.members.length < min);
-
-    // Collect members of undersized teams
     const orphans = [];
     tooSmall.forEach(t => orphans.push(...t.members));
     shuffle(orphans);
-
-    // Try to absorb orphans into teams that still have room up to MAX (5)
     orphans.forEach(s => {
-        const room = ok.filter(t => t.members.length < max);
-        if (room.length > 0) {
-            const smallest = room.reduce((a, b) => a.members.length < b.members.length ? a : b);
-            smallest.members.push(s);
-        } else if (ok.length > 0) {
-            // Force push if strictly needed to avoid orphans, even if it exceeds max slightly
+        if (ok.length > 0) {
             const smallest = ok.reduce((a, b) => a.members.length < b.members.length ? a : b);
             smallest.members.push(s);
         }
     });
-
-    // Re-number teams after potential merges
     ok.forEach((t, i) => t.id = i + 1);
     return ok;
 }
@@ -1867,7 +1859,7 @@ function renderAssessments(container) {
                 '<div class="rt-section-title">Generated Assignments (' + cfg.generatedAssignments.length + ')</div>' +
                 '<div style="display:flex;gap:8px;">' +
                 '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;" onclick="generateAssignments()">Regenerate</button>' +
-                '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;background:var(--gradient-green);" onclick="exportAssessmentsCSV()">Export CSV</button>' +
+                '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;background:var(--gradient-green);" onclick="exportAssignmentsCSV()">Export CSV</button>' +
                 '</div></div>' +
                 '<div class="assign-result-grid">' + cards + '</div></div>';
         }
@@ -1927,7 +1919,7 @@ function renderAssessments(container) {
     container.innerHTML = `<div class="wiz-header">
         <div>
             <div class="wiz-header-title">&#9999;&#65039; Assignment Configuration Wizard</div>
-            <div class="wiz-header-sub">Generate assessments and map to sessions &middot; ${getDeptName(deptCode)} &middot; ${batchYear} Batch</div>
+            <div class="wiz-header-sub">Generate assignments and map to sessions &middot; ${getDeptName(deptCode)} &middot; ${batchYear} Batch</div>
         </div>
         <button onclick="openSyllabusPdf('${pdfPath}')" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;padding:8px 16px;font-size:.8rem;font-weight:600;cursor:pointer;">
             &#128196; ${regulation} Syllabus PDF
@@ -2073,7 +2065,7 @@ function generateAssignments() {
     }, 100);
 }
 
-function exportAssessmentsCSV() {
+function exportAssignmentsCSV() {
     const cfg = navState.assignConfig || {};
     const assignments = cfg.generatedAssignments;
     if (!assignments || !assignments.length) { alert('Please generate assignments first.'); return; }
@@ -2092,3 +2084,8 @@ function exportAssessmentsCSV() {
 
 
 
+
+function openSyllabusPdf(path) {
+    if(!path) { alert("Syllabus PDF not available."); return; }
+    window.open("Syllabus/" + path, "_blank");
+}
