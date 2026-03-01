@@ -1754,12 +1754,21 @@ function renderAssessments(container) {
                         if(opt && opt.value) {
                             navState.assignConfig.courseCode = opt.value;
                             navState.assignConfig.courseName = opt.text.replace(opt.value + ' - ', '');
+                            navState.assignConfig.customizedFor = null;
                         }
                     ">
                         <option value="" disabled ${!cfg.courseCode ? 'selected' : ''}>Select a subject...</option>
-                        ${(SUBJECTS_DATA[regulation] && SUBJECTS_DATA[regulation][deptCode] ? SUBJECTS_DATA[regulation][deptCode] : []).map(s =>
-            `<option value="${s.code}" ${(cfg.courseCode === s.code) ? 'selected' : ''}>${s.code} - ${s.name}</option>`
-        ).join('')}
+                        ${(function () {
+                let list = (SUBJECTS_DATA[regulation] && SUBJECTS_DATA[regulation][deptCode] ? SUBJECTS_DATA[regulation][deptCode] : []);
+                if (deptCode === 'ATE') {
+                    if (batchYear == 2029) list = ["MA3251", "PH3251", "BE3251", "GE3251", "GE3271", "BE3271"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2028) list = ["AU3401", "AU3402", "AU3403", "AU3404", "ML3391"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2027) list = ["AU3601"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
+                }
+                return list;
+            })().map(s =>
+                `<option value="${s.code}" ${(cfg.courseCode === s.code) ? 'selected' : ''}>${s.code} - ${s.name}</option>`
+            ).join('')}
                     </select>
                 </div>
                 <div class="wiz-field full"><label>Course Description (optional)</label>
@@ -1798,6 +1807,14 @@ function renderAssessments(container) {
     }
 
     if (step === 3) {
+        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode] && cfg.customizedFor !== cfg.courseCode) {
+            const spec = ATE_SUBJECTS[cfg.courseCode];
+            cfg.courseOutcomes = Object.assign({}, spec.cos);
+            cfg.units = {};
+            for (let i = 1; i <= 5; i++) cfg.units[i] = { title: spec.units[String(i)] || spec.units[i] || 'Unit ' + i, desc: '' };
+            cfg.customizedFor = cfg.courseCode;
+        }
+
         const defaultCOs = {
             CO1: 'Understand and apply fundamental concepts of the subject.',
             CO2: 'Analyse and solve domain-specific problems using appropriate methods.',
