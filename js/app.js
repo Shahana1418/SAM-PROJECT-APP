@@ -3,6 +3,38 @@
  * College → Department → Batch → Teams → Students
  */
 
+
+// ===== Premium Toast Notifications =====
+function showToast(message, type = 'info') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    // Icons based on type
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✅';
+    if (type === 'warning') icon = '⚠️';
+    if (type === 'error') icon = '🚨';
+    
+    toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-message">${message}</span>`;
+    container.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('toast-show'), 10);
+    
+    // Remove after 3.5s
+    setTimeout(() => {
+        toast.classList.remove('toast-show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
 // ===== Global State =====
 let appData = null;
 let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
@@ -70,6 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== Data Loading =====
 function loadData() {
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+            splash.style.opacity = '0';
+            setTimeout(() => splash.remove(), 500);
+        }
+    }, 600);
+
     if (typeof STUDENT_DATA !== 'undefined') {
         appData = STUDENT_DATA;
     } else {
@@ -198,7 +238,7 @@ function generateAndShowTeams(deptCode, batchYear, teamSize, mode) {
     if (mode === 'cgpa') {
         const hasCgpa = students.some(s => s.cgpa !== null && s.cgpa !== undefined);
         if (!hasCgpa) {
-            alert('⚠️ CGPA data is not available for this batch. Falling back to Random Balanced mode.');
+            showToast('⚠️ CGPA data is not available for this batch. Falling back to Random Balanced mode.', 'warning');
             mode = 'random';
         }
     }
@@ -1165,7 +1205,7 @@ function applyCalendarConfig() {
     const spd = parseInt(document.getElementById('calSessPerDay')?.value || '2');
     const revealMode = document.getElementById('calRevealMode')?.value || 'presenter';
     if (!startDate || !endDate || endDate < startDate) {
-        alert('Please set a valid start and end date.');
+        showToast('⚠️ Please set a valid start and end date.', 'error');
         return;
     }
     const teams = navState.teams;
@@ -2068,7 +2108,7 @@ function generateAssignments() {
 function exportAssignmentsCSV() {
     const cfg = navState.assignConfig || {};
     const assignments = cfg.generatedAssignments;
-    if (!assignments || !assignments.length) { alert('Please generate assignments first.'); return; }
+    if (!assignments || !assignments.length) { showToast('⚠️ Please generate assignments first.', 'warning'); return; }
     const deptCode = navState.dept, batchYear = navState.batch;
     let csv = 'Assignment ID,Team,Course Code,Course Name,Topic Title,Unit,Complexity,Course Outcome,Duration,Type,Objective\n';
     assignments.forEach((a, i) => {
@@ -2086,6 +2126,6 @@ function exportAssignmentsCSV() {
 
 
 function openSyllabusPdf(path) {
-    if (!path) { alert('Syllabus PDF not available.'); return; }
+    if (!path) { showToast('⚠️ Syllabus PDF not available for this regulation.', 'error'); return; }
     window.open(path, '_blank');
 }
