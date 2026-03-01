@@ -1765,6 +1765,13 @@ function renderAssessments(container) {
                     else if (batchYear == 2028) list = ["AU3401", "AU3402", "AU3403", "AU3404", "ML3391"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["AU3601"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                 }
+
+                if (cfg.courseCode && !list.find(s => s.code === cfg.courseCode)) {
+                    cfg.courseCode = '';
+                    cfg.courseName = '';
+                    cfg.customizedFor = null;
+                }
+
                 return list;
             })().map(s =>
                 `<option value="${s.code}" ${(cfg.courseCode === s.code) ? 'selected' : ''}>${s.code} - ${s.name}</option>`

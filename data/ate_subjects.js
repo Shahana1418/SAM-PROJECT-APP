@@ -111,11 +111,11 @@ const ATE_SUBJECTS = {
             "5": "Testing Instruments"
         },
         "cos": {
-            "CO1": "Understand internal concepts of Unit 1 for Fuels and Lubricants.",
-            "CO2": "Understand internal concepts of Unit 2 for Fuels and Lubricants.",
-            "CO3": "Understand internal concepts of Unit 3 for Fuels and Lubricants.",
-            "CO4": "Understand internal concepts of Unit 4 for Fuels and Lubricants.",
-            "CO5": "Understand internal concepts of Unit 5 for Fuels and Lubricants."
+            "CO1": "Understand the role, properties and testing of various fuels",
+            "CO2": "Explain the refining process of petroleum",
+            "CO3": "Analyze the effects of engine friction and lubrication theory",
+            "CO4": "Compare different types of lubricants and additives",
+            "CO5": "Select appropriate fuels and lubricants for automotive applications"
         }
     },
     "AU3402": {
@@ -196,11 +196,11 @@ const ATE_SUBJECTS = {
             "5": "Test Procedures And Emission Measurements"
         },
         "cos": {
-            "CO1": "Understand internal concepts of Unit 1 for Automotive Pollution and Control.",
-            "CO2": "Understand internal concepts of Unit 2 for Automotive Pollution and Control.",
-            "CO3": "Understand internal concepts of Unit 3 for Automotive Pollution and Control.",
-            "CO4": "Understand internal concepts of Unit 4 for Automotive Pollution and Control.",
-            "CO5": "Understand internal concepts of Unit 5 for Automotive Pollution and Control."
+            "CO1": "Differentiate the various emissions formed in IC engines",
+            "CO2": "Analyze the effects of pollution on human health and environment",
+            "CO3": "Design the control techniques for minimizing emissions",
+            "CO4": "Categorize the emission norms",
+            "CO5": "Identify suitable methods to reduce the noise emissions"
         }
     }
 };
