@@ -1188,50 +1188,62 @@ function randomiseCalendarRoles() {
 
 function buildTeams(students, teamSize, mode) {
     if (students.length === 0) return [];
-    if (!teamSize || teamSize < 3) teamSize = 4;
-    if (teamSize > 5) teamSize = 5;
     mode = mode || 'random';
 
-    const MIN_PER_TEAM = 3;
-    const MAX_PER_TEAM = 4; // Hard cap: max 4 members per team
+    // Constraints:
+    // Minimum members per team = 4 (no teams of 2 or 3)
+    // Maximum members per team = 5
+    // Maximum number of teams = 15
+    const MIN_PER_TEAM = 4;
+    const MAX_PER_TEAM = 5;
+    const MAX_TEAMS = 15;
 
     const allStudents = [...students];
     shuffle(allStudents);
 
+    // 1. Calculate number of teams
+    // Must not exceed MAX_TEAMS.
+    // Must be able to fit all students such that no team has < MIN_PER_TEAM.
+    let numTeams = Math.ceil(allStudents.length / MAX_PER_TEAM); // Absolute min teams to fit everyone
+    
+    // We want to maximize the number of teams up to MAX_TEAMS, 
+    // BUT we cannot have teams smaller than MIN_PER_TEAM (4).
+    // So the maximum possible teams is floor(students / 4)
+    let possibleMaxTeams = Math.floor(allStudents.length / MIN_PER_TEAM);
+    
+    // Apply hard cap of 15 teams
+    if (possibleMaxTeams > MAX_TEAMS) possibleMaxTeams = MAX_TEAMS;
+
+    // Default to the max possible teams that still allow at least 4 members per team
+    numTeams = possibleMaxTeams;
+    
+    // Safeguard: if there are very few students (e.g., 3), just put them in 1 team 
+    // (though rule says no 3, we can't create teams out of thin air if total < 4)
+    if (allStudents.length > 0 && numTeams < 1) numTeams = 1;
+
+    // 2. Gender ratio preparation
     const males = allStudents.filter(s => s.gender === 'M');
     const females = allStudents.filter(s => s.gender === 'F');
     shuffle(males);
     shuffle(females);
+    const maleRatio = males.length / (allStudents.length || 1);
 
-    // Calculate number of teams:
-    // Must be multiple of 3, and all teams must have 3-4 members.
-    // minTeams: ceil(n / MAX_PER_TEAM) — ensures no team exceeds 4
-    // maxTeams: floor(n / MIN_PER_TEAM) — ensures no team falls below 3
-    // We pick numTeams as the highest multiple-of-3 that is <= maxTeams
-    // and >= minTeams (rounded up to next mult of 3 if needed).
-    const minTeams = Math.ceil(allStudents.length / MAX_PER_TEAM);
-    const maxTeams = Math.floor(allStudents.length / MIN_PER_TEAM);
-
-    // Start at minTeams, round up to multiple of 3
-    let numTeams = minTeams;
-    if (numTeams % 3 !== 0) numTeams = Math.ceil(numTeams / 3) * 3;
-
-    // If after rounding up we exceed maxTeams, step down by 3
-    while (numTeams > maxTeams && numTeams >= 3) numTeams -= 3;
-
-    // Absolute minimum: 3 teams
-    if (numTeams < 3) numTeams = 3;
+    let teams = Array.from({ length: numTeams }, (_, i) => ({ id: i + 1, members: [] }));
 
     if (mode === 'cgpa') {
-        // CGPA-balanced: snake draft so each team gets similar avg CGPA
         const withCgpa = allStudents.filter(s => s.cgpa !== null && s.cgpa !== undefined);
         const withoutCgpa = allStudents.filter(s => s.cgpa === null || s.cgpa === undefined);
         withCgpa.sort((a, b) => (b.cgpa || 0) - (a.cgpa || 0));
 
-        const teams = Array.from({ length: numTeams }, (_, i) => ({ id: i + 1, members: [] }));
         let teamIdx = 0, direction = 1;
         withCgpa.forEach(s => {
-            teams[teamIdx].members.push(s);
+            if (teams[teamIdx].members.length < MAX_PER_TEAM) {
+                teams[teamIdx].members.push(s);
+            } else {
+                // Find next available team
+                const avail = teams.find(t => t.members.length < MAX_PER_TEAM);
+                if (avail) avail.members.push(s);
+            }
             teamIdx += direction;
             if (teamIdx >= numTeams) { teamIdx = numTeams - 1; direction = -1; }
             if (teamIdx < 0) { teamIdx = 0; direction = 1; }
@@ -1244,33 +1256,30 @@ function buildTeams(students, teamSize, mode) {
                 smallest.members.push(s);
             }
         });
-        return enforceMinSize(teams, MIN_PER_TEAM, MAX_PER_TEAM);
-    }
-
-    // Default: Random gender-balanced (also used for 'manual' mode)
-    const pool = [];
-    let mi = 0, fi = 0;
-    const maleRatio = males.length / (allStudents.length || 1);
-    for (let i = 0; i < allStudents.length; i++) {
-        const targetMales = Math.round((i + 1) * maleRatio);
-        if (mi < males.length && (mi < targetMales || fi >= females.length)) {
-            pool.push(males[mi++]);
-        } else if (fi < females.length) {
-            pool.push(females[fi++]);
+    } else {
+        // Strict gender-balanced distribution per team
+        // Calculate exact target male/female count per team
+        let mIdx = 0, fIdx = 0;
+        
+        // Distribute base sizes to all teams first
+        for (let t = 0; t < numTeams; t++) {
+            let targetSize = Math.floor(allStudents.length / numTeams);
+            if (t < allStudents.length % numTeams) targetSize++; // distribute remainder
+            
+            let targetMales = Math.round(targetSize * maleRatio);
+            
+            // Fill team
+            for (let i = 0; i < targetSize; i++) {
+                if (teams[t].members.filter(m => m.gender === 'M').length < targetMales && mIdx < males.length) {
+                    teams[t].members.push(males[mIdx++]);
+                } else if (fIdx < females.length) {
+                    teams[t].members.push(females[fIdx++]);
+                } else if (mIdx < males.length) {
+                    // Fallback if we run out of females
+                    teams[t].members.push(males[mIdx++]);
+                }
+            }
         }
-    }
-
-    // Distribute evenly: base fill, then spread extras one per team
-    const baseSize = Math.floor(pool.length / numTeams);
-    const leftover = pool.length - (baseSize * numTeams);
-    const teams = [];
-    let idx = 0;
-    for (let t = 0; t < numTeams; t++) {
-        // Give extra 1 student to the first `leftover` teams
-        const extra = t < leftover ? 1 : 0;
-        const size = baseSize + extra;
-        teams.push({ id: t + 1, members: pool.slice(idx, idx + size) });
-        idx += size;
     }
 
     return enforceMinSize(teams, MIN_PER_TEAM, MAX_PER_TEAM);
@@ -1287,11 +1296,15 @@ function enforceMinSize(teams, min, max) {
     tooSmall.forEach(t => orphans.push(...t.members));
     shuffle(orphans);
 
-    // Try to absorb orphans into teams that still have room
+    // Try to absorb orphans into teams that still have room up to MAX (5)
     orphans.forEach(s => {
         const room = ok.filter(t => t.members.length < max);
         if (room.length > 0) {
             const smallest = room.reduce((a, b) => a.members.length < b.members.length ? a : b);
+            smallest.members.push(s);
+        } else if (ok.length > 0) {
+            // Force push if strictly needed to avoid orphans, even if it exceeds max slightly
+            const smallest = ok.reduce((a, b) => a.members.length < b.members.length ? a : b);
             smallest.members.push(s);
         }
     });
