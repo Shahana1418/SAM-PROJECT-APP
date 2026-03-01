@@ -1904,9 +1904,8 @@ function renderAssessments(container) {
                 <div class="wiz-field"><label>Assignment Type</label>
                     <select id="wiz-type">
                         <option value="presentation" ${savedType === 'presentation' ? 'selected' : ''}>Team Presentation</option>
-                        <option value="assignment" ${savedType === 'assignment' ? 'selected' : ''}>Individual Assignment</option>
                         <option value="miniproject" ${savedType === 'miniproject' ? 'selected' : ''}>Mini Project</option>
-                        <option value="viva" ${savedType === 'viva' ? 'selected' : ''}>Viva Voce</option>
+                        <option value="practicals" ${savedType === 'practicals' ? 'selected' : ''}>Practicals</option>
                     </select>
                 </div>
                 <div class="wiz-field"><label>Complexity</label>
@@ -1923,8 +1922,8 @@ function renderAssessments(container) {
                         <option value="20-30 min" ${cfg.duration === '20-30 min' ? 'selected' : ''}>20-30 minutes</option>
                         <option value="30 min"   ${cfg.duration === '30 min' ? 'selected' : ''}>30 minutes</option>
                     </select></div>
-                <div class="wiz-field"><label>Focus Units (Ctrl for multi-select)</label>
-                    <select id="wiz-focus-units" multiple style="min-height:90px;">
+                <div class="wiz-field"><label>Focus Unit</label>
+                    <select id="wiz-focus-units">
                         <option value="all" ${!(cfg.focusUnits && cfg.focusUnits.length) ? 'selected' : ''}>All Units (recommended)</option>
                         ${unitOpts}
                     </select></div>
