@@ -1747,14 +1747,21 @@ function renderAssessments(container) {
                     <input type="text" readonly value="${getDeptName(deptCode)}" class="wiz-prefill"></div>
                 <div class="wiz-field"><label>Passing Year (Batch)</label>
                     <input type="text" readonly value="${batchYear}" class="wiz-prefill"></div>
-                <div class="wiz-field"><label>Course Code</label>
-                    <input type="text" id="wiz-course-code" placeholder="e.g. CS3492"
-                        value="${cfg.courseCode || ''}"
-                        oninput="navState.assignConfig=navState.assignConfig||{};navState.assignConfig.courseCode=this.value;"></div>
-                <div class="wiz-field"><label>Course Name</label>
-                    <input type="text" id="wiz-course-name" placeholder="e.g. Database Management Systems"
-                        value="${cfg.courseName || ''}"
-                        oninput="navState.assignConfig=navState.assignConfig||{};navState.assignConfig.courseName=this.value;"></div>
+                <div class="wiz-field full"><label>Core Subject (Anna Univ Syllabus)</label>
+                    <select id="wiz-core-subject" onchange="
+                        if(!navState.assignConfig) navState.assignConfig={};
+                        let opt = this.options[this.selectedIndex];
+                        if(opt && opt.value) {
+                            navState.assignConfig.courseCode = opt.value;
+                            navState.assignConfig.courseName = opt.text.replace(opt.value + ' - ', '');
+                        }
+                    ">
+                        <option value="" disabled ${!cfg.courseCode ? 'selected' : ''}>Select a subject...</option>
+                        ${(SUBJECTS_DATA[regulation] && SUBJECTS_DATA[regulation][deptCode] ? SUBJECTS_DATA[regulation][deptCode] : []).map(s =>
+            `<option value="${s.code}" ${(cfg.courseCode === s.code) ? 'selected' : ''}>${s.code} - ${s.name}</option>`
+        ).join('')}
+                    </select>
+                </div>
                 <div class="wiz-field full"><label>Course Description (optional)</label>
                     <textarea id="wiz-course-desc" placeholder="Brief description..."
                         oninput="navState.assignConfig=navState.assignConfig||{};navState.assignConfig.courseDesc=this.value;">${cfg.courseDesc || ''}</textarea></div>
@@ -2012,33 +2019,33 @@ function toggleAssignCard(i) {
     if (expand) expand.style.transform = isOpen ? 'rotate(180deg)' : '';
 }
 
-function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx) {
+function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx, courseName = '') {
     const { assignType } = config;
     const typeLabel = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce' }[assignType] || 'Team Presentation';
     const descMap = {
-        presentation: 'Prepare and deliver a structured presentation on <strong>"' + unitTitle + '"</strong>. Cover theoretical foundations, real-world applications, and emerging developments with visual aids.',
-        assignment: 'Write a detailed report on <strong>"' + unitTitle + '"</strong> including theoretical background, derivations or algorithmic steps, case studies, and your own analysis.',
-        miniproject: 'Design and implement a small-scale project demonstrating principles of <strong>"' + unitTitle + '"</strong>. Document your design, implementation, and outcomes.',
-        viva: 'Prepare for an oral examination on <strong>"' + unitTitle + '"</strong>. Expect questions on core concepts, problem-solving approaches, and practical implications.',
+        presentation: `Prepare and deliver a structured presentation on <strong>"${unitTitle}"</strong>. Focus heavily on <strong>Anna University previous year important questions</strong>, core algorithms, and theorems relevant to <strong>${courseName}</strong>. Include real-world applications and visual aids.`,
+        assignment: `Write a detailed analytical report on <strong>"${unitTitle}"</strong>. You must solve and explain <strong>frequently asked Anna University important questions</strong>, including theoretical background, derivations, and algorithmic steps from <strong>${courseName}</strong>.`,
+        miniproject: `Design and implement a small-scale practical demonstration of principles from <strong>"${unitTitle}"</strong>. Document your implementation based on the standard laboratory requirements for <strong>${courseName}</strong>.`,
+        practicals: `Perform hands-on lab exercises and software/hardware experiments related to <strong>"${unitTitle}"</strong>. Answer standard viva questions and document the output for <strong>${courseName}</strong>.`,
     };
     const objectives = [
-        'To understand and articulate the key concepts in ' + unitTitle + '.',
-        'To analyse and apply ' + unitTitle + ' principles to engineering problems.',
-        'To evaluate and compare techniques related to ' + unitTitle + '.',
-        'To demonstrate competence in ' + unitTitle + ' through structured presentation.',
-        'To develop research and communication skills through ' + unitTitle + ' study.',
+        `To master Anna University core concepts and important questions in ${unitTitle}.`,
+        `To analyse and apply ${courseName} principles to standard engineering problems.`,
+        `To evaluate and solve repeated university examination questions related to ${unitTitle}.`,
+        `To demonstrate competence in ${courseName} through structured presentation of core theorems.`,
+        `To develop practical implementation skills required for ${courseName} laboratories.`,
     ];
     const deliverableMap = {
-        presentation: ['Slide deck (8-12 slides) covering overview, concepts, and applications.', 'Q&A session with evaluating team.', 'Reference list (min 3 peer-reviewed sources).'],
-        assignment: ['Typed report (1500-2000 words) with introduction, body, and conclusion.', 'Diagrams or pseudocode where relevant.', 'IEEE references (min 4 sources).'],
+        presentation: ['Slide deck (8-12 slides) covering Anna University repeated topics.', 'Q&A session with evaluating team.', 'Reference list from standard syllabus textbooks.'],
+        assignment: ['Typed report (1500-2000 words) with derivations and step-by-step solutions.', 'Answers to at least 3 previous year important questions.', 'Diagrams or pseudocode where relevant.'],
         miniproject: ['Working prototype or implementation.', 'Project report: problem, design, results.', 'Live demo to evaluating team.'],
-        viva: ['Oral responses to 5-8 questions.', '1-page concept note (before viva).', 'Short problem-solving on the spot.'],
+        practicals: ['Observation and Record documentation.', 'Execution of code/circuit/experiment.', 'Output validation and viva responses.'],
     };
     const criteriaMap = {
-        presentation: ['Content clarity and depth (30%)', 'Slides and visual aids (20%)', 'Delivery and time management (25%)', 'Q&A handling (25%)'],
-        assignment: ['Accuracy and depth (35%)', 'Writing clarity and structure (25%)', 'Diagrams and examples (20%)', 'References (20%)'],
-        miniproject: ['Functionality and completeness (40%)', 'Innovation and design (20%)', 'Documentation (20%)', 'Demo and explanation (20%)'],
-        viva: ['Answer correctness (40%)', 'Depth of understanding (30%)', 'Follow-up questions (20%)', 'Communication (10%)'],
+        presentation: ['Clarity and coverage of AU syllabus topics (30%)', 'Slides and visual aids (20%)', 'Delivery and time management (25%)', 'Q&A handling (25%)'],
+        assignment: ['Correctness of problem solutions (35%)', 'Writing clarity and structure (25%)', 'Diagrams and examples (20%)', 'Adherence to syllabus scope (20%)'],
+        miniproject: ['Functionality and completeness (40%)', 'Innovation and alignment with theory (20%)', 'Documentation (20%)', 'Demo and explanation (20%)'],
+        practicals: ['Successful execution (40%)', 'Knowledge of concepts/viva (30%)', 'Observation writing (20%)', 'Debugging skills (10%)'],
     };
     const complexityCycle = ['Easy', 'Medium', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Hard', 'Easy'];
     const usedComplexity = config.complexity === 'mixed'
@@ -2088,10 +2095,9 @@ function generateAssignments() {
             pool.push({ unitNum: u, title: unitTitle, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
         }
     });
-    const generated = [];
     for (let i = 0; i < numTeams; i++) {
         const topic = pool[i % pool.length];
-        generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i));
+        generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i, cfg.courseName));
     }
     cfg.generatedAssignments = generated;
     navState.assignStep = 4;
