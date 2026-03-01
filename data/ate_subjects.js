@@ -201,6 +201,14 @@ const ATE_SUBJECTS = {
             "CO3": "Design the control techniques for minimizing emissions",
             "CO4": "Categorize the emission norms",
             "CO5": "Identify suitable methods to reduce the noise emissions"
+        },
+        "objective": "The objective of this course is to prepare the students to have knowledge on the harmful effects of major pollutants of IC engines, emission standards, various pollution measurement devices and control techniques.",
+        "unit_descs": {
+            "1": "Sources of Pollution. Various emissions from Automobiles — Formation — Effects of pollutants on environment human beings. Emission control techniques – Emission standards - National and international.",
+            "2": "Emission formation in SI Engines- Carbon monoxide- Unburned hydrocarbon, NOx, Smoke — Effects of design and operating variables on emission formation – controlling of pollutants -Catalytic converters — Charcoal Canister — Positive Crank case ventilation system, Secondary air injection, thermal reactor, Laser Assisted Combustion.",
+            "3": "Formation of White, Blue, and Black Smokes, NOx, soot, sulphur particulate and Intermediate Compounds – Physical and Chemical delay — Significance Effect of Operating variables on Emission formation — Fumigation, EGR, HCCI, Particulate Traps, SCR — Cetane number Effect.",
+            "4": "Sources of Noise — Engine Noise, Transmission Noise, vehicle structural Noise, aerodynamics noise, Exhaust Noise. Noise reduction in Automobiles — Encapsulation technique for noise reduction — Silencer Design.",
+            "5": "Constant Volume Sampling I and 3 (CVSI & CVS3) Systems- Sampling Procedures — Chassis dyno - Seven mode and thirteen mode cycles for Emission Sampling — Sampling problems — world harmonized driving cycles - Emission analysers —NDIR, FID, Chemiluminesecent, Smoke meters, Dilution Tunnel, SHED Test, Sound level meters. Particle counter"
         }
     }
 };

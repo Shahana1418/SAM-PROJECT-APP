@@ -1832,9 +1832,9 @@ function renderAssessments(container) {
         const savedCOs = cfg.courseOutcomes || defaultCOs;
         const coHTML = Object.entries(savedCOs).map(([k, v]) =>
             '<div class="wiz-co-row"><span class="wiz-co-label">' + k + '</span>' +
-            '<input type="text" id="co-' + k + '" value="' + v + '" data-co="' + k + '" ' +
+            '<textarea id="co-' + k + '" data-co="' + k + '" rows="2" ' +
             'oninput="(navState.assignConfig.courseOutcomes=navState.assignConfig.courseOutcomes||{})[this.dataset.co]=this.value;" ' +
-            'placeholder="Course outcome..."></div>'
+            'placeholder="Course outcome...">' + v + '</textarea></div>'
         ).join('');
 
         const savedUnits = cfg.units || {};

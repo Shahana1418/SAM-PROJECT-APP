@@ -3419,7 +3419,8 @@ body {
     margin-top: 2px;
 }
 
-.wiz-co-row input {
+.wiz-co-row input,
+.wiz-co-row textarea {
     flex: 1;
     background: var(--bg-primary);
     border: 1px solid rgba(15, 23, 42, 0.12);
@@ -3430,9 +3431,11 @@ body {
     color: var(--text-primary);
     outline: none;
     transition: all 0.2s;
+    resize: vertical;
 }
 
-.wiz-co-row input:focus {
+.wiz-co-row input:focus,
+.wiz-co-row textarea:focus {
     border-color: var(--accent-blue);
     box-shadow: 0 0 0 2px var(--accent-blue-glow);
     background: #fff;
@@ -3993,6 +3996,7 @@ body {
         padding: 2px 5px;
     }
 }
+
 /* =======================================================
    PREMIUM 10/10 UPGRADES: SPASH, TOASTS, SCROLLBARS, SHADOWS  
 ======================================================= */
@@ -4002,9 +4006,11 @@ body {
     width: 8px;
     height: 8px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
     background: rgba(148, 163, 184, 0.4);
     border-radius: 10px;
@@ -4012,6 +4018,7 @@ body {
     background-clip: padding-box;
     transition: background-color 0.2s ease;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(148, 163, 184, 0.8);
     border: 2px solid transparent;
@@ -4030,7 +4037,10 @@ body {
 /* 3. Splash Screen Styling */
 .splash-screen {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background: #ffffff;
     z-index: 9999;
     display: flex;
@@ -4062,7 +4072,7 @@ body {
 .splash-loader {
     width: 150px;
     height: 4px;
-    background: rgba(37,99,235,0.1);
+    background: rgba(37, 99, 235, 0.1);
     border-radius: 4px;
     overflow: hidden;
     margin: 0 auto;
@@ -4072,25 +4082,47 @@ body {
 .splash-loader::after {
     content: '';
     position: absolute;
-    top: 0; left: 0; height: 100%; width: 40%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%;
     background: var(--accent-blue);
     border-radius: 4px;
     animation: loadingBar 1.2s ease-in-out infinite;
 }
 
 @keyframes loadingBar {
-    0% { left: -40%; }
-    100% { left: 100%; }
+    0% {
+        left: -40%;
+    }
+
+    100% {
+        left: 100%;
+    }
 }
 
 @keyframes splashPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(0.98); opacity: 0.9; }
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
 }
 
 @keyframes rotateLogo {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* 4. Beautiful Toast Notifications */
@@ -4142,10 +4174,21 @@ body {
 }
 
 /* Colored Toast Variations */
-.toast-success { border-left: 4px solid var(--accent-green); }
-.toast-error   { border-left: 4px solid var(--accent-red); }
-.toast-warning { border-left: 4px solid var(--accent-orange); }
-.toast-info    { border-left: 4px solid var(--accent-blue); }
+.toast-success {
+    border-left: 4px solid var(--accent-green);
+}
+
+.toast-error {
+    border-left: 4px solid var(--accent-red);
+}
+
+.toast-warning {
+    border-left: 4px solid var(--accent-orange);
+}
+
+.toast-info {
+    border-left: 4px solid var(--accent-blue);
+}
 
 
 /* Overriding wiz layout from bottom to fix clipping/styling issues reported */
