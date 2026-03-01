@@ -12,22 +12,22 @@ function showToast(message, type = 'info') {
         container.id = 'toast-container';
         document.body.appendChild(container);
     }
-    
+
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
+
     // Icons based on type
     let icon = 'ℹ️';
     if (type === 'success') icon = '✅';
     if (type === 'warning') icon = '⚠️';
     if (type === 'error') icon = '🚨';
-    
+
     toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-message">${message}</span>`;
     container.appendChild(toast);
-    
+
     // Trigger animation
     setTimeout(() => toast.classList.add('toast-show'), 10);
-    
+
     // Remove after 3.5s
     setTimeout(() => {
         toast.classList.remove('toast-show');
@@ -1853,14 +1853,6 @@ function renderAssessments(container) {
             { id: 'viva', icon: '&#128172;', name: 'Viva Voce', desc: 'Oral Q&A examination' },
         ];
         const savedType = cfg.assignType || 'presentation';
-        const typeCards = assignTypes.map(t =>
-            '<div><input type="radio" name="wiz-type" id="wt-' + t.id + '" value="' + t.id + '" class="wiz-type-option" ' + (savedType === t.id ? 'checked' : '') + '>' +
-            '<label for="wt-' + t.id + '" class="wiz-type-label">' +
-            '<span class="wiz-type-icon">' + t.icon + '</span>' +
-            '<span class="wiz-type-name">' + t.name + '</span>' +
-            '<span class="wiz-type-desc">' + t.desc + '</span>' +
-            '</label></div>'
-        ).join('');
 
         const unitOpts = [1, 2, 3, 4, 5].map(u =>
             '<option value="' + u + '" ' + ((cfg.focusUnits || []).includes(u) ? 'selected' : '') + '>Unit ' + u + '</option>'
@@ -1908,9 +1900,15 @@ function renderAssessments(container) {
         const unitList = [1, 2, 3, 4, 5].map(u => (units[u] || {}).title || 'Unit ' + u).join(', ');
         panelHTML = `<div class="wiz-panel">
             <div class="wiz-panel-title">&#9881;&#65039; Step 4 &mdash; Assignment Configuration</div>
-            <div style="font-size:.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Assignment Type</div>
-            <div class="wiz-type-grid">${typeCards}</div>
             <div class="wiz-form-grid">
+                <div class="wiz-field"><label>Assignment Type</label>
+                    <select id="wiz-type">
+                        <option value="presentation" ${savedType === 'presentation' ? 'selected' : ''}>Team Presentation</option>
+                        <option value="assignment" ${savedType === 'assignment' ? 'selected' : ''}>Individual Assignment</option>
+                        <option value="miniproject" ${savedType === 'miniproject' ? 'selected' : ''}>Mini Project</option>
+                        <option value="viva" ${savedType === 'viva' ? 'selected' : ''}>Viva Voce</option>
+                    </select>
+                </div>
                 <div class="wiz-field"><label>Complexity</label>
                     <select id="wiz-complexity">
                         <option value="mixed" ${(!cfg.complexity || cfg.complexity === 'mixed') ? 'selected' : ''}>Mixed (Easy/Medium/Hard)</option>
@@ -2061,7 +2059,7 @@ function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey,
 function generateAssignments() {
     if (!navState.assignConfig) navState.assignConfig = {};
     const cfg = navState.assignConfig;
-    const typeEl = document.querySelector('input[name="wiz-type"]:checked');
+    const typeEl = document.getElementById('wiz-type');
     cfg.assignType = typeEl ? typeEl.value : (cfg.assignType || 'presentation');
     cfg.complexity = document.getElementById('wiz-complexity')?.value || cfg.complexity || 'mixed';
     cfg.duration = document.getElementById('wiz-duration')?.value || cfg.duration || '15-20 min';
