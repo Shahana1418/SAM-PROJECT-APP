@@ -2664,3 +2664,1332 @@ body {
     font-weight: 700;
     white-space: nowrap;
 }
+
+/* ===== Session Calendar ===== */
+.cal-config-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-card);
+}
+
+.cal-config-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cal-config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.cal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cal-field label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cal-field input[type="date"],
+.cal-field select {
+    background: var(--bg-primary);
+    border: 1px solid rgba(15, 23, 42, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.cal-field input[type="date"]:focus,
+.cal-field select:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px var(--accent-blue-glow);
+}
+
+.cal-days-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cal-day-toggle {
+    display: none;
+}
+
+.cal-day-label {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border-color);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.cal-day-toggle:checked+.cal-day-label {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.cal-day-label:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.cal-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+/* Calendar grid */
+.cal-months-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.cal-month-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.cal-month-header {
+    background: var(--gradient-blue);
+    color: #fff;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cal-week-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cal-week-label {
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: var(--border-color);
+}
+
+.cal-cell {
+    background: var(--bg-card);
+    min-height: 90px;
+    padding: 8px;
+    position: relative;
+}
+
+.cal-cell-empty {
+    background: #fafbfc;
+}
+
+.cal-cell-date {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cal-cell-date.today-date {
+    color: var(--accent-blue);
+}
+
+.cal-today-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-blue);
+    border-radius: 50%;
+}
+
+.cal-session-slot {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.03));
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: var(--radius-sm);
+    padding: 6px 8px;
+    font-size: 0.72rem;
+    animation: slideUp 0.3s ease;
+}
+
+.cal-sess-num {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+
+.cal-sess-time {
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.cal-role-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cal-role-chip {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cal-role-presenter {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--accent-blue);
+}
+
+.cal-role-reviewer {
+    background: rgba(5, 150, 105, 0.1);
+    color: var(--accent-green);
+}
+
+.cal-role-feedback {
+    background: rgba(234, 88, 12, 0.1);
+    color: var(--accent-orange);
+}
+
+.cal-role-locked {
+    background: rgba(148, 163, 184, 0.12);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Session list (below calendar) */
+.cal-sesslist-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.cal-sess-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    animation: slideUp 0.3s ease both;
+}
+
+.cal-sess-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.cal-sess-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.cal-sess-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--gradient-blue);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cal-sess-card-info {
+    flex: 1;
+}
+
+.cal-sess-date {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.cal-sess-period {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.cal-sess-roles {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cal-sess-role-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.cal-sess-role-item.presenter {
+    background: rgba(37, 99, 235, 0.07);
+    color: var(--accent-blue);
+}
+
+.cal-sess-role-item.reviewer {
+    background: rgba(5, 150, 105, 0.07);
+    color: var(--accent-green);
+}
+
+.cal-sess-role-item.feedback {
+    background: rgba(234, 88, 12, 0.07);
+    color: var(--accent-orange);
+}
+
+.cal-sess-role-item.locked {
+    background: rgba(148, 163, 184, 0.1);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.cal-lock-icon {
+    font-size: 0.85rem;
+}
+
+@media (max-width: 700px) {
+    .cal-config-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cal-week-labels,
+    .cal-grid {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .cal-sesslist-row {
+        grid-template-columns: 1fr;
+    }
+
+    .cal-cell {
+        min-height: 60px;
+        padding: 4px;
+    }
+
+    .cal-session-slot {
+        font-size: 0.6rem;
+    }
+}
+
+/* ===== Assignment Configuration Wizard ===== */
+.wiz-header {
+    background: var(--gradient-blue);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    color: #fff;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+}
+
+.wiz-header-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.wiz-header-sub {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 4px;
+}
+
+/* Step progress bar */
+.wiz-stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.wiz-step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    position: relative;
+    cursor: default;
+    transition: background 0.2s ease;
+    border-right: 1px solid var(--border-color);
+}
+
+.wiz-step:last-child {
+    border-right: none;
+}
+
+.wiz-step.done {
+    cursor: pointer;
+    background: rgba(5, 150, 105, 0.04);
+}
+
+.wiz-step.active {
+    background: rgba(37, 99, 235, 0.06);
+}
+
+.wiz-step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.wiz-step.done .wiz-step-num {
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+    color: #fff;
+}
+
+.wiz-step.active .wiz-step-num {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+.wiz-step-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.wiz-step-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.wiz-step.active .wiz-step-label {
+    color: var(--accent-blue);
+}
+
+.wiz-step.done .wiz-step-label {
+    color: var(--accent-green);
+}
+
+.wiz-step-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 1px;
+}
+
+/* Step panel */
+.wiz-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-card);
+    animation: slideUp 0.25s ease;
+}
+
+.wiz-panel-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.wiz-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.wiz-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.wiz-field.full {
+    grid-column: 1 / -1;
+}
+
+.wiz-field label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wiz-field input,
+.wiz-field select,
+.wiz-field textarea {
+    background: var(--bg-primary);
+    border: 1px solid rgba(15, 23, 42, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.85rem;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+    resize: vertical;
+}
+
+.wiz-field textarea {
+    min-height: 70px;
+}
+
+.wiz-field input:focus,
+.wiz-field select:focus,
+.wiz-field textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px var(--accent-blue-glow);
+    background: #fff;
+}
+
+.wiz-field input[readonly],
+.wiz-prefill {
+    background: rgba(37, 99, 235, 0.05);
+    border-color: rgba(37, 99, 235, 0.2);
+    color: var(--accent-blue);
+    font-weight: 600;
+}
+
+.wiz-nav-row {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Regulation card */
+.wiz-reg-card {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(37, 99, 235, 0.02));
+    border: 1.5px solid rgba(37, 99, 235, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.wiz-reg-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--accent-blue);
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+}
+
+.wiz-reg-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.wiz-reg-item label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.wiz-reg-item span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.wiz-reg-logic {
+    background: rgba(37, 99, 235, 0.06);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+/* Unit rows */
+.wiz-unit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.wiz-unit-row {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.wiz-unit-row:focus-within {
+    box-shadow: 0 0 0 3px var(--accent-blue-glow);
+    border-color: rgba(37, 99, 235, 0.3);
+}
+
+.wiz-unit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    cursor: pointer;
+    user-select: none;
+}
+
+.wiz-unit-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--gradient-blue);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.wiz-unit-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.wiz-unit-expand {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.wiz-unit-body {
+    padding: 12px 14px;
+    background: #fff;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wiz-unit-body input,
+.wiz-unit-body textarea {
+    background: var(--bg-primary);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: var(--radius-sm);
+    padding: 8px 11px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+    outline: none;
+    width: 100%;
+    resize: vertical;
+    transition: all 0.2s;
+}
+
+.wiz-unit-body input:focus,
+.wiz-unit-body textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px var(--accent-blue-glow);
+    background: #fff;
+}
+
+/* CO rows */
+.wiz-co-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.wiz-co-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.wiz-co-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--accent-blue);
+    background: rgba(37, 99, 235, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    margin-top: 2px;
+}
+
+.wiz-co-row input {
+    flex: 1;
+    background: var(--bg-primary);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    font-family: inherit;
+    font-size: 0.78rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s;
+}
+
+.wiz-co-row input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px var(--accent-blue-glow);
+    background: #fff;
+}
+
+/* Config step */
+.wiz-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.wiz-type-option {
+    display: none;
+}
+
+.wiz-type-label {
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.wiz-type-label:hover {
+    border-color: var(--accent-blue);
+}
+
+.wiz-type-option:checked+.wiz-type-label {
+    background: rgba(37, 99, 235, 0.06);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px var(--accent-blue-glow);
+}
+
+.wiz-type-icon {
+    font-size: 1.4rem;
+}
+
+.wiz-type-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.wiz-type-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* Generate ready card */
+.wiz-ready-card {
+    background: rgba(5, 150, 105, 0.04);
+    border: 1.5px solid rgba(5, 150, 105, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+}
+
+.wiz-ready-icon {
+    font-size: 2.5rem;
+}
+
+.wiz-ready-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.wiz-ready-bullets {
+    list-style: none;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.wiz-ready-bullets li::before {
+    content: '✅ ';
+}
+
+/* Assignment result cards */
+.assign-result-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.assign-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-blue);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    animation: slideUp 0.3s ease both;
+}
+
+.assign-card:nth-child(odd) {
+    border-left-color: var(--accent-blue);
+}
+
+.assign-card:nth-child(even) {
+    border-left-color: var(--accent-purple);
+}
+
+.assign-card:nth-child(3n) {
+    border-left-color: var(--accent-green);
+}
+
+.assign-card:nth-child(4n) {
+    border-left-color: var(--accent-orange);
+}
+
+.assign-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateX(2px);
+}
+
+.assign-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.assign-team-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--gradient-blue);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.assign-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.assign-topic-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.assign-meta-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.assign-pill {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.assign-card-expand {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.assign-card-body {
+    border-top: 1px solid var(--border-color);
+    padding: 14px 16px;
+    display: none;
+    background: #fafbfc;
+}
+
+.assign-card-body.open {
+    display: block;
+}
+
+.assign-card-body h4 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 12px 0 6px;
+}
+
+.assign-card-body h4:first-child {
+    margin-top: 0;
+}
+
+.assign-card-body p,
+.assign-card-body li {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.assign-card-body ul,
+.assign-card-body ol {
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+@media (max-width: 600px) {
+    .wiz-stepper {
+        flex-direction: column;
+    }
+
+    .wiz-step {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .wiz-reg-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .wiz-type-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ===== Session Schedule Table ===== */
+.sched-table-wrap {
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.sched-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.sched-date-header {
+    background: #f8fafc;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 10px 14px;
+    width: 130px;
+    border-right: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.sched-col-header {
+    background: #f8fafc;
+    text-align: left;
+    padding: 10px 12px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sched-col-header:last-child {
+    border-right: none;
+}
+
+.sched-date-cell {
+    padding: 10px 14px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    background: #fafbfc;
+    width: 130px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.sched-date-day {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.sched-date-num {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.sched-date-today {
+    color: var(--accent-blue);
+}
+
+.sched-today-badge,
+.sched-past-badge {
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    margin-top: 4px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.sched-today-badge {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--accent-blue);
+}
+
+.sched-past-badge {
+    background: rgba(5, 150, 105, 0.1);
+    color: var(--accent-green);
+}
+
+.sched-slot-cell {
+    padding: 10px 12px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.sched-slot-cell:last-child {
+    border-right: none;
+}
+
+.sched-empty-cell {
+    padding: 10px 12px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+    vertical-align: middle;
+    background: #fafbfc;
+}
+
+.sched-empty {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.sched-today-row {
+    background: rgba(37, 99, 235, 0.03);
+}
+
+.sched-past-row {
+    background: rgba(248, 250, 252, 0.7);
+    opacity: 0.8;
+}
+
+.sched-sess-num {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: var(--text-muted);
+    letter-spacing: 0.4px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.sched-role-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+/* Chips shared across table and cards */
+.sched-chip {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.sched-presenter {
+    background: rgba(37, 99, 235, 0.1);
+    color: #1d4ed8;
+}
+
+.sched-reviewer {
+    background: rgba(5, 150, 105, 0.1);
+    color: #047857;
+}
+
+.sched-feedback {
+    background: rgba(124, 58, 237, 0.1);
+    color: #6d28d9;
+}
+
+.sched-locked {
+    background: rgba(148, 163, 184, 0.1);
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* Status bars */
+.sched-status-ok,
+.sched-status-warn {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.sched-status-ok {
+    background: rgba(5, 150, 105, 0.06);
+    border: 1px solid rgba(5, 150, 105, 0.2);
+    color: #059669;
+}
+
+.sched-status-warn {
+    background: rgba(220, 38, 38, 0.06);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: #dc2626;
+}
+
+/* Day Cards */
+.sched-day-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sched-day-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    animation: slideUp 0.3s ease both;
+    transition: var(--transition);
+}
+
+.sched-day-card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.sched-day-today {
+    border-color: rgba(37, 99, 235, 0.3);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.06);
+}
+
+.sched-day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sched-day-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.sched-day-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.sched-day-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.sched-badge-today {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--accent-blue);
+}
+
+.sched-badge-done {
+    background: rgba(5, 150, 105, 0.1);
+    color: var(--accent-green);
+}
+
+.sched-sess-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.sched-sess-item {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sched-sess-item:last-child {
+    border-bottom: none;
+}
+
+.sched-sess-item-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
+    padding-left: 4px;
+}
+
+.sched-sess-item-num {
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.sched-roles-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+@media (max-width: 640px) {
+    .sched-table-wrap {
+        font-size: 0.72rem;
+    }
+
+    .sched-date-cell,
+    .sched-date-header {
+        width: 90px;
+        padding: 8px;
+    }
+
+    .sched-slot-cell {
+        padding: 8px;
+    }
+
+    .sched-chip {
+        font-size: 0.62rem;
+        padding: 2px 5px;
+    }
+}
