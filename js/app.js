@@ -1779,7 +1779,7 @@ function renderAssessments(container) {
                     </select>
                 </div>
                 <div class="wiz-field full"><label>Course Description (optional)</label>
-                    <textarea id="wiz-course-desc" placeholder="Brief description..."
+                    <textarea id="wiz-course-desc" placeholder="Brief description..." rows="3"
                         oninput="navState.assignConfig=navState.assignConfig||{};navState.assignConfig.courseDesc=this.value;">${cfg.courseDesc || ''}</textarea></div>
             </div>
             <div class="wiz-nav-row">
@@ -1814,12 +1814,24 @@ function renderAssessments(container) {
     }
 
     if (step === 3) {
-        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode] && cfg.customizedFor !== cfg.courseCode) {
+        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode]) {
             const spec = ATE_SUBJECTS[cfg.courseCode];
-            cfg.courseOutcomes = Object.assign({}, spec.cos);
-            cfg.units = {};
-            for (let i = 1; i <= 5; i++) cfg.units[i] = { title: spec.units[String(i)] || spec.units[i] || 'Unit ' + i, desc: '' };
-            cfg.customizedFor = cfg.courseCode;
+            let needsUpdate = (cfg.customizedFor !== cfg.courseCode);
+            if (!needsUpdate && spec.unit_descs && (!cfg.units || !cfg.units[1] || !cfg.units[1].desc)) {
+                needsUpdate = true;
+            }
+            if (needsUpdate) {
+                cfg.courseOutcomes = Object.assign({}, spec.cos);
+                cfg.units = {};
+                for (let i = 1; i <= 5; i++) {
+                    cfg.units[i] = {
+                        title: spec.units[String(i)] || spec.units[i] || 'Unit ' + i,
+                        desc: (spec.unit_descs && spec.unit_descs[String(i)]) ? spec.unit_descs[String(i)] : ''
+                    };
+                }
+                if (spec.objective) cfg.courseDesc = spec.objective;
+                cfg.customizedFor = cfg.courseCode;
+            }
         }
 
         const defaultCOs = {
@@ -1850,8 +1862,8 @@ function renderAssessments(container) {
                 '</div>' +
                 '<div class="wiz-unit-body" id="unit-body-' + u + '" style="display:none;">' +
                 '<input type="text" id="unit-title-' + u + '" placeholder="Unit title" value="' + savedTitle + '" ' +
-                'oninput="document.getElementById(\\"unit-name-preview-' + u + '\\").textContent=this.value;">' +
-                '<textarea id="unit-desc-' + u + '" rows="3" placeholder="Describe key topics...">' + savedDesc + '</textarea>' +
+                'oninput="document.getElementById(\\"unit-name-preview-' + u + '\\").textContent=this.value;" style="font-weight:600;color:var(--accent-blue);">' +
+                '<textarea id="unit-desc-' + u + '" rows="4" placeholder="Describe key topics...">' + savedDesc + '</textarea>' +
                 '<div style="font-size:.72rem;color:var(--text-muted);">Tip: More detail = richer assignments</div>' +
                 '</div></div>';
         }).join('');
