@@ -2170,6 +2170,11 @@ function generateAssignments() {
         pool = allTopics;
     }
 
+    // Safety fallback just in case regex filtering results in an empty pool
+    if (pool.length === 0) {
+        useUnits.forEach(u => pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u, co: coKeys[(u - 1) % coKeys.length] || 'CO1' }));
+    }
+
     const generated = [];
     for (let i = 0; i < numTeams; i++) {
         const topic = pool[i % pool.length];
