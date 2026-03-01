@@ -1199,15 +1199,15 @@ function buildTeams(students, teamSize, mode) {
 
     // Strict constraints: multiple of 3 teams, sizes 4 or 5
     // Allowed gender ratios per team: 2:2, 4:0, 0:4 (and 5th person any)
-    
+
     // Find valid numTeams (multiple of 3) where sum of sizes (4s and 5s) equals N
     let numTeams = 3;
     let found = false;
     let numSize4 = 0, numSize5 = 0;
-    
+
     // Test multiples of 3 down from N/4
     const maxPoss = Math.floor(allStudents.length / 4);
-    for (let nt = Math.floor(maxPoss/3)*3; nt >= 3; nt -= 3) {
+    for (let nt = Math.floor(maxPoss / 3) * 3; nt >= 3; nt -= 3) {
         // We have nt teams. Can we achieve N using only sizes 4 and 5?
         // 4x + 5y = N  and x + y = nt
         // 4(nt - y) + 5y = N => 4nt + y = N => y = N - 4nt
@@ -1221,10 +1221,10 @@ function buildTeams(students, teamSize, mode) {
             break;
         }
     }
-    
+
     if (!found) {
         // Fallback if math is impossible (e.g. very few students like 10)
-        numTeams = Math.max(3, Math.ceil(allStudents.length/5));
+        numTeams = Math.max(3, Math.ceil(allStudents.length / 5));
         numSize4 = numTeams;
         numSize5 = 0;
     }
@@ -1239,7 +1239,7 @@ function buildTeams(students, teamSize, mode) {
     const pairsF = []; // arrays of 2 females
     while (males.length >= 2) pairsM.push([males.pop(), males.pop()]);
     while (females.length >= 2) pairsF.push([females.pop(), females.pop()]);
-    
+
     // Any leftovers (since odd numbers mean 1 leftover M/F)
     const leftovers = [...males, ...females];
 
@@ -1269,7 +1269,7 @@ function buildTeams(students, teamSize, mode) {
     // First flatten any remaining pairs back into leftovers
     while (pairsM.length > 0) leftovers.push(...pairsM.pop());
     while (pairsF.length > 0) leftovers.push(...pairsF.pop());
-    
+
     // Distribute remaining students into teams that need them to reach their target size (sizes[t])
     for (let t = 0; t < numTeams; t++) {
         let needed = sizes[t] - teams[t].members.length;
@@ -1278,7 +1278,7 @@ function buildTeams(students, teamSize, mode) {
             needed--;
         }
     }
-    
+
     // Final desperate check if we ran out of room but have students (math boundary conditions)
     let overflowIdx = 0;
     while (leftovers.length > 0) {
@@ -2086,6 +2086,6 @@ function exportAssignmentsCSV() {
 
 
 function openSyllabusPdf(path) {
-    if(!path) { alert("Syllabus PDF not available."); return; }
-    window.open("Syllabus/" + path, "_blank");
+    if (!path) { alert('Syllabus PDF not available.'); return; }
+    window.open(path, '_blank');
 }
