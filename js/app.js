@@ -2120,17 +2120,57 @@ function generateAssignments() {
     const units = cfg.units || {};
     const cos = cfg.courseOutcomes || { CO1: 'CO1', CO2: 'CO2', CO3: 'CO3', CO4: 'CO4', CO5: 'CO5' };
     const coKeys = Object.keys(cos);
-    const pool = [];
     const useUnits = cfg.focusUnits && cfg.focusUnits.length ? cfg.focusUnits : [1, 2, 3, 4, 5];
+    const allTopics = [];
     useUnits.forEach(u => {
-        const unitTopics = syllTopics.filter(t => t.unit === u);
-        const unitTitle = (units[u] || {}).title || (unitTopics[0] || {}).title || 'Unit ' + u;
-        if (unitTopics.length) {
-            unitTopics.forEach(t => pool.push({ unitNum: u, title: t.title || unitTitle, co: coKeys[(u - 1) % coKeys.length] || 'CO1' }));
-        } else {
-            pool.push({ unitNum: u, title: unitTitle, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
+        const uObj = units[u] || {};
+        const uTitle = uObj.title || 'Unit ' + u;
+        const uDesc = uObj.desc || '';
+        let subtopics = [];
+
+        if (uDesc.trim().length > 10) {
+            subtopics = uDesc.split(/[-—–.,;]+/)
+                .map(s => s.trim())
+                .filter(s => s.length > 5 && s.toLowerCase() !== 'and');
         }
+
+        if (subtopics.length === 0) {
+            const unitTopics = syllTopics.filter(t => t.unit === u);
+            if (unitTopics.length) {
+                subtopics = unitTopics.map(t => t.title || uTitle);
+            } else {
+                subtopics = [uTitle];
+            }
+        }
+
+        subtopics.forEach(sub => {
+            allTopics.push({ unitNum: u, title: sub, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
+        });
     });
+
+    let pool = [];
+    if (numTeams <= useUnits.length) {
+        useUnits.forEach(u => {
+            pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u + ' Comprehensive Coverage', co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
+        });
+    } else if (allTopics.length > numTeams) {
+        const buckets = Array.from({ length: numTeams }, () => []);
+        allTopics.forEach((t, i) => {
+            const bIdx = Math.min(Math.floor(i / (allTopics.length / numTeams)), numTeams - 1);
+            buckets[bIdx].push(t);
+        });
+        buckets.forEach(b => {
+            if (b.length > 0) pool.push({
+                unitNum: b[0].unitNum,
+                title: b.map(x => x.title).join(' & '),
+                co: b[0].co
+            });
+        });
+    } else {
+        pool = allTopics;
+    }
+
+    const generated = [];
     for (let i = 0; i < numTeams; i++) {
         const topic = pool[i % pool.length];
         generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i, cfg.courseName));
