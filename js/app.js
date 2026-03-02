@@ -868,10 +868,22 @@ function renderTeams(container) {
             <div class="teams-container" id="teams-container"></div>
         </div>
 
+        <!-- Assignment Generation CTA Banner (shown before Session Schedule) -->
+        <div class="assess-cta-banner" onclick="navigateToAssessments()">
+            <div class="cta-left">
+                <div class="cta-icon">📋</div>
+                <div class="cta-text">
+                    <div class="cta-title">View Assignment Generation</div>
+                    <div class="cta-sub">Each team has been automatically assigned a unique syllabus topic unit-wise</div>
+                </div>
+            </div>
+            <div class="cta-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+
         <!-- Session CTA Banner -->
         <div class="session-cta-banner" onclick="navigateToSessions()">
             <div class="cta-left">
-                <div class="cta-icon">📋</div>
+                <div class="cta-icon">🗓️</div>
                 <div class="cta-text">
                     <div class="cta-title">View Session Schedule</div>
                     <div class="cta-sub">${numSessions} sessions · ${hrs > 0 ? hrs + 'h ' : ''}${remMin}m total · Round-Robin format</div>
@@ -1187,16 +1199,7 @@ function renderSessions(container) {
             </table>
         </div>
     </div>
-    <div class="assess-cta-banner" onclick="navigateToAssessments()">
-        <div class="cta-left">
-            <div class="cta-icon">📋</div>
-            <div class="cta-text">
-                <div class="cta-title">View Assignment Generation</div>
-                <div class="cta-sub">Each team has been automatically assigned a unique syllabus topic unit-wise</div>
-            </div>
-        </div>
-        <div class="cta-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
-    </div>`;
+`;
 }
 
 function applyCalendarConfig() {
