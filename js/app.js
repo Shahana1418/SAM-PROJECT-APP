@@ -1727,13 +1727,28 @@ function renderAssessments(container) {
     let panelHTML = '';
 
     if (step === 1) {
+        const batchInfo = getBatchAcademicInfo(batchYear);
+        let coHTML = '';
+        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode] && ATE_SUBJECTS[cfg.courseCode].cos) {
+            const cos = ATE_SUBJECTS[cfg.courseCode].cos;
+            coHTML = `<div class="wiz-field full" style="margin-top: 1rem;"><label>Course Outcomes</label>
+                <div style="background:rgba(37,99,235,0.05); border:1px solid rgba(37,99,235,0.2); padding: 12px; border-radius: 8px;">
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-secondary);">
+                        ${Object.entries(cos).map(([key, val]) => `<li><strong>${key}:</strong> ${val}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>`;
+        }
+
         panelHTML = `<div class="wiz-panel">
             <div class="wiz-panel-title">&#128218; Step 1 &mdash; Course Selection</div>
             <div class="wiz-form-grid">
                 <div class="wiz-field"><label>Department</label>
                     <input type="text" readonly value="${getDeptName(deptCode)}" class="wiz-prefill"></div>
-                <div class="wiz-field"><label>Passing Year (Batch)</label>
+                <div class="wiz-field"><label>Batch Year</label>
                     <input type="text" readonly value="${batchYear}" class="wiz-prefill"></div>
+                <div class="wiz-field full"><label>Auto-detected Semester</label>
+                    <input type="text" readonly value="Semester ${batchInfo.semester}" class="wiz-prefill"></div>
                 <div class="wiz-field full"><label>Core Subject (Anna Univ Syllabus)</label>
                     <select id="wiz-core-subject" onchange="
                         if(!navState.assignConfig) navState.assignConfig={};
@@ -1742,7 +1757,12 @@ function renderAssessments(container) {
                             navState.assignConfig.courseCode = opt.value;
                             navState.assignConfig.courseName = opt.text.replace(opt.value + ' - ', '');
                             navState.assignConfig.customizedFor = null;
+                        } else {
+                            navState.assignConfig.courseCode = '';
+                            navState.assignConfig.courseName = '';
+                            navState.assignConfig.customizedFor = null;
                         }
+                        render();
                     ">
                         <option value="" disabled ${!cfg.courseCode ? 'selected' : ''}>Select a subject...</option>
                         ${(function () {
@@ -1765,10 +1785,8 @@ function renderAssessments(container) {
             ).join('')}
                     </select>
                 </div>
-                <div class="wiz-field full"><label>Course Description (optional)</label>
-                    <textarea id="wiz-course-desc" placeholder="Brief description..." rows="3"
-                        oninput="navState.assignConfig=navState.assignConfig||{};navState.assignConfig.courseDesc=this.value;">${cfg.courseDesc || ''}</textarea></div>
             </div>
+            ${coHTML}
             <div class="wiz-nav-row">
                 <button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="moveAssignStep(2)">Next &rarr;</button>
             </div>
