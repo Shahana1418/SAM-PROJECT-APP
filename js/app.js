@@ -285,15 +285,15 @@ function renderBreadcrumb() {
             onclick="navigateBackToTeams()">Teams</span>`);
     }
 
-    if (navState.level === 'sessions' || navState.level === 'assessments') {
+    if (navState.level === 'assessments' || navState.level === 'sessions') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item ${navState.level === 'sessions' ? 'active' : 'clickable'}" 
-            onclick="navigateToSessions()">Session Schedule</span>`);
+        items.push(`<span class="breadcrumb-item ${navState.level === 'assessments' ? 'active' : 'clickable'}" 
+            onclick="navigateToAssessments()">Assignment Generation</span>`);
     }
 
-    if (navState.level === 'assessments') {
+    if (navState.level === 'sessions') {
         items.push(`<span class="breadcrumb-sep">›</span>`);
-        items.push(`<span class="breadcrumb-item active">Assignment Generation</span>`);
+        items.push(`<span class="breadcrumb-item active">Session Schedule</span>`);
     }
 
     bc.innerHTML = items.join('');
@@ -868,32 +868,16 @@ function renderTeams(container) {
             <div class="teams-container" id="teams-container"></div>
         </div>
 
-        <!-- Assignment Generation CTA Banner (shown before Session Schedule) -->
+        <!-- Assignment Generation CTA Banner -->
         <div class="assess-cta-banner" onclick="navigateToAssessments()">
             <div class="cta-left">
                 <div class="cta-icon">📋</div>
                 <div class="cta-text">
                     <div class="cta-title">View Assignment Generation</div>
-                    <div class="cta-sub">Each team has been automatically assigned a unique syllabus topic unit-wise</div>
+                    <div class="cta-sub">Proceed to auto-assign a unique syllabus topic unit-wise to each team</div>
                 </div>
             </div>
             <div class="cta-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
-        </div>
-
-        <!-- Session CTA Banner -->
-        <div class="session-cta-banner" onclick="navigateToSessions()">
-            <div class="cta-left">
-                <div class="cta-icon">🗓️</div>
-                <div class="cta-text">
-                    <div class="cta-title">View Session Schedule</div>
-                    <div class="cta-sub">${numSessions} sessions · ${hrs > 0 ? hrs + 'h ' : ''}${remMin}m total · Round-Robin format</div>
-                </div>
-            </div>
-            <div class="cta-arrow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="9 18 15 12 9 6"/>
-                </svg>
-            </div>
         </div>
     `;
 
@@ -1939,7 +1923,21 @@ function renderAssessments(container) {
                 '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;" onclick="generateAssignments()">Regenerate</button>' +
                 '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;background:var(--gradient-green);" onclick="exportAssignmentsCSV()">Export CSV</button>' +
                 '</div></div>' +
-                '<div class="assign-result-grid">' + cards + '</div></div>';
+                '<div class="assign-result-grid">' + cards + '</div></div>' +
+                '<div class="session-cta-banner" style="margin-top: 1.5rem;" onclick="navigateToSessions()">' +
+                '<div class="cta-left">' +
+                '<div class="cta-icon">🗓️</div>' +
+                '<div class="cta-text">' +
+                '<div class="cta-title">Proceed to Session Schedule</div>' +
+                '<div class="cta-sub">Organize your generated assignments into a round-robin presentation schedule</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="cta-arrow">' +
+                '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
+                '<polyline points="9 18 15 12 9 6"/>' +
+                '</svg>' +
+                '</div>' +
+                '</div>';
         }
 
         const units = cfg.units || {};
