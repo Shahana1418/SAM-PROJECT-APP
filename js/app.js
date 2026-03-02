@@ -1728,16 +1728,16 @@ function renderAssessments(container) {
 
     if (step === 1) {
         const batchInfo = getBatchAcademicInfo(batchYear);
-        let coHTML = '';
-        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode] && ATE_SUBJECTS[cfg.courseCode].cos) {
-            const cos = ATE_SUBJECTS[cfg.courseCode].cos;
-            coHTML = `<div class="wiz-field full" style="margin-top: 1rem;"><label>Course Outcomes</label>
-                <div style="background:rgba(37,99,235,0.05); border:1px solid rgba(37,99,235,0.2); padding: 12px; border-radius: 8px;">
-                    <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-secondary);">
-                        ${Object.entries(cos).map(([key, val]) => `<li><strong>${key}:</strong> ${val}</li>`).join('')}
-                    </ul>
-                </div>
-            </div>`;
+        // Show Course Objective (not COs) after subject selection
+        let objectiveHTML = '';
+        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode]) {
+            const spec = ATE_SUBJECTS[cfg.courseCode];
+            if (spec.objective) {
+                objectiveHTML = `<div style="margin-top:1.2rem;background:linear-gradient(135deg,rgba(37,99,235,0.07),rgba(124,58,237,0.07));border:1px solid rgba(37,99,235,0.18);border-radius:12px;padding:16px 20px;">
+                    <div style="font-size:.72rem;font-weight:800;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">&#127919; Course Objective</div>
+                    <p style="font-size:.88rem;color:var(--text-secondary);line-height:1.6;margin:0;">${spec.objective}</p>
+                </div>`;
+            }
         }
 
         panelHTML = `<div class="wiz-panel">
@@ -1772,13 +1772,11 @@ function renderAssessments(container) {
                     else if (batchYear == 2028) list = ["AU3401", "AU3402", "AU3403", "AU3404", "ML3391"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["AU3601"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                 }
-
                 if (cfg.courseCode && !list.find(s => s.code === cfg.courseCode)) {
                     cfg.courseCode = '';
                     cfg.courseName = '';
                     cfg.customizedFor = null;
                 }
-
                 return list;
             })().map(s =>
                 `<option value="${s.code}" ${(cfg.courseCode === s.code) ? 'selected' : ''}>${s.code} - ${s.name}</option>`
@@ -1786,7 +1784,7 @@ function renderAssessments(container) {
                     </select>
                 </div>
             </div>
-            ${coHTML}
+            ${objectiveHTML}
             <div class="wiz-nav-row">
                 <button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="moveAssignStep(2)">Next &rarr;</button>
             </div>
@@ -1902,9 +1900,15 @@ function renderAssessments(container) {
         ];
         const savedType = cfg.assignType || 'presentation';
 
-        const unitOpts = [1, 2, 3, 4, 5].map(u =>
-            '<option value="' + u + '" ' + ((cfg.focusUnits || []).includes(u) ? 'selected' : '') + '>Unit ' + u + '</option>'
-        ).join('');
+        // Focus Units as checkboxes (multi-select)
+        const focusUnitsHTML = [1, 2, 3, 4, 5].map(u => {
+            const unitTitle = (cfg.units && cfg.units[u]) ? cfg.units[u].title : ('Unit ' + u);
+            const checked = (!cfg.focusUnits || !cfg.focusUnits.length || cfg.focusUnits.includes(u)) ? 'checked' : '';
+            return `<label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;background:var(--card-bg);border:1px solid var(--border);font-size:.85rem;">
+                <input type="checkbox" class="focus-unit-cb" value="${u}" ${checked} style="width:16px;height:16px;accent-color:var(--accent-blue);">
+                <span><strong>Unit ${u}</strong> — ${unitTitle}</span>
+            </label>`;
+        }).join('');
 
         let resultHTML = '';
         if (cfg.generatedAssignments && cfg.generatedAssignments.length > 0) {
@@ -1965,9 +1969,9 @@ function renderAssessments(container) {
             <div class="wiz-form-grid">
                 <div class="wiz-field"><label>Assignment Type</label>
                     <select id="wiz-type">
-                        <option value="presentation" ${savedType === 'presentation' ? 'selected' : ''}>Team Presentation</option>
-                        <option value="miniproject" ${savedType === 'miniproject' ? 'selected' : ''}>Mini Project</option>
-                        <option value="practicals" ${savedType === 'practicals' ? 'selected' : ''}>Practicals</option>
+                        <option value="presentation" ${savedType === 'presentation' ? 'selected' : ''}>&#127908; Team Presentation</option>
+                        <option value="miniproject" ${savedType === 'miniproject' ? 'selected' : ''}>&#128295; Mini Project</option>
+                        <option value="practicals" ${savedType === 'practicals' ? 'selected' : ''}>&#128203; Practicals</option>
                     </select>
                 </div>
                 <div class="wiz-field"><label>Complexity</label>
@@ -1984,23 +1988,17 @@ function renderAssessments(container) {
                         <option value="20-30 min" ${cfg.duration === '20-30 min' ? 'selected' : ''}>20-30 minutes</option>
                         <option value="30 min"   ${cfg.duration === '30 min' ? 'selected' : ''}>30 minutes</option>
                     </select></div>
-                <div class="wiz-field"><label>Focus Unit</label>
-                    <select id="wiz-focus-units">
-                        <option value="all" ${!(cfg.focusUnits && cfg.focusUnits.length) ? 'selected' : ''}>All Units (recommended)</option>
-                        ${unitOpts}
-                    </select></div>
-                <div class="wiz-field"><label>Include Practical Exercises</label>
-                    <select id="wiz-practicals">
-                        <option value="yes" ${cfg.practicals !== 'no' ? 'selected' : ''}>Yes - include lab/mini-project topics</option>
-                        <option value="no"  ${cfg.practicals === 'no' ? 'selected' : ''}>No - theory topics only</option>
-                    </select></div>
+            </div>
+            <div style="margin-top:1rem;">
+                <div style="font-size:.78rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">&#9989; Focus Units (tick to include)</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="focus-units-grid">${focusUnitsHTML}</div>
             </div>
             <div class="wiz-ready-card">
                 <div class="wiz-ready-icon">&#9999;&#65039;</div>
                 <div class="wiz-ready-title">Ready to Generate ${numTeams} Assignments</div>
                 <ul class="wiz-ready-bullets">
-                    <li>Based on ${regulation} syllabus</li>
-                    <li>Topics drawn from unit descriptions you configured</li>
+                    <li>Curated topic list from official Anna University syllabus</li>
+                    <li>12 distinct topics tailored to <strong>${cfg.assignType === 'miniproject' ? 'Mini Projects' : 'Presentation'}</strong> mode</li>
                     <li>Each team gets a unique topic with objectives &amp; deliverables</li>
                     <li>Export as CSV to share with faculty</li>
                 </ul>
@@ -2076,31 +2074,66 @@ function toggleAssignCard(i) {
 
 function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx, courseName = '') {
     const { assignType } = config;
-    const typeLabel = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce' }[assignType] || 'Team Presentation';
+    const typeLabel = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce', practicals: 'Practicals' }[assignType] || 'Team Presentation';
     const descMap = {
-        presentation: `Prepare and deliver a structured presentation on <strong>"${unitTitle}"</strong>. Focus heavily on <strong>Anna University previous year important questions</strong>, core algorithms, and theorems relevant to <strong>${courseName}</strong>. Include real-world applications and visual aids.`,
-        assignment: `Write a detailed analytical report on <strong>"${unitTitle}"</strong>. You must solve and explain <strong>frequently asked Anna University important questions</strong>, including theoretical background, derivations, and algorithmic steps from <strong>${courseName}</strong>.`,
-        miniproject: `Design and implement a small-scale practical demonstration of principles from <strong>"${unitTitle}"</strong>. Document your implementation based on the standard laboratory requirements for <strong>${courseName}</strong>.`,
-        practicals: `Perform hands-on lab exercises and software/hardware experiments related to <strong>"${unitTitle}"</strong>. Answer standard viva questions and document the output for <strong>${courseName}</strong>.`,
+        presentation: `Prepare and deliver a 12–15 minute structured presentation on <strong>"${unitTitle}"</strong> from <strong>${courseName}</strong>. Cover Anna University important questions, key formulae, diagrams, and real-world examples. Use minimum 10 slides with clear visuals.`,
+        assignment: `Write a detailed analytical report on <strong>"${unitTitle}"</strong> from <strong>${courseName}</strong>. Include derivations, solved problems from previous Anna University question papers, diagrams and a summary. Minimum 1500 words.`,
+        miniproject: `Design, build or simulate a mini project on <strong>"${unitTitle}"</strong> relevant to <strong>${courseName}</strong>. Demonstrate a working outcome (prototype, simulation or data analysis), prepare a project report and present findings to the team.`,
+        practicals: `Perform laboratory experiments related to <strong>"${unitTitle}"</strong> in <strong>${courseName}</strong>. Record observations, analyse results, answer viva questions and submit a complete observation book entry.`,
     };
-    const objectives = [
-        `To master Anna University core concepts and important questions in ${unitTitle}.`,
-        `To analyse and apply ${courseName} principles to standard engineering problems.`,
-        `To evaluate and solve repeated university examination questions related to ${unitTitle}.`,
-        `To demonstrate competence in ${courseName} through structured presentation of core theorems.`,
-        `To develop practical implementation skills required for ${courseName} laboratories.`,
-    ];
+    const objectiveMap = {
+        presentation: `To understand and communicate key concepts of "${unitTitle}" from ${courseName}, with emphasis on Anna University syllabus topics and exam-relevant questions.`,
+        assignment: `To analyse and solve Anna University examination problems related to "${unitTitle}" from ${courseName}, developing problem-solving and technical writing skills.`,
+        miniproject: `To apply theoretical knowledge of "${unitTitle}" from ${courseName} in a practical, hands-on mini project that demonstrates engineering principles.`,
+        practicals: `To verify theoretical concepts of "${unitTitle}" through hands-on experiments in ${courseName} laboratory, building observation and analytical skills.`,
+    };
     const deliverableMap = {
-        presentation: ['Slide deck (8-12 slides) covering Anna University repeated topics.', 'Q&A session with evaluating team.', 'Reference list from standard syllabus textbooks.'],
-        assignment: ['Typed report (1500-2000 words) with derivations and step-by-step solutions.', 'Answers to at least 3 previous year important questions.', 'Diagrams or pseudocode where relevant.'],
-        miniproject: ['Working prototype or implementation.', 'Project report: problem, design, results.', 'Live demo to evaluating team.'],
-        practicals: ['Observation and Record documentation.', 'Execution of code/circuit/experiment.', 'Output validation and viva responses.'],
+        presentation: [
+            'PowerPoint/PDF slide deck (minimum 10 slides).',
+            'Live 12–15 min presentation to the team with Q&A.',
+            'Reference list citing syllabus textbooks and important question resources.'
+        ],
+        assignment: [
+            'Typed report (minimum 1500 words) with derivations and step-by-step solutions.',
+            'Solutions to at least 3 previous Anna University important questions.',
+            'Diagrams, graphs or flowcharts as applicable.'
+        ],
+        miniproject: [
+            'Working prototype, simulation output or experimental data.',
+            'Project report: Abstract, Introduction, Design/Method, Results, Conclusion.',
+            'Live demonstration and Q&A with evaluating team.'
+        ],
+        practicals: [
+            'Completed observation book entry with aim, apparatus, procedure, result.',
+            'Graphs and calculations as required by the experiment.',
+            'Viva responses covering theory behind the experiment.'
+        ],
     };
     const criteriaMap = {
-        presentation: ['Clarity and coverage of AU syllabus topics (30%)', 'Slides and visual aids (20%)', 'Delivery and time management (25%)', 'Q&A handling (25%)'],
-        assignment: ['Correctness of problem solutions (35%)', 'Writing clarity and structure (25%)', 'Diagrams and examples (20%)', 'Adherence to syllabus scope (20%)'],
-        miniproject: ['Functionality and completeness (40%)', 'Innovation and alignment with theory (20%)', 'Documentation (20%)', 'Demo and explanation (20%)'],
-        practicals: ['Successful execution (40%)', 'Knowledge of concepts/viva (30%)', 'Observation writing (20%)', 'Debugging skills (10%)'],
+        presentation: [
+            'Coverage of Anna University syllabus topics (30%)',
+            'Clarity of slides and visual aids (20%)',
+            'Delivery, confidence and time management (25%)',
+            'Handling of Q&A from reviewers (25%)'
+        ],
+        assignment: [
+            'Correctness of problem solutions and derivations (35%)',
+            'Writing clarity and report structure (25%)',
+            'Diagrams, tables and examples (20%)',
+            'Adherence to syllabus scope and references (20%)'
+        ],
+        miniproject: [
+            'Working functionality and completeness (40%)',
+            'Innovation and alignment with course theory (20%)',
+            'Project report quality and documentation (20%)',
+            'Demonstration and explanation to reviewing team (20%)'
+        ],
+        practicals: [
+            'Successful execution of the experiment (40%)',
+            'Knowledge of underlying concepts (viva) (30%)',
+            'Observation book quality and calculations (20%)',
+            'Debugging/troubleshooting skills shown (10%)'
+        ],
     };
     const complexityCycle = ['Easy', 'Medium', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Hard', 'Easy'];
     const usedComplexity = config.complexity === 'mixed'
@@ -2110,7 +2143,7 @@ function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey,
         assessId: 'ASSIGN_' + String(teamIdx + 1).padStart(3, '0'),
         unit: 'Unit ' + unitNum, unitTitle, title: unitTitle,
         co: coKey, complexity: usedComplexity, duration: config.duration, type: typeLabel,
-        objective: objectives[teamIdx % objectives.length],
+        objective: objectiveMap[assignType] || objectiveMap.presentation,
         description: descMap[assignType] || descMap.presentation,
         deliverables: deliverableMap[assignType] || deliverableMap.presentation,
         criteria: criteriaMap[assignType] || criteriaMap.presentation,
@@ -2124,74 +2157,71 @@ function generateAssignments() {
     cfg.assignType = typeEl ? typeEl.value : (cfg.assignType || 'presentation');
     cfg.complexity = document.getElementById('wiz-complexity')?.value || cfg.complexity || 'mixed';
     cfg.duration = document.getElementById('wiz-duration')?.value || cfg.duration || '15-20 min';
-    cfg.practicals = document.getElementById('wiz-practicals')?.value || cfg.practicals || 'yes';
-    const focusEl = document.getElementById('wiz-focus-units');
-    if (focusEl) {
-        const sel = Array.from(focusEl.selectedOptions).map(o => parseInt(o.value)).filter(v => !isNaN(v));
-        cfg.focusUnits = sel.length ? sel : [];
+
+    // Read checked focus units (checkboxes)
+    const cbAll = document.querySelectorAll('.focus-unit-cb');
+    if (cbAll.length > 0) {
+        const sel = Array.from(cbAll).filter(cb => cb.checked).map(cb => parseInt(cb.value));
+        cfg.focusUnits = sel.length ? sel : [1, 2, 3, 4, 5];
+    } else {
+        cfg.focusUnits = cfg.focusUnits || [];
     }
+
     const teams = navState.teams || [];
     const numTeams = teams.length || 12;
     const deptCode = navState.dept;
     const batchYear = navState.batch;
-    const regulation = batchYear >= 2029 ? 'R2025' : 'R2021';
-    const syllTopics = (SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode]) ? SYLLABUS_DATA[regulation][deptCode] : [];
     const units = cfg.units || {};
     const cos = cfg.courseOutcomes || { CO1: 'CO1', CO2: 'CO2', CO3: 'CO3', CO4: 'CO4', CO5: 'CO5' };
     const coKeys = Object.keys(cos);
     const useUnits = cfg.focusUnits && cfg.focusUnits.length ? cfg.focusUnits : [1, 2, 3, 4, 5];
-    const allTopics = [];
-    useUnits.forEach(u => {
-        const uObj = units[u] || {};
-        const uTitle = uObj.title || 'Unit ' + u;
-        const uDesc = uObj.desc || '';
-        let subtopics = [];
 
-        if (uDesc.trim().length > 10) {
-            subtopics = uDesc.split(/[-—–.,;]+/)
-                .map(s => s.trim())
-                .filter(s => s.length > 5 && s.toLowerCase() !== 'and');
-        }
-
-        if (subtopics.length === 0) {
-            const unitTopics = syllTopics.filter(t => t.unit === u);
-            if (unitTopics.length) {
-                subtopics = unitTopics.map(t => t.title || uTitle);
-            } else {
-                subtopics = [uTitle];
-            }
-        }
-
-        subtopics.forEach(sub => {
-            allTopics.push({ unitNum: u, title: sub, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
-        });
-    });
+    /* ── Try curated topic list from ATE_SUBJECTS first ── */
+    const spec = (typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null;
+    const curatedList = spec && spec.topics ? spec.topics[cfg.assignType] : null;
 
     let pool = [];
-    if (numTeams <= useUnits.length) {
+
+    if (curatedList && curatedList.length > 0) {
+        // Use pre-defined topic list — distribute 12 topics across numTeams
+        const filtered = curatedList; // already exactly 12 curated topics
+        const coUnits = [1, 2, 3, 4, 5]; // map topic index to unit for CO assignment
+        for (let i = 0; i < filtered.length; i++) {
+            const uIdx = Math.floor(i / filtered.length * 5); // spread across 5 units
+            const uNum = coUnits[uIdx] || 1;
+            pool.push({
+                unitNum: uNum,
+                title: filtered[i],
+                co: coKeys[(uNum - 1) % coKeys.length] || 'CO1'
+            });
+        }
+    } else {
+        /* ── Fallback: derive topics from unit descriptions ── */
+        const allTopics = [];
         useUnits.forEach(u => {
-            pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u + ' Comprehensive Coverage', co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
-        });
-    } else if (allTopics.length > numTeams) {
-        const buckets = Array.from({ length: numTeams }, () => []);
-        allTopics.forEach((t, i) => {
-            const bIdx = Math.min(Math.floor(i / (allTopics.length / numTeams)), numTeams - 1);
-            buckets[bIdx].push(t);
-        });
-        buckets.forEach(b => {
-            if (b.length > 0) pool.push({
-                unitNum: b[0].unitNum,
-                title: b.map(x => x.title).join(' & '),
-                co: b[0].co
+            const uObj = units[u] || {};
+            const uTitle = uObj.title || 'Unit ' + u;
+            const uDesc = uObj.desc || '';
+            let subtopics = [];
+            if (uDesc.trim().length > 10) {
+                subtopics = uDesc.split(/[-—–.,;]+/).map(s => s.trim()).filter(s => s.length > 5 && s.toLowerCase() !== 'and');
+            }
+            if (subtopics.length === 0) subtopics = [uTitle];
+            subtopics.forEach(sub => {
+                allTopics.push({ unitNum: u, title: sub, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
             });
         });
-    } else {
-        pool = allTopics;
-    }
-
-    // Safety fallback just in case regex filtering results in an empty pool
-    if (pool.length === 0) {
-        useUnits.forEach(u => pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u, co: coKeys[(u - 1) % coKeys.length] || 'CO1' }));
+        if (allTopics.length > numTeams) {
+            const buckets = Array.from({ length: numTeams }, () => []);
+            allTopics.forEach((t, i) => {
+                const bIdx = Math.min(Math.floor(i / (allTopics.length / numTeams)), numTeams - 1);
+                buckets[bIdx].push(t);
+            });
+            buckets.forEach(b => { if (b.length > 0) pool.push({ unitNum: b[0].unitNum, title: b.map(x => x.title).join(' & '), co: b[0].co }); });
+        } else {
+            pool = allTopics;
+        }
+        if (pool.length === 0) useUnits.forEach(u => pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u, co: coKeys[(u - 1) % coKeys.length] || 'CO1' }));
     }
 
     const generated = [];

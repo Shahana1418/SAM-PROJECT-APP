@@ -1,414 +1,170 @@
+/**
+ * SUBJECTS_DATA — Department × Regulation subject lists
+ * Code and name for each subject appear in the Step 1 dropdown.
+ */
 const SUBJECTS_DATA = {
+
+    /* ─── R2021 (Batches 2027, 2028) ─────────────────────────────── */
     "R2021": {
-        "CVE": [
-            {
-                "code": "IP3151",
-                "name": "Theory"
-            },
-            {
-                "code": "GE3152",
-                "name": "Practicals"
-            },
-            {
-                "code": "GE3172",
-                "name": "Category"
-            },
-            {
-                "code": "GE3252",
-                "name": "Practicals"
-            },
-            {
-                "code": "GE3272",
-                "name": "Course Title"
-            },
-            {
-                "code": "CE3351",
-                "name": "Practicals"
-            },
-            {
-                "code": "GE3361",
-                "name": "Course Title"
-            },
-            {
-                "code": "CE3601",
-                "name": "Course Title"
-            },
-            {
-                "code": "AG3601",
-                "name": "Practicals"
-            },
-            {
-                "code": "CE3811",
-                "name": "Course Title"
-            },
-            {
-                "code": "MX3084",
-                "name": "Course Title"
-            },
-            {
-                "code": "CE3024",
-                "name": "Periods"
-            },
-            {
-                "code": "CE3048",
-                "name": "Course Title"
-            },
-            {
-                "code": "CE3055",
-                "name": "Course Title"
-            }
-        ],
+
         "ATE": [
-            {
-                "code": "GE3172",
-                "name": "Anna University, Chennai"
-            },
-            {
-                "code": "AU3303",
-                "name": "Practicals"
-            },
-            {
-                "code": "MX3084",
-                "name": "Course Title"
-            },
-            {
-                "code": "MX3089",
-                "name": "Course Title"
-            }
+            // Batch-specific subjects are injected dynamically in renderAssessments.
+            // This generic list applies when batch-specific override is not matched.
+            { code: "AU3601", name: "Automotive Pollution and Control" },
+            { code: "AU3401", name: "Fuels and Lubricants" },
+            { code: "AU3402", name: "Automotive Chassis" },
+            { code: "AU3403", name: "Vehicle Body Engineering" },
+            { code: "AU3404", name: "Automotive Transmission" },
+            { code: "ML3391", name: "Mechanics of Solids" }
         ],
-        "IMT": [
-            {
-                "code": "IP3151",
-                "name": "Theory"
-            },
-            {
-                "code": "CS3391",
-                "name": "Practicals"
-            },
-            {
-                "code": "IT3811",
-                "name": "Course Title"
-            },
-            {
-                "code": "GE3792",
-                "name": "Course Title"
-            },
-            {
-                "code": "MX3084",
-                "name": "Course Title"
-            }
-        ],
-        "ECE": [
-            {
-                "code": "IP3151",
-                "name": "Theory"
-            },
-            {
-                "code": "GE3152",
-                "name": "Practicals"
-            },
-            {
-                "code": "EC3352",
-                "name": "Practicals"
-            },
-            {
-                "code": "EC3811",
-                "name": "Course Title"
-            },
-            {
-                "code": "MX3084",
-                "name": "Course"
-            },
-            {
-                "code": "MX3089",
-                "name": "Course Title"
-            }
-        ],
-        "CSE": [
-            {
-                "code": "IP3151",
-                "name": "Theory"
-            },
-            {
-                "code": "GE3152",
-                "name": "Category"
-            },
-            {
-                "code": "GE3451",
-                "name": "Course Title"
-            },
-            {
-                "code": "CS3481",
-                "name": "Total"
-            },
-            {
-                "code": "CS3811",
-                "name": "Course Title"
-            },
-            {
-                "code": "GE3792",
-                "name": "Course Title"
-            },
-            {
-                "code": "MX3084",
-                "name": "Course Title"
-            }
-        ],
+
         "MCE": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
+            { code: "ME3301", name: "Fluid Mechanics and Machinery" },
+            { code: "ME3302", name: "Manufacturing Technology – II" },
+            { code: "ME3303", name: "Engineering Thermodynamics" },
+            { code: "ME3401", name: "Applied Thermodynamics" },
+            { code: "ME3402", name: "Design of Machine Elements" },
+            { code: "ME3403", name: "Metrology and Measurements" },
+            { code: "ME3501", name: "Computer Aided Design and Manufacturing" },
+            { code: "ME3601", name: "Mechatronics" }
         ],
+
+        "CSE": [
+            { code: "CS3301", name: "Data Structures and Algorithms" },
+            { code: "CS3302", name: "Computer Organization and Architecture" },
+            { code: "CS3391", name: "Object Oriented Programming" },
+            { code: "CS3401", name: "Algorithms" },
+            { code: "CS3451", name: "Introduction to Operating Systems" },
+            { code: "CS3481", name: "Database Management Systems" },
+            { code: "CS3501", name: "Software Engineering" },
+            { code: "CS3601", name: "Computer Networks" },
+            { code: "CS3691", name: "Embedded Systems and IoT" },
+            { code: "CS3811", name: "Digital Forensics" },
+            { code: "GE3451", name: "Human Values and Ethics" }
+        ],
+
+        "ECE": [
+            { code: "EC3301", name: "Signals and Systems" },
+            { code: "EC3302", name: "Electronic Circuits – I" },
+            { code: "EC3351", name: "Digital Electronics" },
+            { code: "EC3352", name: "Electronic Circuits – II" },
+            { code: "EC3401", name: "Electromagnetic Fields" },
+            { code: "EC3452", name: "Linear Integrated Circuits" },
+            { code: "EC3501", name: "Digital Signal Processing" },
+            { code: "EC3601", name: "VLSI Design" },
+            { code: "EC3811", name: "Internet of Things" }
+        ],
+
         "EEE": [
-            {
-                "code": "IP3151",
-                "name": "Theory"
-            },
-            {
-                "code": "GE3152",
-                "name": "Practicals"
-            },
-            {
-                "code": "GE3252",
-                "name": "Practicals"
-            },
-            {
-                "code": "GE3272",
-                "name": "Course Title"
-            },
-            {
-                "code": "CS3353",
-                "name": "Practicals"
-            },
-            {
-                "code": "GE3361",
-                "name": "Course Title"
-            },
-            {
-                "code": "EE3405",
-                "name": "Course Title"
-            },
-            {
-                "code": "EE3512",
-                "name": "Total"
-            },
-            {
-                "code": "EE3811",
-                "name": "Course Title"
-            },
-            {
-                "code": "EE3031",
-                "name": "Course Title"
-            }
+            { code: "EE3301", name: "Electric Circuits" },
+            { code: "EE3302", name: "Electromagnetic Theory" },
+            { code: "EE3303", name: "Electronic Devices and Circuits" },
+            { code: "EE3401", name: "Electrical Machines – I" },
+            { code: "EE3402", name: "Electrical Machines – II" },
+            { code: "EE3405", name: "Power Systems" },
+            { code: "EE3501", name: "Control Systems" },
+            { code: "EE3512", name: "Power Electronics" },
+            { code: "EE3601", name: "High Voltage Engineering" },
+            { code: "EE3811", name: "Renewable Energy Systems" }
         ],
+
+        "CVE": [
+            { code: "CE3301", name: "Fluid Mechanics" },
+            { code: "CE3302", name: "Building Materials and Construction" },
+            { code: "CE3303", name: "Mechanics of Solids" },
+            { code: "CE3351", name: "Structural Analysis" },
+            { code: "CE3401", name: "Concrete Technology" },
+            { code: "CE3501", name: "Design of Concrete Structures" },
+            { code: "CE3601", name: "Environmental Engineering" },
+            { code: "CE3811", name: "Traffic Engineering" }
+        ],
+
+        "IMT": [
+            { code: "IT3301", name: "Data Structures and Algorithms" },
+            { code: "CS3391", name: "Object Oriented Programming" },
+            { code: "IT3401", name: "Database Management Systems" },
+            { code: "IT3501", name: "Computer Networks" },
+            { code: "IT3601", name: "Cloud Computing" },
+            { code: "IT3811", name: "Cyber Security" },
+            { code: "GE3792", name: "Disaster Relief Engineering" }
+        ],
+
         "CDS": [
-            {
-                "code": "IP3151",
-                "name": "Theory"
-            },
-            {
-                "code": "HS3152",
-                "name": "Professional English I"
-            },
-            {
-                "code": "MA3151",
-                "name": "Matrices and Calculus"
-            }
+            { code: "MA3151", name: "Matrices and Calculus" },
+            { code: "HS3152", name: "Professional English – I" },
+            { code: "DS3301", name: "Statistics for Data Science" },
+            { code: "DS3401", name: "Machine Learning" },
+            { code: "DS3501", name: "Big Data Analytics" },
+            { code: "DS3601", name: "Deep Learning" }
         ]
     },
+
+    /* ─── R2025 (Batch 2029+, Semester 2 common subjects) ────────── */
     "R2025": {
-        "IMT": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
-        ],
-        "CVE": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
-        ],
-        "CDS": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
-        ],
+
         "ATE": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" },
+            { code: "BE3271", name: "Basic Electrical and Electronics Engineering Laboratory" }
         ],
-        "CSE": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
-        ],
+
         "MCE": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" }
         ],
-        "EEE": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
+
+        "CSE": [
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" }
         ],
+
         "ECE": [
-            {
-                "code": "MA3251",
-                "name": "Statistics and Numerical Methods"
-            },
-            {
-                "code": "PH3251",
-                "name": "Materials Science"
-            },
-            {
-                "code": "BE3251",
-                "name": "Basic Electrical and Electronics Engineering"
-            },
-            {
-                "code": "GE3251",
-                "name": "Engineering Graphics"
-            },
-            {
-                "code": "GE3271",
-                "name": "Engineering Practices Laboratory"
-            }
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" }
+        ],
+
+        "EEE": [
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" }
+        ],
+
+        "CVE": [
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" }
+        ],
+
+        "IMT": [
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" }
+        ],
+
+        "CDS": [
+            { code: "MA3251", name: "Statistics and Numerical Methods" },
+            { code: "PH3251", name: "Materials Science" },
+            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
+            { code: "GE3251", name: "Engineering Graphics" },
+            { code: "GE3271", name: "Engineering Practices Laboratory" }
         ]
     }
 };
