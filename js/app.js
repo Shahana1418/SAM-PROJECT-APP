@@ -200,6 +200,13 @@ function updateUserBadge() {
 
 // ===== Navigation =====
 function navigateTo(level, dept, batch) {
+    // When moving to a different batch or department, reset the wizard state
+    const batchChanging = (level === 'batch' && (dept !== navState.dept || batch !== navState.batch));
+    const levelGoingBack = (level === 'college' || level === 'department' || level === 'batch');
+    if (batchChanging || levelGoingBack) {
+        navState.assignStep = 1;
+        navState.assignConfig = {};
+    }
     navState.level = level;
     navState.dept = dept || null;
     navState.batch = batch || null;
@@ -216,12 +223,18 @@ function navigateToSessions() {
 }
 
 function navigateToAssessments() {
+    // Reset wizard to step 1 so it shows fresh for the current batch
+    navState.assignStep = 1;
+    navState.assignConfig = {};
     navState.level = 'assessments';
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function navigateBackToTeams() {
+    // Clear wizard state so re-entering starts fresh
+    navState.assignStep = 1;
+    navState.assignConfig = {};
     navState.level = 'teams';
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2015,12 +2028,11 @@ function renderAssessments(container) {
 
     container.innerHTML = `<div class="wiz-header">
         <div>
+            <button onclick="navigateBackToTeams()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:8px;color:#fff;padding:6px 14px;font-size:.8rem;font-weight:600;cursor:pointer;margin-bottom:10px;">&#8592; Back to Teams</button>
             <div class="wiz-header-title">&#9999;&#65039; Assignment Configuration Wizard</div>
             <div class="wiz-header-sub">Generate assignments and map to sessions &middot; ${getDeptName(deptCode)} &middot; ${batchYear} Batch</div>
         </div>
-        <button onclick="openSyllabusPdf('${pdfPath}')" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;padding:8px 16px;font-size:.8rem;font-weight:600;cursor:pointer;">
-            &#128196; ${regulation} Syllabus PDF
-        </button>
+        <button onclick="openSyllabusPdf('${pdfPath}')" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;padding:8px 16px;font-size:.8rem;font-weight:600;cursor:pointer;">&#128196; ${regulation} Syllabus PDF</button>
     </div>
     ${stepperHTML}
     ${panelHTML}`;
