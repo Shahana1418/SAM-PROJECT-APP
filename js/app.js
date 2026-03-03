@@ -1263,10 +1263,12 @@ function buildTeams(students, teamSize, mode) {
     }
 
     if (!found) {
-        // Fallback if math is impossible (e.g. very few students like 10)
-        numTeams = Math.max(3, Math.ceil(allStudents.length / 5));
-        numSize4 = numTeams;
-        numSize5 = 0;
+        // Fallback: very small class (< 12 students). Round up to nearest multiple of 3.
+        let raw = Math.max(3, Math.ceil(allStudents.length / 5));
+        numTeams = Math.ceil(raw / 3) * 3; // always a multiple of 3
+        numSize5 = allStudents.length - 4 * numTeams; // could be negative — handled below
+        if (numSize5 < 0) numSize5 = 0;
+        numSize4 = numTeams - numSize5;
     }
 
     const sizes = Array(numTeams).fill(4);
