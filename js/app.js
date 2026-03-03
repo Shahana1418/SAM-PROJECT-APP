@@ -2247,43 +2247,48 @@ function generateAssignments() {
 
     /* ── For non-practicals: filter SYLLABUS_DATA by focusUnits AND complexity ── */
     if (!curatedList) {
-        const isR2025 = batchYear >= 2029;
-        const regulation = isR2025 ? 'R2025' : 'R2021';
-        let syllTopics = (typeof SYLLABUS_DATA !== 'undefined' &&
-            SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
-            ? SYLLABUS_DATA[regulation][deptCode] : [];
-
-        // Keep only topics from checked/selected units
-        syllTopics = syllTopics.filter(t => useUnits.includes(t.unit));
-
-        // Filter by complexity when not 'mixed'
-        if (cfg.complexity !== 'mixed' && syllTopics.length > 0) {
-            const complexFiltered = syllTopics.filter(t => t.complexity === cfg.complexity);
-            // Only apply filter if we get at least one match; otherwise keep all focusUnit topics
-            if (complexFiltered.length > 0) syllTopics = complexFiltered;
-        }
-
-        if (syllTopics.length > 0) {
-            curatedList = syllTopics.map(t => t.title);
+        if (spec && spec.topics && spec.topics[cfg.assignType] && spec.topics[cfg.assignType].length > 0) {
+            // First Priority: explicitly curated topics in ATE_SUBJECTS matching the assignType
+            curatedList = spec.topics[cfg.assignType];
         } else {
-            // Last resort: ATE_SUBJECTS curated list
-            curatedList = spec && spec.topics ? spec.topics[cfg.assignType] : null;
+            // Second Priority: use generic SYLLABUS_DATA topics
+            const isR2025 = batchYear >= 2029;
+            const regulation = isR2025 ? 'R2025' : 'R2021';
+            let syllTopics = (typeof SYLLABUS_DATA !== 'undefined' &&
+                SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
+                ? SYLLABUS_DATA[regulation][deptCode] : [];
+
+            // Keep only topics from checked/selected units
+            syllTopics = syllTopics.filter(t => useUnits.includes(t.unit));
+
+            // Filter by complexity when not 'mixed'
+            if (cfg.complexity !== 'mixed' && syllTopics.length > 0) {
+                const complexFiltered = syllTopics.filter(t => t.complexity === cfg.complexity);
+                // Only apply filter if we get at least one match; otherwise keep all focusUnit topics
+                if (complexFiltered.length > 0) syllTopics = complexFiltered;
+            }
+
+            if (syllTopics.length > 0) {
+                curatedList = syllTopics.map(t => t.title);
+            }
         }
     }
 
     let pool = [];
 
     if (curatedList && curatedList.length > 0) {
-        const filtered = curatedList;
         const coUnits = [1, 2, 3, 4, 5];
-        for (let i = 0; i < filtered.length; i++) {
-            const uIdx = Math.floor(i / filtered.length * 5);
+        for (let i = 0; i < curatedList.length; i++) {
+            const uIdx = Math.floor(i / curatedList.length * 5);
             const uNum = coUnits[uIdx] || 1;
-            pool.push({
-                unitNum: uNum,
-                title: filtered[i],
-                co: coKeys[(uNum - 1) % coKeys.length] || 'CO1'
-            });
+            // Only include this topic if its mapped unit is among selected focus units
+            if (useUnits.includes(uNum)) {
+                pool.push({
+                    unitNum: uNum,
+                    title: curatedList[i],
+                    co: coKeys[(uNum - 1) % coKeys.length] || 'CO1'
+                });
+            }
         }
     } else {
         /* ── Fallback: derive topics only from selected unit descriptions ── */
