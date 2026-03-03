@@ -276,7 +276,7 @@ const ATE_SUBJECTS = {
         objective: "The objective of this course is to prepare the students to have knowledge on the harmful effects of major pollutants of IC engines, emission standards, various pollution measurement devices and control techniques.",
         units: {
             1: { title: "Emission from Automobiles", desc: "Sources of Pollution. Various emissions from Automobiles — Formation — Effects of pollutants on environment and human beings. Emission control techniques – Emission standards - National and international." },
-            2: { title: "Emission from Spark Ignition Engine and Its Control", desc: "Emission formation in SI Engines- Carbon monoxide- Unburned hydrocarbon, NOx, Smoke — Effects of design and operating variables on emission formation — Control of evaporative emission — Two-way Catalytic converter — Three-way Catalytic converter — Performance and efficiency — Thermal reactor — Fumigation." },
+            2: { title: "Emission from Spark Ignition Engine and Its Control", desc: "Emission formation in SI Engines - Carbon monoxide - Unburned hydrocarbon - NOx - Smoke - Lead emission - Crankcase emission — Effects of design and operating variables on emission formation — Control of evaporative emission: Charcoal Canister — Crankcase emission control: Positive Crankcase Ventilation (PCV) system — Control of exhaust emission: Secondary air injection — Two-way Catalytic converter — Three-way Catalytic converter — Performance and efficiency — Thermal reactor — Laser Assisted Combustion." },
             3: { title: "Emission from Compression Ignition Engine and Its Control", desc: "Formation of White, Blue, and Black Smokes, NOx, soot, sulphur particulate and Intermediate Compounds — Physical and Chemical delay — Significance Effect of Operating variables on Emission formation — Fumigation, EGR, HCCI, Particulate Traps, SCR — Cetane number Effect." },
             4: { title: "Noise Pollution from Automobiles", desc: "Sources of Noise — Engine Noise, Transmission Noise, vehicle structural Noise, aerodynamics noise, Exhaust Noise. Noise reduction in Automobiles — Encapsulation technique for noise reduction — Silencer Design." },
             5: { title: "Test Procedures and Emission Measurements", desc: "Constant Volume Sampling I and 3 (CVS1 & CVS3) Systems- Sampling Procedures — Chassis dyno - Seven mode and thirteen mode cycles for Emission Sampling — Sampling problems — world harmonized driving cycles - Emission analysers — NDIR, FID, Chemiluminescent, Smoke meters, Dilution Tunnel, SHED Test, Sound level meters. Particle counter." }
@@ -584,18 +584,18 @@ const ATE_LABS = {
     2: [
         {
             code: "GE3271", name: "Engineering Practices Laboratory", experiments: [
-                "Study and practice of basic carpentry joints",
-                "Study and practice of sheet metal operations – Tray making",
-                "Study and practice of fitting operations – V-fit and Dovetail fit",
-                "Study and practice of plumbing joints and pipe connections",
-                "Study and practice of welding – Arc welding butt and lap joints",
-                "Study and practice of basic machining – Turning and facing",
-                "Wiring practice – Staircase wiring and godown wiring",
-                "Soldering practice – Simple electronic circuit assembly",
-                "Study of power tools and measurement instruments",
-                "Foundry practice – Moulding and casting of simple shapes",
-                "Smithy practice – Forging operations",
-                "Study and use of basic hand tools and their applications"
+                "Plumbing: Connecting various pipe fittings — valves, taps, couplings, unions, reducers and elbows used in households",
+                "Plumbing: Laying pipe connections to suction and delivery sides of a pump; connecting metal, plastic and flexible pipes",
+                "Wood Work: Sawing and planing; making T-Joint, Mortise, Tenon and Dovetail joints; studying door panels and trusses",
+                "Electrical: Basic switchboard wiring with lamp, fan and three-pin socket",
+                "Electrical: Staircase wiring; fluorescent lamp (CFL and LED) wiring",
+                "Electrical: Energy meter wiring, calculations and calibration",
+                "Electrical: Study of iron box, emergency lamp and fan regulator wiring",
+                "Welding: Butt joint, Lap joint and Tee joint using arc welding; gas welding practice",
+                "Machining: Simple turning, drilling and tapping operations",
+                "Assembly: Assembling centrifugal pump, household mixer and air conditioner",
+                "Sheet Metal Work: Making square tray and funnel; basic foundry operations",
+                "Soldering: Simple electronic circuit soldering; continuity check and PCB assembly"
             ]
         },
         {
@@ -618,19 +618,19 @@ const ATE_LABS = {
     /* Semester 4 Labs (Batch 2028) */
     4: [
         {
-            code: "AU3411", name: "Automotive Chassis Laboratory", experiments: [
-                "Study of chassis layout and frame types in automobile",
-                "Study and demonstration of steering mechanisms and geometry",
-                "Study of different types of front axles and stub axles",
-                "Study of propeller shaft, universal joints and CV joints",
-                "Study of differential mechanism and final drive types",
-                "Study of full-floating, semi-floating and three-quarter floating axles",
-                "Study of leaf spring, coil spring and torsion bar suspension",
-                "Study of independent suspension and shock absorbers",
-                "Study and demonstration of drum brake components",
-                "Study and demonstration of disc brake components",
-                "Study of hydraulic and pneumatic braking circuits",
-                "Study of anti-lock braking system (ABS) components"
+            code: "AU3411", name: "Vehicle Components Laboratory", experiments: [
+                "Dismantling, measurement and assembling of 1000cc, Bus, V8, CRDI and MPFI engines",
+                "Dismantling, measurement and assembling of single plate and diaphragm clutches",
+                "Dismantling, calculation of gear ratio and assembling of constant mesh gearbox",
+                "Dismantling, calculation of gear ratio and assembling of sliding mesh gearbox",
+                "Dismantling and assembling of transfer case",
+                "Dismantling, calculation of gear ratio and assembling of differential assembly",
+                "Dismantling, measurement and assembling of front axle assembly",
+                "Dismantling, measurement and assembling of rear axle assembly",
+                "Study of different chassis layouts and frame types",
+                "Study of different braking systems — drum and disc brakes",
+                "Study of steering system — types and components",
+                "Study of suspension system — types and shock absorbers"
             ]
         },
         {
@@ -653,35 +653,37 @@ const ATE_LABS = {
     /* Semester 6 Labs (Batch 2027) */
     6: [
         {
-            code: "AU3611", name: "Engine Testing Laboratory", experiments: [
-                "Performance test on single cylinder four stroke diesel engine",
-                "Performance test on single cylinder four stroke petrol engine",
-                "Heat balance test on single cylinder diesel engine",
-                "Morse test on multi-cylinder petrol engine",
-                "Determination of volumetric efficiency of air compressor",
-                "Emission testing of petrol engine using exhaust gas analyser",
-                "Emission testing of diesel engine using smoke meter",
-                "Valve timing diagram verification of IC engine",
-                "Port timing diagram verification of two stroke engine",
-                "Retardation test on IC engine",
-                "Study of fuel injection system in diesel engine",
-                "Study of ignition system in petrol engine"
+            code: "AU3611", name: "Computer Aided Vehicle Design and Analysis Laboratory", experiments: [
+                /* Engine Design Experiments */
+                "Design and modelling of piston, piston pin and piston rings",
+                "Design and modelling of connecting rod assembly",
+                "Design and modelling of crankshaft assembly and balancing weight calculations",
+                "Design and modelling of flywheel",
+                "Design and modelling of cam and camshaft",
+                "Design and drawing of inlet and exhaust valves",
+                /* Chassis Design Experiments */
+                "Design and modelling of vehicle frame",
+                "Design and modelling of clutch assembly",
+                "Design and modelling of sliding mesh gearbox",
+                "Design and modelling of propeller shaft with universal joint",
+                "Design and modelling of front axle assembly",
+                "Design and modelling of rear axle assembly"
             ]
         },
         {
-            code: "AU3612", name: "Computer Aided Vehicle Design Laboratory", experiments: [
-                "3D modelling of automotive components using CAD software",
-                "Assembly of engine components in CAD environment",
-                "Stress analysis of connecting rod using FEA",
-                "Stress analysis of piston using FEA",
-                "Design and drafting of gearbox components",
-                "Design and analysis of brake drum/disc using FEA",
-                "Simulation of suspension system behaviour",
-                "Design of chassis frame and structural analysis",
-                "Aerodynamic simulation of vehicle body using CFD",
-                "Generation of manufacturing drawings with GD&T",
-                "Motion analysis of crank-slider mechanism",
-                "Parametric modelling of steering components"
+            code: "AU3612", name: "Engine Testing and Emission Measurement Laboratory", experiments: [
+                "Study and use of IC engine testing dynamometers (eddy current and hydraulic)",
+                "Study and use of pressure pickups, charge amplifier, storage oscilloscope and signal analyzers",
+                "Performance test on petrol engine — brake power, thermal efficiency and BSFC",
+                "Performance test on diesel engine — brake power, thermal efficiency and BSFC",
+                "Determination of frictional power on petrol engines using Morse test / retardation test",
+                "Heat balance test on automotive diesel engine",
+                "Study of NDIR Gas Analyser and Flame Ionisation Detector (FID)",
+                "Study of Chemiluminescent NOx analyser",
+                "Measurement of HC, CO, O2 and NOx using exhaust gas analyser",
+                "Diesel smoke measurement using smoke opacity meter / Hartridge smoke meter",
+                "Study of Constant Volume Sampling (CVS) system for emission testing",
+                "Study of chassis dynamometer and emission test cycles"
             ]
         }
     ]

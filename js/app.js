@@ -1859,15 +1859,26 @@ function renderAssessments(container) {
             CO5: 'Demonstrate awareness of emerging trends and professional responsibility.'
         };
         const savedCOs = cfg.courseOutcomes || defaultCOs;
-        const coColors = ['#2563eb', '#7c3aed', '#059669', '#d97706', '#dc2626'];
-        const coHTML = Object.entries(savedCOs).map(([k, v], idx) =>
-            '<div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:linear-gradient(135deg,rgba(' + (idx % 2 === 0 ? '37,99,235' : '124,58,237') + ',0.04),rgba(' + (idx % 2 === 0 ? '124,58,237' : '37,99,235') + ',0.04));border:1px solid rgba(37,99,235,0.10);border-radius:12px;margin-bottom:10px;">' +
-            '<span style="display:inline-flex;align-items:center;justify-content:center;min-width:52px;height:28px;border-radius:20px;background:' + coColors[idx % 5] + ';color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.5px;flex-shrink:0;">' + k + '</span>' +
-            '<textarea id="co-' + k + '" data-co="' + k + '" rows="2" ' +
-            'oninput="(navState.assignConfig.courseOutcomes=navState.assignConfig.courseOutcomes||{})[this.dataset.co]=this.value;" ' +
-            'style="flex:1;border:1px solid rgba(37,99,235,0.12);border-radius:8px;padding:8px 12px;font-size:.85rem;line-height:1.5;color:var(--text-primary);background:var(--card-bg);resize:vertical;" ' +
-            'placeholder="Course outcome...">' + v + '</textarea></div>'
-        ).join('');
+        const coAccents = [
+            { bg: '#2563eb', light: 'rgba(37,99,235,0.07)', border: 'rgba(37,99,235,0.18)' },
+            { bg: '#7c3aed', light: 'rgba(124,58,237,0.07)', border: 'rgba(124,58,237,0.18)' },
+            { bg: '#059669', light: 'rgba(5,150,105,0.07)', border: 'rgba(5,150,105,0.18)' },
+            { bg: '#d97706', light: 'rgba(217,119,6,0.07)', border: 'rgba(217,119,6,0.18)' },
+            { bg: '#dc2626', light: 'rgba(220,38,38,0.07)', border: 'rgba(220,38,38,0.18)' }
+        ];
+        const coHTML = Object.entries(savedCOs).map(([k, v], idx) => {
+            const acc = coAccents[idx % 5];
+            return '<div style="background:' + acc.light + ';border:1.5px solid ' + acc.border + ';border-radius:14px;padding:16px 20px;margin-bottom:12px;">' +
+                '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">' +
+                '<span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:' + acc.bg + ';color:#fff;font-size:.75rem;font-weight:900;flex-shrink:0;">' + (idx + 1) + '</span>' +
+                '<span style="font-size:.78rem;font-weight:800;color:' + acc.bg + ';text-transform:uppercase;letter-spacing:.7px;">' + k + ' \u2014 Course Outcome ' + (idx + 1) + '</span>' +
+                '</div>' +
+                '<textarea id="co-' + k + '" data-co="' + k + '" rows="2" ' +
+                'oninput="(navState.assignConfig.courseOutcomes=navState.assignConfig.courseOutcomes||{})[this.dataset.co]=this.value;" ' +
+                'style="width:100%;border:1px solid ' + acc.border + ';border-radius:8px;padding:10px 14px;font-size:.88rem;line-height:1.65;color:var(--text-primary);background:rgba(255,255,255,0.6);resize:vertical;font-family:inherit;box-sizing:border-box;">' + v + '</textarea>' +
+                '</div>';
+        }).join('');
+
 
         const savedUnits = cfg.units || {};
         const unitRows = [1, 2, 3, 4, 5].map(u => {
