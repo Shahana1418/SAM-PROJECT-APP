@@ -1,21 +1,24 @@
 /**
  * ATE_SUBJECTS — Automobile Engineering core subject data
  * Objectives, unit topics, and Course Outcomes taken VERBATIM from
- * B.E.Automobile.pdf (Anna University R2021 syllabus, hosted on GitHub Pages).
+ * B.E.Automobile.pdf (Anna University R2021 syllabus).
  *
  * Batch mapping:
- *   2027 → Semester 6  → AU3601
- *   2028 → Semester 4  → AU3401, AU3402, AU3403, AU3404, ML3391
- *   2029 → Semester 2  → Common Engineering subjects (MA3251, etc.)
+ *   2027 → Semester 6  → AU3601, Labs: AU3611, AU3612
+ *   2028 → Semester 4  → AU3401-AU3404, ML3391, Labs: AU3411, AU3412
+ *   2029 → Semester 2  → MA3251, PH3251, BE3251, GE3251, HS3252, Labs: GE3271, BE3271
+ *
+ * LABS — stored per-semester so the "Practicals" assignment type can list them.
  */
 const ATE_SUBJECTS = {
 
-    /* ═══════════════════════════════════════════════════════════════
-     * AU3401  —  FUELS AND LUBRICANTS
-     * ATE 2028 Batch | Semester 4 | L T P C: 3 0 0 3
-     * ═══════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════════════
+     *  SEMESTER  4  —  BATCH 2028  (R2021)
+     * ══════════════════════════════════════════════════════════════════ */
+
     "AU3401": {
         name: "Fuels and Lubricants",
+        semester: 4,
         objective: "The objective of this course is to prepare the students to understand the role, properties and testing of various fuels and lubricants in the design and operation of IC engines.",
         units: {
             1: { title: "Refinery of Fuels and Lubricants", desc: "Introduction to Structure of petroleum, refining Process-Distillation, cracking processes, Catalytic reforming, alkylation, isomerisation and polymerization, finishing process- blending, products of refining process. Manufacture of lubricating oil base stocks, manufacture of finished automotive lubricants." },
@@ -63,19 +66,16 @@ const ATE_SUBJECTS = {
         }
     },
 
-    /* ═══════════════════════════════════════════════════════════════
-     * AU3402  —  AUTOMOTIVE CHASSIS
-     * ATE 2028 Batch | Semester 4 | L T P C: 3 0 0 3
-     * ═══════════════════════════════════════════════════════════════ */
     "AU3402": {
         name: "Automotive Chassis",
+        semester: 4,
         objective: "The objective of this course is to prepare the students to understand the basics of various vehicle frames, front axles, steering, suspension and braking systems used in automobile.",
         units: {
-            1: { title: "Introduction, Front Axle and Steering Systems", desc: "Types of Chassis layout, constructional details and materials for frames, Testing of frames; Types of Front Axles and Stub Axles, Front Wheel Geometry, Condition for True Rolling Motion of Wheels during Steering, Ackerman's and Davis Steering Mechanisms, Steering Error Curve, Steering Linkages, Different Types of Steering Gears, Slip Angle, Over–Steer and Under–Steer, Reversible and Irreversible Steering, EPAS." },
-            2: { title: "Propeller Shaft and Final Drive", desc: "Effect of Driving Thrust, torque reactions and side thrust, Hotchkiss drive, torque tube drive, radius rods and stabilizers, Propeller Shaft, Universal Joints, Constant Velocity Universal Joints, Front Wheel drive, Final drive, different types, Double reduction and twin speed final drives, Multi–axled vehicles, Differential principle and types, Differential housings, limited speed differential, Differential locks." },
-            3: { title: "Axles and Tyres", desc: "Construction and Design of Drive Axles, Types of Loads acting on drive axles, Full–Floating, Three–Quarter Floating and Semi–Floating Axles, Axle Housings and Types – Lift axle, Dead axle, Types and Constructional Details of Different Types of Wheels and Rims, Different Types of Tyres and their constructional details." },
-            4: { title: "Suspension System", desc: "Need for Suspension System, Types of Suspension Springs, Constructional details and characteristics of Single Leaf, Multi–Leaf, Coil, and Torsion bar, Rubber, Pneumatic and Hydro–elastic Suspension Spring Systems, Independent Suspension System, Shock Absorbers, Types and Constructional details." },
-            5: { title: "Braking System", desc: "Theory of Automobile Braking, Stopping Distance Time and Braking Efficiency, Effect of Weight Transfer during Braking, Theory of Drum Brakes, Loading and Trailing Shoes, Braking Torque, Constructional Details of Drum Brake and its Activators, Disc Brake Theory, Types and Construction, Hydraulic Braking System, Mechanical Braking System, Pneumatic Braking System, Power–Assisted Braking System, Anti–Lock Braking System, Constructional Details." }
+            1: { title: "Introduction, Front Axle and Steering Systems", desc: "Types of Chassis layout, constructional details and materials for frames, Testing of frames; Types of Front Axles and Stub Axles, Front Wheel Geometry, Condition for True Rolling Motion of Wheels during Steering, Ackerman's and Davis Steering Mechanisms, Steering Error Curve, Steering Linkages, Different Types of Steering Gears, Slip Angle, Over-Steer and Under-Steer, Reversible and Irreversible Steering, EPAS." },
+            2: { title: "Propeller Shaft and Final Drive", desc: "Effect of Driving Thrust, torque reactions and side thrust, Hotchkiss drive, torque tube drive, radius rods and stabilizers, Propeller Shaft, Universal Joints, Constant Velocity Universal Joints, Front Wheel drive, Final drive, different types, Double reduction and twin speed final drives, Multi-axled vehicles, Differential principle and types, Differential housings, limited speed differential, Differential locks." },
+            3: { title: "Axles and Tyres", desc: "Construction and Design of Drive Axles, Types of Loads acting on drive axles, Full-Floating, Three-Quarter Floating and Semi-Floating Axles, Axle Housings and Types – Lift axle, Dead axle, Types and Constructional Details of Different Types of Wheels and Rims, Different Types of Tyres and their constructional details." },
+            4: { title: "Suspension System", desc: "Need for Suspension System, Types of Suspension Springs, Constructional details and characteristics of Single Leaf, Multi-Leaf, Coil, and Torsion bar, Rubber, Pneumatic and Hydro-elastic Suspension Spring Systems, Independent Suspension System, Shock Absorbers, Types and Constructional details." },
+            5: { title: "Braking System", desc: "Theory of Automobile Braking, Stopping Distance Time and Braking Efficiency, Effect of Weight Transfer during Braking, Theory of Drum Brakes, Loading and Trailing Shoes, Braking Torque, Constructional Details of Drum Brake and its Activators, Disc Brake Theory, Types and Construction, Hydraulic Braking System, Mechanical Braking System, Pneumatic Braking System, Power-Assisted Braking System, Anti-Lock Braking System, Constructional Details." }
         },
         cos: {
             CO1: "Identify the different types of frame and chassis used in Automotive.",
@@ -116,12 +116,9 @@ const ATE_SUBJECTS = {
         }
     },
 
-    /* ═══════════════════════════════════════════════════════════════
-     * AU3403  —  VEHICLE BODY ENGINEERING
-     * ATE 2028 Batch | Semester 4 | L T P C: 3 0 0 3
-     * ═══════════════════════════════════════════════════════════════ */
     "AU3403": {
         name: "Vehicle Body Engineering",
+        semester: 4,
         objective: "To prepare the students with the knowledge on the body construction details of light, heavy and commercial vehicles, along with the vehicle aerodynamics and body materials.",
         units: {
             1: { title: "Car Body Details", desc: "Types of Car body - Saloon, convertibles, Limousine, Estate Van, Racing and Sports car – car body terminology - Visibility- regulations, driver's visibility, improvement in visibility and tests for visibility. Driver seat design - Car Body Construction - Various panels in car bodies. Safety: Safety design, safety equipment for cars." },
@@ -169,12 +166,9 @@ const ATE_SUBJECTS = {
         }
     },
 
-    /* ═══════════════════════════════════════════════════════════════
-     * AU3404  —  AUTOMOTIVE TRANSMISSION
-     * ATE 2028 Batch | Semester 4 | L T P C: 3 0 0 3
-     * ═══════════════════════════════════════════════════════════════ */
     "AU3404": {
         name: "Automotive Transmission",
+        semester: 4,
         objective: "To prepare the students to gain knowledge in the construction and principle of mechanical transmission components, hydrodynamic devices, hydrostatic devices, automatic transmission system, and Electric drive used in road vehicles.",
         units: {
             1: { title: "Clutch", desc: "Requirement of transmission system, Types of transmission system, Requirement of Clutches – Functions-Types of clutches, construction and operation of Single plate, multi plate and Diaphragm spring clutches. Centrifugal clutch, Electronic clutch." },
@@ -222,16 +216,13 @@ const ATE_SUBJECTS = {
         }
     },
 
-    /* ═══════════════════════════════════════════════════════════════
-     * ML3391  —  MECHANICS OF SOLIDS
-     * ATE 2028 Batch | Semester 4 | L T P C: 3 0 0 3
-     * ═══════════════════════════════════════════════════════════════ */
     "ML3391": {
         name: "Mechanics of Solids",
+        semester: 4,
         objective: "To apply principle concepts behind stress, strain and deformation of solids, analyze transverse loading on beams, understand torsion principles in shafts, acquire knowledge on deflection of beams, and interpret thin and thick shell behavior.",
         units: {
             1: { title: "Stress, Strain and Deformation of Solids", desc: "Rigid and Deformable bodies – Strength, Stiffness and Stability – Stresses and Strains: Tensile, Compressive and Shear – Material Behaviour- Elastic Vs Plastic – Response of Real Materials: Tensile Test, Compressive Test, Shear Test, Cyclic Tests - strain gauges and rosettes – Deformation of Statically determinate and In-determinate bars of variable cross-section & Composite section under axial load – Thermal stress – Elastic constants – Plane Strain – Volumetric Strain." },
-            2: { title: "Transverse Loading on Beams and Stresses in Beam", desc: "Beams – types transverse loading on beams – Shear force and bending moment in beams – Cantilevers – Simply supported beams and over–hanging beams. Theory of simple bending – Bending stress distribution – Flitched beams – Shear stress distribution." },
+            2: { title: "Transverse Loading on Beams and Stresses in Beam", desc: "Beams – types transverse loading on beams – Shear force and bending moment in beams – Cantilevers – Simply supported beams and over-hanging beams. Theory of simple bending – Bending stress distribution – Flitched beams – Shear stress distribution." },
             3: { title: "Torsion", desc: "Torsion formulation stresses and deformation in circular and hollow shafts – Stepped shafts – Deflection in shafts fixed at both ends – Stresses in helical springs – Deflection of helical springs – Closed and Open Coiled helical springs – springs in series and parallel, carriage springs." },
             4: { title: "Deflection of Beams", desc: "Slope, Deflection and Radius of Curvature – Methods of Determination of Slope and Deflection- Double Integration method – Macaulay's method – Area moment Theorems for computation of slopes and deflections in beams - Conjugate beam and strain energy – Maxwell's reciprocal theorems." },
             5: { title: "Thick & Thin Shells & Principal Stresses", desc: "Stresses in thin cylindrical shell due to internal pressure, circumferential and longitudinal stresses and deformation in thin cylinders – spherical shells subjected to internal pressure – Deformation in spherical shells – Lame's theory – Application of theories of failure – Stresses on inclined planes – principal stresses and principal planes – Mohr's circle of stress." }
@@ -248,10 +239,10 @@ const ATE_SUBJECTS = {
                 "Stress-Strain Diagrams and Material Behaviour – Elastic vs Plastic",
                 "Strain Gauges and Rosettes – Measurement of Deformation",
                 "Thermal Stress in Composite and Statically Indeterminate Bars",
-                "Shear Force and Bending Moment Diagrams for Cantilever and Simply Supported Beams",
+                "Shear Force and Bending Moment Diagrams for Beams",
                 "Theory of Simple Bending and Bending Stress Distribution",
                 "Shear Stress Distribution in Beams – Rectangular and I-Sections",
-                "Torsion in Circular and Hollow Shafts – Anna University Problems",
+                "Torsion in Circular and Hollow Shafts – Important Problems",
                 "Helical Springs – Types, Stresses and Deflection",
                 "Double Integration and Macaulay's Method for Beam Deflection",
                 "Area Moment Theorem and Conjugate Beam Method",
@@ -262,7 +253,7 @@ const ATE_SUBJECTS = {
                 "Material Testing: Tensile and Compression Test on Mild Steel",
                 "Strain Gauge Calibration and Stress Measurement Experiment",
                 "Bending Moment Verification Using Simply Supported Beam Test Rig",
-                "Torsion Test on Circular Shaft – Experimental and Theoretical Comparison",
+                "Torsion Test on Circular Shaft – Experimental vs Theoretical Comparison",
                 "Deflection Measurement of Cantilever Beam Under Point Load",
                 "Spring Stiffness Testing – Closed and Open Coiled Helical Springs",
                 "Thin Cylinder Pressure Vessel Stress Analysis",
@@ -275,12 +266,13 @@ const ATE_SUBJECTS = {
         }
     },
 
-    /* ═══════════════════════════════════════════════════════════════
-     * AU3601  —  AUTOMOTIVE POLLUTION AND CONTROL
-     * ATE 2027 Batch | Semester 6 | L T P C: 3 0 0 3
-     * ═══════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════════════
+     *  SEMESTER  6  —  BATCH 2027  (R2021)
+     * ══════════════════════════════════════════════════════════════════ */
+
     "AU3601": {
         name: "Automotive Pollution and Control",
+        semester: 6,
         objective: "The objective of this course is to prepare the students to have knowledge on the harmful effects of major pollutants of IC engines, emission standards, various pollution measurement devices and control techniques.",
         units: {
             1: { title: "Emission from Automobiles", desc: "Sources of Pollution. Various emissions from Automobiles — Formation — Effects of pollutants on environment and human beings. Emission control techniques – Emission standards - National and international." },
@@ -326,5 +318,371 @@ const ATE_SUBJECTS = {
                 "World Harmonized Driving Cycle Analysis and Fuel Economy Study"
             ]
         }
+    },
+
+    /* ══════════════════════════════════════════════════════════════════
+     *  SEMESTER  2  —  BATCH 2029  (R2021 Common)
+     * ══════════════════════════════════════════════════════════════════ */
+
+    "MA3251": {
+        name: "Statistics and Numerical Methods",
+        semester: 2,
+        objective: "To acquaint the knowledge of testing of hypothesis for small and large samples, design of experiments and to introduce the basic concepts of numerical methods and their applications.",
+        units: {
+            1: { title: "Testing of Hypothesis", desc: "Sampling distributions – Estimation of parameters – Statistical Hypothesis – Large sample tests based on Normal distribution for single mean and difference of means – Tests based on t, F and Chi-square distributions for mean, variance and proportion – Goodness of fit." },
+            2: { title: "Design of Experiments", desc: "One way and Two way classifications - Completely Randomized Design – Randomized Block Design – Latin Square Design – 2 power 2 Factorial Design." },
+            3: { title: "Solution of Equations and Eigenvalue Problems", desc: "Solution of algebraic and transcendental equations – Fixed point iteration method – Newton Raphson method – Solution of linear system of equations – Gauss elimination method – Pivoting – Gauss Jordan method – Iterative methods of Gauss Jacobi and Gauss Seidel – Eigen values of a matrix by Power method and Jacobi's method." },
+            4: { title: "Interpolation, Numerical Differentiation and Integration", desc: "Lagrange's and Newton's divided difference interpolations – Newton's forward and backward difference interpolation – Approximation of derivatives using interpolation polynomials – Numerical single and double integrations using Trapezoidal and Simpson's 1/3 rules." },
+            5: { title: "Numerical Solution of Ordinary Differential Equations", desc: "Single step methods: Taylor's series method – Euler's method – Modified Euler's method – Fourth order Runge – Kutta method for solving first order equations – Multi step methods: Milne's and Adams – Bash forth predictor corrector methods for solving first order equations." }
+        },
+        cos: {
+            CO1: "Apply the concept of testing of hypothesis for small and large samples in real life problems.",
+            CO2: "Apply the concept of design of experiments in the field of agriculture and statistical quality control.",
+            CO3: "Appreciate the numerical techniques of solving algebraic and transcendental equations.",
+            CO4: "Apply numerical techniques in interpolation, differentiation and integration.",
+            CO5: "Solve ordinary differential equations numerically using single and multi-step methods."
+        },
+        topics: {
+            presentation: [
+                "Sampling Distributions and Parameter Estimation",
+                "Large Sample Tests – Z Test for Single and Difference of Means",
+                "Small Sample Tests – t, F and Chi-Square Distributions",
+                "One Way and Two Way ANOVA Classification",
+                "Latin Square Design and Factorial Experiments",
+                "Newton Raphson Method – Algorithm and Applications",
+                "Gauss Elimination and Gauss Jordan Methods",
+                "Iterative Methods – Gauss Jacobi and Gauss Seidel",
+                "Lagrange's and Newton's Divided Difference Interpolation",
+                "Simpson's 1/3 Rule and Trapezoidal Rule for Numerical Integration",
+                "Runge-Kutta Fourth Order Method for ODE",
+                "Adams-Bashforth Predictor Corrector Method"
+            ],
+            miniproject: [
+                "Statistical Hypothesis Testing Tool Using Python",
+                "ANOVA Calculator Application for Agricultural Data",
+                "Root Finding Visualizer – Newton Raphson and Fixed Point Iteration",
+                "Linear System Solver – Gauss Elimination with Pivoting",
+                "Eigenvalue Calculator Using Power Method with GUI",
+                "Interpolation Polynomial Plotter Using Lagrange's Method",
+                "Numerical Differentiation and Integration Web Calculator",
+                "ODE Solver Comparison – Euler vs Runge-Kutta Methods",
+                "Statistical Quality Control Chart Generator",
+                "Excel-Based Design of Experiments Tool",
+                "Simpson's Rule Area Calculator for Engineering Curves",
+                "Milne's Predictor-Corrector Method Step-by-Step Simulator"
+            ]
+        }
+    },
+
+    "PH3251": {
+        name: "Materials Science",
+        semester: 2,
+        objective: "To introduce the essential principles of crystal structures, mechanical properties of materials, dielectric and magnetic properties, ceramics, composites and semiconducting materials.",
+        units: {
+            1: { title: "Crystal Physics", desc: "Lattice – Unit cell – Bravais lattices – Lattice planes – Miller indices – d spacing in cubic lattice – Calculation of number of atoms per unit cell – Atomic radius – Coordination number – Packing factor for SC, BCC, FCC and HCP structures – Diamond and graphite structures – Crystal imperfections: Point, line, surface and volume defects." },
+            2: { title: "Properties of Materials and Testing", desc: "Stress and Strain – Stress-Strain diagram – Elastic modulus – Poisson's ratio – Relationship between elastic constants – Hardness – Types of hardness testing methods – Brinell, Vickers, Rockwell and Micro-hardness – Fatigue – Creep – Fracture – Types of fracture." },
+            3: { title: "Dielectric and Magnetic Properties", desc: "Electrical susceptibility – Dielectric constant – Polarization - Types of polarization – Equation of internal field in liquids and solids – Clausius-Mosotti equation – Piezo – Ferro and Pyro electricity – Frequency dependence of dielectric constant – Classification of magnetic materials – Domain theory of ferromagnetism – Hysteresis – Applications." },
+            4: { title: "Ceramics, Composites and Nanomaterials", desc: "Classification of ceramics – Properties and applications of ceramics – Classification of composites – Fibre reinforced composites – Particle reinforced composites – Applications – Nano materials – Properties and applications – Carbon nanotubes – Synthesis of nanomaterials: Top down approach – Ball milling, Bottom up approach – Sol-gel, CVD." },
+            5: { title: "Semiconducting Materials", desc: "Intrinsic semiconductor – Carrier concentration derivation – Fermi level – Hall effect – Determination of Hall coefficient – Experimental determination of band gap – Direct band gap and indirect band gap – Elemental and compound semiconductors – Applications of Hall effect – Semiconductor devices." }
+        },
+        cos: {
+            CO1: "Appreciate the knowledge of crystal structures and crystal imperfections.",
+            CO2: "Understand the mechanical properties of materials in engineering applications.",
+            CO3: "Explain the dielectric and magnetic properties of materials.",
+            CO4: "Describe ceramics, composites, and nanomaterials with their applications.",
+            CO5: "Relate the semiconductor properties and Hall effect for device applications."
+        },
+        topics: {
+            presentation: [
+                "Crystal Systems, Bravais Lattices and Miller Indices",
+                "Packing Factor Calculation for SC, BCC, FCC and HCP",
+                "Crystal Imperfections – Point, Line and Surface Defects",
+                "Stress-Strain Diagram and Elastic Constants Relationship",
+                "Hardness Testing Methods – Brinell, Vickers, Rockwell",
+                "Polarization Types and Clausius-Mosotti Equation",
+                "Piezoelectricity, Ferroelectricity and Pyroelectricity",
+                "Domain Theory of Ferromagnetism and Hysteresis Loop",
+                "Ceramics – Classification, Properties and Applications",
+                "Composites – Fibre and Particle Reinforced Types",
+                "Nanomaterials Synthesis – Ball Milling, Sol-Gel, CVD",
+                "Hall Effect – Coefficient Determination and Applications"
+            ],
+            miniproject: [
+                "Crystal Structure Model – 3D Visualization of SC, BCC and FCC",
+                "Packing Factor Calculator for Different Crystal Structures",
+                "Stress-Strain Curve Plotter Using Experimental Data",
+                "Hardness Comparison Study of Different Engineering Materials",
+                "Dielectric Constant Measurement at Different Frequencies",
+                "Hysteresis Loop Tracer for Magnetic Material Characterization",
+                "Ceramic Tile Strength Testing and Property Analysis",
+                "Composite Material Fabrication and Tensile Testing",
+                "Carbon Nanotube Properties Study Using Literature Survey",
+                "Band Gap Determination of Semiconductor Using Four Probe",
+                "Hall Effect Experimental Setup and Coefficient Calculation",
+                "Nanomaterial Synthesis Using Sol-Gel Method Demonstration"
+            ]
+        }
+    },
+
+    "BE3251": {
+        name: "Basic Electrical and Electronics Engineering",
+        semester: 2,
+        objective: "To introduce the basics of electric circuits, electrical machines, and electronic devices for understanding electrical and electronics engineering fundamentals.",
+        units: {
+            1: { title: "DC Circuits and AC Circuits", desc: "Ohm's law – Kirchhoff's laws – Series and parallel combinations of resistances – Mesh and Node analysis – Star-Delta transformation – AC fundamentals – Representation of sinusoidal waveforms – Peak, RMS and Average values – Form factor and peak factor – Impedance – Power factor – Power in AC circuits – Single phase and three phase balanced circuits." },
+            2: { title: "Electrical Machines", desc: "Construction and principle of DC motors – Types of DC motors – Speed control of DC motors – Single phase transformer – EMF equation – Voltage regulation – Construction and principle of three phase induction motor – Slip – Applications." },
+            3: { title: "Utilization of Electrical Energy", desc: "Renewable energy sources – Wind energy, Solar energy – Concept of domestic wiring – Staircase wiring – Godown wiring – Electrical safety – Fuses – MCB – ELCB – Earthing – Energy conservation and audit." },
+            4: { title: "Electronic Devices and Circuits", desc: "PN junction diode – Zener diode – Bipolar Junction Transistor (BJT) – Operating point – Transistor as a switch – MOSFET – Operational amplifier – Inverting and Non-inverting amplifier – Applications: Adder, Subtractor, Integrator, Differentiator." },
+            5: { title: "Digital Electronics", desc: "Number systems – Decimal, Binary, Octal and Hexadecimal – Boolean algebra – Logic gates – De Morgan's theorems – K-Map simplification – Half adder and Full adder – Flip-flops: SR, JK, D and T – Counters and Shift registers." }
+        },
+        cos: {
+            CO1: "Analyze DC and AC circuits using network theorems.",
+            CO2: "Understand the construction and working of electrical machines.",
+            CO3: "Apply concepts of wiring and energy conservation in practical scenarios.",
+            CO4: "Describe the working of electronic devices and op-amp circuits.",
+            CO5: "Design simple combinational and sequential digital circuits."
+        },
+        topics: {
+            presentation: [
+                "Kirchhoff's Laws and Mesh-Node Analysis Methods",
+                "Star-Delta Transformation and AC Impedance Circuits",
+                "Single Phase and Three Phase Balanced AC Circuits",
+                "DC Motor Types and Speed Control Methods",
+                "Single Phase Transformer – EMF Equation and Regulation",
+                "Three Phase Induction Motor – Construction and Slip",
+                "Solar and Wind Energy Systems Overview",
+                "Electrical Safety – Fuses, MCB, ELCB and Earthing",
+                "PN Junction Diode and Zener Diode Characteristics",
+                "Operational Amplifier – Inverting and Non-Inverting Circuits",
+                "Boolean Algebra, Logic Gates and K-Map Simplification",
+                "Flip-Flops, Counters and Shift Registers"
+            ],
+            miniproject: [
+                "DC Circuit Simulator Using Kirchhoff's Laws",
+                "AC Power Factor Calculator for Single and Three Phase Circuits",
+                "DC Motor Speed Control Using Arduino",
+                "Transformer Efficiency Test and EMF Equation Verification",
+                "Solar Panel I-V Characteristic Measurement",
+                "Home Wiring Model with Safety Devices (MCB, ELCB)",
+                "PN Junction Diode Characteristic Curve Plotter",
+                "Op-Amp Based Adder and Subtractor Circuit Breadboard Demo",
+                "Logic Gate Tester Using LED Display",
+                "K-Map Simplification Tool Web Application",
+                "4-Bit Counter Design Using JK Flip-Flops",
+                "Energy Audit Calculator for Domestic Consumption"
+            ]
+        }
+    },
+
+    "GE3251": {
+        name: "Engineering Graphics",
+        semester: 2,
+        objective: "To develop the graphic skill for communication of concepts, ideas and design of engineering products through graphical representations and to develop the ability to create and interpret engineering drawings.",
+        units: {
+            1: { title: "Plane Curves and Freehand Sketching", desc: "Curves used in engineering practices: Conics – Construction of ellipse, parabola and hyperbola by eccentricity method – Construction of cycloid – Construction of involute of circle and square – Drawing of tangents and normals to curves – Freehand sketching: Sketching of machine parts." },
+            2: { title: "Projection of Points, Lines and Plane Surfaces", desc: "Orthographic projection – First angle and third angle projection – Projection of points – Projection of straight lines inclined to both planes – Determination of true lengths and true inclinations – Projection of planes inclined to both planes." },
+            3: { title: "Projection of Solids", desc: "Projection of simple solids such as prisms, pyramids, cylinders and cones – Axis inclined to one plane and parallel to the other – Axis inclined to both the planes." },
+            4: { title: "Section of Solids and Development of Surfaces", desc: "Sectioning of above solids by planes inclined to one plane – Obtaining true shape of sections – Development of lateral surfaces of simple and truncated solids – Prisms, pyramids, cylinders and cones." },
+            5: { title: "Isometric and Perspective Projections", desc: "Principles of isometric projection – Isometric scale – Isometric projections of simple solids and truncated solids – Prisms, pyramids, cylinders, cones – Perspective projection of prisms, pyramids and cylinders by visual ray method." }
+        },
+        cos: {
+            CO1: "Construct conics, involutes and cycloid curves used in engineering.",
+            CO2: "Draw the projection of points, lines and plane surfaces.",
+            CO3: "Draw the projection of simple solids in various positions.",
+            CO4: "Draw the section of solids and develop lateral surfaces.",
+            CO5: "Draw isometric and perspective projections of simple solids."
+        },
+        topics: {
+            presentation: [
+                "Conic Sections – Ellipse, Parabola and Hyperbola Construction",
+                "Cycloid and Involute Curve Construction Methods",
+                "Orthographic Projection – First and Third Angle Systems",
+                "Projection of Lines Inclined to Both Planes",
+                "Projection of Plane Surfaces Inclined to Both Planes",
+                "Projection of Prisms and Pyramids – Axis Inclined",
+                "Projection of Cylinders and Cones – Various Orientations",
+                "Sectioning of Solids by Inclined Cutting Planes",
+                "True Shape of Sections – Methods and Applications",
+                "Development of Lateral Surfaces – Truncated Solids",
+                "Isometric Projection – Principles and Scale",
+                "Perspective Projection – Visual Ray Method"
+            ],
+            miniproject: [
+                "CAD Drawing of Conic Sections with Eccentricity Method",
+                "AutoCAD Model of Orthographic Projections of Machine Part",
+                "3D SolidWorks Model of Prism and Pyramid with Sections",
+                "Development of Truncated Cylinder and Cone Sheet Metal Pattern",
+                "Isometric Drawing of a Simple Assembly Using CAD Software",
+                "Perspective View Generation of Building Block Using AutoCAD",
+                "Engineering Drawing Standards – BIS vs ISO Comparison Study",
+                "Freehand Sketching Portfolio of Common Machine Parts",
+                "Section Drawing of Engine Piston and Connecting Rod",
+                "3D Printed Model from Engineering Drawing",
+                "True Length and Inclination Calculator Application",
+                "Surface Development Template for Sheet Metal Workshop"
+            ]
+        }
+    },
+
+    "HS3252": {
+        name: "Professional English - II",
+        semester: 2,
+        objective: "To enhance the communication skills of the students with emphasis on professional context and technical vocabulary for academic and career readiness.",
+        units: {
+            1: { title: "Printers and Publishers", desc: "Reading: Comprehension passages on printing and publishing industry. Vocabulary: Technical terms related to media and publishing. Grammar: Tenses – Active and Passive voice. Writing: Letter writing – Formal and informal. Speaking: Self-introduction and description." },
+            2: { title: "Science and Technology", desc: "Reading: Comprehension passages on scientific discoveries and innovations. Vocabulary: Technical vocabulary in science and technology. Grammar: Subject-verb agreement – Prepositions. Writing: Report writing – Technical report format. Speaking: Presentation skills – Describing a process." },
+            3: { title: "Art and Media", desc: "Reading: Comprehension passages on art, cinema and mass media. Vocabulary: Terms related to visual and performing arts. Grammar: Clauses – Relative and conditional. Writing: Review writing – Film and book reviews. Speaking: Group discussion techniques." },
+            4: { title: "Business and Management", desc: "Reading: Comprehension passages on business, commerce and management. Vocabulary: Business and management terminology. Grammar: Transformation of sentences – Direct to indirect speech. Writing: Memo and circular writing. Speaking: Mock interview preparation." },
+            5: { title: "Environment and Ecology", desc: "Reading: Comprehension passages on environment, pollution and ecology. Vocabulary: Environmental and ecological terms. Grammar: Error correction and sentence completion. Writing: Essay writing – Environmental topics. Speaking: Debate and extempore speaking." }
+        },
+        cos: {
+            CO1: "Read and comprehend passages from various domains effectively.",
+            CO2: "Use appropriate vocabulary and grammar in professional communication.",
+            CO3: "Write formal letters, reports and reviews following standard formats.",
+            CO4: "Deliver effective presentations and participate in group discussions.",
+            CO5: "Demonstrate confidence in interviews and debate scenarios."
+        },
+        topics: {
+            presentation: [
+                "Evolution of Printing Technology – From Gutenberg to Digital",
+                "Technical Report Writing – Structure and Best Practices",
+                "Emerging Technologies in Science – AI, IoT and Robotics",
+                "Impact of Mass Media and Social Media on Society",
+                "Business Communication Skills for Engineers",
+                "Environmental Awareness and Sustainability Practices",
+                "Effective Presentation Techniques for Technical Topics",
+                "Interview Skills and Resume Building for Freshers",
+                "Active and Passive Voice in Technical Writing",
+                "Review Writing – Analyzing Films and Technical Books",
+                "Group Discussion Ethics and Team Communication",
+                "Essay Writing on Current Environmental Challenges"
+            ],
+            miniproject: [
+                "Technical Report on College Department – Structure and Analysis",
+                "Business Letter Writing Portfolio for Engineering Professionals",
+                "Mock Interview Practice Video Recording and Self-Assessment",
+                "Group Discussion Evaluation Rubric Design",
+                "Environmental Awareness Campaign Poster and Presentation",
+                "Technical Vocabulary Flashcard App for Engineering Students",
+                "Film Review Blog with Professional English Standards",
+                "Resume and Cover Letter Design for Campus Placement",
+                "Grammar Quiz Application – Tenses, Voice and Prepositions",
+                "Science Communication Video on Recent Innovation",
+                "Debate Script Writing on Technology vs Environment",
+                "Publishing Process Infographic and Presentation"
+            ]
+        }
     }
+};
+
+/* ══════════════════════════════════════════════════════════════════
+ *  SEMESTER LABS — used when user selects "Practicals" type
+ *  Key = semester number, value = array of lab entries
+ * ══════════════════════════════════════════════════════════════════ */
+const ATE_LABS = {
+    /* Semester 2 Labs (Batch 2029) */
+    2: [
+        {
+            code: "GE3271", name: "Engineering Practices Laboratory", experiments: [
+                "Study and practice of basic carpentry joints",
+                "Study and practice of sheet metal operations – Tray making",
+                "Study and practice of fitting operations – V-fit and Dovetail fit",
+                "Study and practice of plumbing joints and pipe connections",
+                "Study and practice of welding – Arc welding butt and lap joints",
+                "Study and practice of basic machining – Turning and facing",
+                "Wiring practice – Staircase wiring and godown wiring",
+                "Soldering practice – Simple electronic circuit assembly",
+                "Study of power tools and measurement instruments",
+                "Foundry practice – Moulding and casting of simple shapes",
+                "Smithy practice – Forging operations",
+                "Study and use of basic hand tools and their applications"
+            ]
+        },
+        {
+            code: "BE3271", name: "Basic Electrical and Electronics Engineering Laboratory", experiments: [
+                "Verification of KVL and KCL in DC circuits",
+                "Measurement of power and power factor in single phase AC circuit",
+                "Performance test on single phase transformer (load test)",
+                "Speed control of DC shunt motor",
+                "Study of characteristics of PN junction and Zener diode",
+                "Characteristics of BJT in CE configuration",
+                "Op-Amp circuits – Inverting and Non-inverting amplifier",
+                "Half adder and Full adder circuit using logic gates",
+                "Characteristics of MOSFET",
+                "Measurement of three phase power using two wattmeter method",
+                "Study of flip-flops – SR, JK, D and T",
+                "Frequency response of series RLC circuit"
+            ]
+        }
+    ],
+    /* Semester 4 Labs (Batch 2028) */
+    4: [
+        {
+            code: "AU3411", name: "Automotive Chassis Laboratory", experiments: [
+                "Study of chassis layout and frame types in automobile",
+                "Study and demonstration of steering mechanisms and geometry",
+                "Study of different types of front axles and stub axles",
+                "Study of propeller shaft, universal joints and CV joints",
+                "Study of differential mechanism and final drive types",
+                "Study of full-floating, semi-floating and three-quarter floating axles",
+                "Study of leaf spring, coil spring and torsion bar suspension",
+                "Study of independent suspension and shock absorbers",
+                "Study and demonstration of drum brake components",
+                "Study and demonstration of disc brake components",
+                "Study of hydraulic and pneumatic braking circuits",
+                "Study of anti-lock braking system (ABS) components"
+            ]
+        },
+        {
+            code: "AU3412", name: "Fuels and Lubricants Laboratory", experiments: [
+                "Determination of flash point and fire point of fuel samples",
+                "Determination of kinematic viscosity using Redwood viscometer",
+                "Determination of calorific value using Bomb calorimeter",
+                "Determination of cloud point and pour point of diesel",
+                "Determination of carbon residue using Conradson apparatus",
+                "Determination of aniline point of fuel samples",
+                "Determination of cetane number / diesel index",
+                "Determination of penetration and softening point of grease",
+                "Drop point test and consistency test on grease samples",
+                "Copper strip corrosion test on fuel samples",
+                "Distillation test on petrol and diesel samples",
+                "Study of ASTM standards for fuel and lubricant testing"
+            ]
+        }
+    ],
+    /* Semester 6 Labs (Batch 2027) */
+    6: [
+        {
+            code: "AU3611", name: "Engine Testing Laboratory", experiments: [
+                "Performance test on single cylinder four stroke diesel engine",
+                "Performance test on single cylinder four stroke petrol engine",
+                "Heat balance test on single cylinder diesel engine",
+                "Morse test on multi-cylinder petrol engine",
+                "Determination of volumetric efficiency of air compressor",
+                "Emission testing of petrol engine using exhaust gas analyser",
+                "Emission testing of diesel engine using smoke meter",
+                "Valve timing diagram verification of IC engine",
+                "Port timing diagram verification of two stroke engine",
+                "Retardation test on IC engine",
+                "Study of fuel injection system in diesel engine",
+                "Study of ignition system in petrol engine"
+            ]
+        },
+        {
+            code: "AU3612", name: "Computer Aided Vehicle Design Laboratory", experiments: [
+                "3D modelling of automotive components using CAD software",
+                "Assembly of engine components in CAD environment",
+                "Stress analysis of connecting rod using FEA",
+                "Stress analysis of piston using FEA",
+                "Design and drafting of gearbox components",
+                "Design and analysis of brake drum/disc using FEA",
+                "Simulation of suspension system behaviour",
+                "Design of chassis frame and structural analysis",
+                "Aerodynamic simulation of vehicle body using CFD",
+                "Generation of manufacturing drawings with GD&T",
+                "Motion analysis of crank-slider mechanism",
+                "Parametric modelling of steering components"
+            ]
+        }
+    ]
 };

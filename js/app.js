@@ -1781,7 +1781,7 @@ function renderAssessments(container) {
                         ${(function () {
                 let list = (SUBJECTS_DATA[regulation] && SUBJECTS_DATA[regulation][deptCode] ? SUBJECTS_DATA[regulation][deptCode] : []);
                 if (deptCode === 'ATE') {
-                    if (batchYear == 2029) list = ["MA3251", "PH3251", "BE3251", "GE3251", "GE3271", "BE3271"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
+                    if (batchYear == 2029) list = ["MA3251", "PH3251", "BE3251", "GE3251", "HS3252"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2028) list = ["AU3401", "AU3402", "AU3403", "AU3404", "ML3391"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["AU3601"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                 }
@@ -1840,9 +1840,10 @@ function renderAssessments(container) {
                 cfg.courseOutcomes = Object.assign({}, spec.cos);
                 cfg.units = {};
                 for (let i = 1; i <= 5; i++) {
+                    const uData = spec.units[String(i)] || spec.units[i] || {};
                     cfg.units[i] = {
-                        title: spec.units[String(i)] || spec.units[i] || 'Unit ' + i,
-                        desc: (spec.unit_descs && spec.unit_descs[String(i)]) ? spec.unit_descs[String(i)] : ''
+                        title: (typeof uData === 'string') ? uData : (uData.title || 'Unit ' + i),
+                        desc: (typeof uData === 'string') ? '' : (uData.desc || '')
                     };
                 }
                 if (spec.objective) cfg.courseDesc = spec.objective;
@@ -1858,10 +1859,13 @@ function renderAssessments(container) {
             CO5: 'Demonstrate awareness of emerging trends and professional responsibility.'
         };
         const savedCOs = cfg.courseOutcomes || defaultCOs;
-        const coHTML = Object.entries(savedCOs).map(([k, v]) =>
-            '<div class="wiz-co-row"><span class="wiz-co-label">' + k + '</span>' +
+        const coColors = ['#2563eb', '#7c3aed', '#059669', '#d97706', '#dc2626'];
+        const coHTML = Object.entries(savedCOs).map(([k, v], idx) =>
+            '<div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:linear-gradient(135deg,rgba(' + (idx % 2 === 0 ? '37,99,235' : '124,58,237') + ',0.04),rgba(' + (idx % 2 === 0 ? '124,58,237' : '37,99,235') + ',0.04));border:1px solid rgba(37,99,235,0.10);border-radius:12px;margin-bottom:10px;">' +
+            '<span style="display:inline-flex;align-items:center;justify-content:center;min-width:52px;height:28px;border-radius:20px;background:' + coColors[idx % 5] + ';color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.5px;flex-shrink:0;">' + k + '</span>' +
             '<textarea id="co-' + k + '" data-co="' + k + '" rows="2" ' +
             'oninput="(navState.assignConfig.courseOutcomes=navState.assignConfig.courseOutcomes||{})[this.dataset.co]=this.value;" ' +
+            'style="flex:1;border:1px solid rgba(37,99,235,0.12);border-radius:8px;padding:8px 12px;font-size:.85rem;line-height:1.5;color:var(--text-primary);background:var(--card-bg);resize:vertical;" ' +
             'placeholder="Course outcome...">' + v + '</textarea></div>'
         ).join('');
 
@@ -2010,9 +2014,9 @@ function renderAssessments(container) {
                 <div class="wiz-ready-icon">&#9999;&#65039;</div>
                 <div class="wiz-ready-title">Ready to Generate ${numTeams} Assignments</div>
                 <ul class="wiz-ready-bullets">
-                    <li>Curated topic list from official Anna University syllabus</li>
-                    <li>12 distinct topics tailored to <strong>${cfg.assignType === 'miniproject' ? 'Mini Projects' : 'Presentation'}</strong> mode</li>
-                    <li>Each team gets a unique topic with objectives &amp; deliverables</li>
+                    <li>${cfg.assignType === 'practicals' ? 'Lab experiments from official Anna University syllabus' : 'Curated topic list from official Anna University syllabus'}</li>
+                    <li>${cfg.assignType === 'practicals' ? 'Semester lab experiments mapped to each team' : (cfg.assignType === 'miniproject' ? '12 distinct Mini Project ideas derived from unit content' : '12 distinct Presentation topics derived from unit content')}</li>
+                    <li>Each team gets a unique ${cfg.assignType === 'practicals' ? 'experiment' : 'topic'} with objectives &amp; deliverables</li>
                     <li>Export as CSV to share with faculty</li>
                 </ul>
                 <button class="btn-primary" style="width:auto;padding:12px 36px;font-size:1rem;" onclick="generateAssignments()">
@@ -2190,16 +2194,32 @@ function generateAssignments() {
 
     /* ── Try curated topic list from ATE_SUBJECTS first ── */
     const spec = (typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null;
-    const curatedList = spec && spec.topics ? spec.topics[cfg.assignType] : null;
+
+    /* ── If Practicals type → pull experiments from ATE_LABS ── */
+    let curatedList = null;
+    if (cfg.assignType === 'practicals' && typeof ATE_LABS !== 'undefined' && spec && spec.semester) {
+        const semLabs = ATE_LABS[spec.semester];
+        if (semLabs && semLabs.length > 0) {
+            // Combine all lab experiments for this semester
+            curatedList = [];
+            semLabs.forEach(lab => {
+                (lab.experiments || []).forEach(exp => {
+                    curatedList.push(lab.code + ': ' + exp);
+                });
+            });
+        }
+    }
+    if (!curatedList) {
+        curatedList = spec && spec.topics ? spec.topics[cfg.assignType] : null;
+    }
 
     let pool = [];
 
     if (curatedList && curatedList.length > 0) {
-        // Use pre-defined topic list — distribute 12 topics across numTeams
-        const filtered = curatedList; // already exactly 12 curated topics
-        const coUnits = [1, 2, 3, 4, 5]; // map topic index to unit for CO assignment
+        const filtered = curatedList;
+        const coUnits = [1, 2, 3, 4, 5];
         for (let i = 0; i < filtered.length; i++) {
-            const uIdx = Math.floor(i / filtered.length * 5); // spread across 5 units
+            const uIdx = Math.floor(i / filtered.length * 5);
             const uNum = coUnits[uIdx] || 1;
             pool.push({
                 unitNum: uNum,
