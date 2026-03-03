@@ -1237,42 +1237,36 @@ function buildTeams(students, teamSize, mode) {
     shuffle(males);
     shuffle(females);
 
-    // Strict constraints: multiple of 3 teams, sizes 4 or 5
-    // Allowed gender ratios per team: 2:2, 4:0, 0:4 (and 5th person any)
+    // Target 12 teams (always a multiple of 3). Allow sizes 3, 4, or 5.
+    // Formula: for N students and T teams, use sizes 3/4/5 to exactly cover N.
+    // We prefer 12 teams, falling back to 9, 6, 3 for small classes.
+    const n = allStudents.length;
+    let numTeams = 12;
+    if (n < 36) numTeams = 9;
+    if (n < 27) numTeams = 6;
+    if (n < 18) numTeams = 3;
 
-    // Find valid numTeams (multiple of 3) where sum of sizes (4s and 5s) equals N
-    let numTeams = 3;
-    let found = false;
-    let numSize4 = 0, numSize5 = 0;
-
-    // Test multiples of 3 down from N/4
-    const maxPoss = Math.floor(allStudents.length / 4);
-    for (let nt = Math.floor(maxPoss / 3) * 3; nt >= 3; nt -= 3) {
-        // We have nt teams. Can we achieve N using only sizes 4 and 5?
-        // 4x + 5y = N  and x + y = nt
-        // 4(nt - y) + 5y = N => 4nt + y = N => y = N - 4nt
-        let y = allStudents.length - 4 * nt; // number of teams of 5
-        let x = nt - y;                      // number of teams of 4
-        if (y >= 0 && x >= 0) {
-            numTeams = nt;
-            numSize4 = x;
-            numSize5 = y;
-            found = true;
-            break;
-        }
+    // Now compute how many teams of each size we need:
+    // size3 * 3 + size4 * 4 + size5 * 5 = n, size3 + size4 + size5 = numTeams
+    // Strategy: start with all size-4 teams, then adjust up (to 5) or down (to 3)
+    // First prefer size-5 teams (if n > 4*numTeams), then size-3 (if n < 4*numTeams)
+    let numSize5 = 0, numSize3 = 0, numSize4 = numTeams;
+    const diff = n - 4 * numTeams; // positive → need bigger teams; negative → need smaller
+    if (diff > 0) {
+        numSize5 = diff; // each size-5 replaces a size-4, adding 1 student
+        numSize3 = 0;
+    } else if (diff < 0) {
+        numSize3 = -diff; // each size-3 replaces a size-4, removing 1 student
+        numSize5 = 0;
     }
+    numSize4 = numTeams - numSize5 - numSize3;
 
-    if (!found) {
-        // Fallback: very small class (< 12 students). Round up to nearest multiple of 3.
-        let raw = Math.max(3, Math.ceil(allStudents.length / 5));
-        numTeams = Math.ceil(raw / 3) * 3; // always a multiple of 3
-        numSize5 = allStudents.length - 4 * numTeams; // could be negative — handled below
-        if (numSize5 < 0) numSize5 = 0;
-        numSize4 = numTeams - numSize5;
-    }
-
-    const sizes = Array(numTeams).fill(4);
-    for (let i = 0; i < numSize5; i++) sizes[i] = 5;
+    // Build sizes array: [5...5, 4...4, 3...3]
+    const sizes = [
+        ...Array(numSize5).fill(5),
+        ...Array(numSize4).fill(4),
+        ...Array(numSize3).fill(3)
+    ]
 
     let teams = Array.from({ length: numTeams }, (_, i) => ({ id: i + 1, members: [] }));
 
@@ -1329,10 +1323,11 @@ function buildTeams(students, teamSize, mode) {
     }
 
     // Just format it nicely
-    return enforceMinSize(teams, 4, 5);
+    return enforceMinSize(teams, 3, 5);
 }
 
 function enforceMinSize(teams, min, max) {
+    // Remove empty teams. Teams with 1–2 members have their students redistributed.
     const ok = teams.filter(t => t.members.length >= min);
     const tooSmall = teams.filter(t => t.members.length < min);
     const orphans = [];
@@ -1340,7 +1335,8 @@ function enforceMinSize(teams, min, max) {
     shuffle(orphans);
     orphans.forEach(s => {
         if (ok.length > 0) {
-            const smallest = ok.reduce((a, b) => a.members.length < b.members.length ? a : b);
+            // Add to the smallest existing team (up to max size)
+            const smallest = ok.reduce((a, b) => a.members.length <= b.members.length ? a : b);
             smallest.members.push(s);
         }
     });
@@ -1877,7 +1873,7 @@ function renderAssessments(container) {
                 '</div>' +
                 '<textarea id="co-' + k + '" data-co="' + k + '" rows="2" ' +
                 'oninput="(navState.assignConfig.courseOutcomes=navState.assignConfig.courseOutcomes||{})[this.dataset.co]=this.value;" ' +
-                'style="width:100%;border:1px solid ' + acc.border + ';border-radius:8px;padding:10px 14px;font-size:.88rem;line-height:1.65;color:var(--text-primary);background:rgba(255,255,255,0.6);resize:vertical;font-family:inherit;box-sizing:border-box;">' + v + '</textarea>' +
+                'style="width:100%;border:1px solid ' + acc.border + ';border-radius:8px;padding:8px 12px;font-size:.82rem;line-height:1.55;color:var(--text-primary);background:rgba(255,255,255,0.6);resize:none;font-family:inherit;box-sizing:border-box;max-height:70px;overflow-y:auto;">' + v + '</textarea>' +
                 '</div>';
         }).join('');
 
@@ -1994,16 +1990,30 @@ function renderAssessments(container) {
 
         const units = cfg.units || {};
         const unitList = [1, 2, 3, 4, 5].map(u => (units[u] || {}).title || 'Unit ' + u).join(', ');
+        // Build lab dropdown HTML for ATE practicals (shows AU3611 / AU3612 / All)
+        const showLabDropdown = (deptCode === 'ATE' && (cfg.assignType === 'practicals' || savedType === 'practicals'));
+        const spec = (typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null;
+        const semLabs = (typeof ATE_LABS !== 'undefined' && spec && spec.semester) ? (ATE_LABS[spec.semester] || []) : [];
+        const labDropdownHTML = showLabDropdown && semLabs.length > 0 ? `
+            <div class="wiz-field" id="lab-select-field">
+                <label>&#128203; Select Lab</label>
+                <select id="wiz-lab-select" style="font-weight:600;">
+                    <option value="all" ${(!cfg.selectedLab || cfg.selectedLab === 'all') ? 'selected' : ''}>All Labs (combined)</option>
+                    ${semLabs.map(l => `<option value="${l.code}" ${cfg.selectedLab === l.code ? 'selected' : ''}>${l.code} — ${l.name}</option>`).join('')}
+                </select>
+            </div>` : '';
+
         panelHTML = `<div class="wiz-panel">
             <div class="wiz-panel-title">&#9881;&#65039; Step 4 &mdash; Assignment Configuration</div>
             <div class="wiz-form-grid">
                 <div class="wiz-field"><label>Assignment Type</label>
-                    <select id="wiz-type">
+                    <select id="wiz-type" onchange="if(!navState.assignConfig)navState.assignConfig={};navState.assignConfig.assignType=this.value;navState.assignConfig.selectedLab='all';render();">
                         <option value="presentation" ${savedType === 'presentation' ? 'selected' : ''}>&#127908; Team Presentation</option>
                         <option value="miniproject" ${savedType === 'miniproject' ? 'selected' : ''}>&#128295; Mini Project</option>
                         <option value="practicals" ${savedType === 'practicals' ? 'selected' : ''}>&#128203; Practicals</option>
                     </select>
                 </div>
+                ${labDropdownHTML}
                 <div class="wiz-field"><label>Complexity</label>
                     <select id="wiz-complexity">
                         <option value="mixed" ${(!cfg.complexity || cfg.complexity === 'mixed') ? 'selected' : ''}>Mixed (Easy/Medium/Hard)</option>
@@ -2208,22 +2218,57 @@ function generateAssignments() {
     /* ── Try curated topic list from ATE_SUBJECTS first ── */
     const spec = (typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null;
 
-    /* ── If Practicals type → pull experiments from ATE_LABS ── */
+    /* ── If Practicals type → pull experiments from ATE_LABS, filtered by selected lab ── */
     let curatedList = null;
     if (cfg.assignType === 'practicals' && typeof ATE_LABS !== 'undefined' && spec && spec.semester) {
         const semLabs = ATE_LABS[spec.semester];
         if (semLabs && semLabs.length > 0) {
-            // Combine all lab experiments for this semester
+            // Read selected lab from dropdown (AU3611, AU3612, or 'all')
+            const labSel = document.getElementById('wiz-lab-select');
+            const selectedLab = labSel ? labSel.value : (cfg.selectedLab || 'all');
+            cfg.selectedLab = selectedLab;
+
             curatedList = [];
             semLabs.forEach(lab => {
-                (lab.experiments || []).forEach(exp => {
-                    curatedList.push(lab.code + ': ' + exp);
-                });
+                if (selectedLab === 'all' || lab.code === selectedLab) {
+                    (lab.experiments || []).forEach(exp => {
+                        curatedList.push(lab.code + ': ' + exp);
+                    });
+                }
             });
+            // Fallback: all labs if selection yields nothing
+            if (curatedList.length === 0) {
+                semLabs.forEach(lab => {
+                    (lab.experiments || []).forEach(exp => curatedList.push(lab.code + ': ' + exp));
+                });
+            }
         }
     }
+
+    /* ── For non-practicals: filter SYLLABUS_DATA by focusUnits AND complexity ── */
     if (!curatedList) {
-        curatedList = spec && spec.topics ? spec.topics[cfg.assignType] : null;
+        const isR2025 = batchYear >= 2029;
+        const regulation = isR2025 ? 'R2025' : 'R2021';
+        let syllTopics = (typeof SYLLABUS_DATA !== 'undefined' &&
+            SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
+            ? SYLLABUS_DATA[regulation][deptCode] : [];
+
+        // Keep only topics from checked/selected units
+        syllTopics = syllTopics.filter(t => useUnits.includes(t.unit));
+
+        // Filter by complexity when not 'mixed'
+        if (cfg.complexity !== 'mixed' && syllTopics.length > 0) {
+            const complexFiltered = syllTopics.filter(t => t.complexity === cfg.complexity);
+            // Only apply filter if we get at least one match; otherwise keep all focusUnit topics
+            if (complexFiltered.length > 0) syllTopics = complexFiltered;
+        }
+
+        if (syllTopics.length > 0) {
+            curatedList = syllTopics.map(t => t.title);
+        } else {
+            // Last resort: ATE_SUBJECTS curated list
+            curatedList = spec && spec.topics ? spec.topics[cfg.assignType] : null;
+        }
     }
 
     let pool = [];
@@ -2241,7 +2286,7 @@ function generateAssignments() {
             });
         }
     } else {
-        /* ── Fallback: derive topics from unit descriptions ── */
+        /* ── Fallback: derive topics only from selected unit descriptions ── */
         const allTopics = [];
         useUnits.forEach(u => {
             const uObj = units[u] || {};
