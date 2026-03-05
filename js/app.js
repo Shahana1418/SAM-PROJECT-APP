@@ -1246,11 +1246,31 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
         numTeams = 15;
     } else {
         // Dynamic team generation for other departments
-        numTeams = Math.ceil(n / (teamSize || 5));
-        if (numTeams % 3 !== 0) numTeams += 3 - (numTeams % 3);
-        // Ensure that max size <= 6 if theoretically possible
-        while (numTeams > 0 && n / numTeams > 6) {
-            numTeams += 3;
+        // Rules: team sizes must be 4 or 5, teams divisible by 3, max 15 teams
+        let validT = [];
+        for (let t = 3; t <= 15; t += 3) {
+            if (n >= 4 * t && n <= 5 * t) validT.push(t);
+        }
+        if (validT.length > 0) {
+            numTeams = Math.max(...validT); // Maximize T → mostly size-4 teams
+        } else if (n > 75) {
+            numTeams = 15;
+        } else if (n < 12) {
+            numTeams = 3;
+        } else {
+            // Fallback: find best T that avoids size 3 teams
+            let minPenalty = Infinity;
+            numTeams = 3;
+            for (let t = 3; t <= 15; t += 3) {
+                let base = Math.floor(n / t);
+                let ext = n % t;
+                let p1 = (base < 4) ? (4 - base) * 1000 : ((base > 5) ? (base - 5) * 10 : 0);
+                let p2 = (base + 1 < 4) ? (4 - base) * 1000 : ((base + 1 > 5) ? (base - 4) * 10 : 0);
+                if (base <= 3) p1 += 50000;
+                if (base + 1 <= 3) p2 += 50000;
+                let penalty = (p1 * (t - ext)) + (p2 * ext) - t * 0.1;
+                if (penalty < minPenalty) { minPenalty = penalty; numTeams = t; }
+            }
         }
         if (numTeams === 0) numTeams = 3;
     }
