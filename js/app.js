@@ -256,7 +256,7 @@ function generateAndShowTeams(deptCode, batchYear, teamSize, mode) {
         }
     }
 
-    navState.teams = buildTeams(students, teamSize || 5, mode);
+    navState.teams = buildTeams(students, teamSize || 5, mode, deptCode, batchYear);
     navState.level = 'teams';
     navState.dept = deptCode;
     navState.batch = batchYear;
@@ -1226,7 +1226,7 @@ function randomiseCalendarRoles() {
     render();
 }
 
-function buildTeams(students, teamSize, mode) {
+function buildTeams(students, teamSize, mode, deptCode, batchYear) {
     if (students.length === 0) return [];
 
     const allStudents = [...students];
@@ -1237,76 +1237,69 @@ function buildTeams(students, teamSize, mode) {
     shuffle(males);
     shuffle(females);
 
-    // Target 12 teams (always a multiple of 3). Allow sizes 3, 4, or 5.
-    // Formula: for N students and T teams, use sizes 3/4/5 to exactly cover N.
-    // We prefer 12 teams, falling back to 9, 6, 3 for small classes.
     const n = allStudents.length;
-    let numTeams = 12;
-    if (n < 36) numTeams = 9;
-    if (n < 27) numTeams = 6;
-    if (n < 18) numTeams = 3;
+    let numTeams;
 
-    // Now compute how many teams of each size we need:
-    // size3 * 3 + size4 * 4 + size5 * 5 = n, size3 + size4 + size5 = numTeams
-    // Strategy: start with all size-4 teams, then adjust up (to 5) or down (to 3)
-    // First prefer size-5 teams (if n > 4*numTeams), then size-3 (if n < 4*numTeams)
-    let numSize5 = 0, numSize3 = 0, numSize4 = numTeams;
-    const diff = n - 4 * numTeams; // positive → need bigger teams; negative → need smaller
-    if (diff > 0) {
-        numSize5 = diff; // each size-5 replaces a size-4, adding 1 student
-        numSize3 = 0;
-    } else if (diff < 0) {
-        numSize3 = -diff; // each size-3 replaces a size-4, removing 1 student
-        numSize5 = 0;
+    if ((deptCode === 'ATE' && batchYear === 2029) || (deptCode === 'CVE' && batchYear === 2027)) {
+        numTeams = 12;
+        if (n < 36) numTeams = 9;
+        if (n < 27) numTeams = 6;
+        if (n < 18) numTeams = 3;
+    } else {
+        // Dynamic team generation for other departments
+        numTeams = Math.ceil(n / (teamSize || 5));
+        if (numTeams % 3 !== 0) numTeams += 3 - (numTeams % 3);
+        // Ensure that max size <= 6 if theoretically possible
+        while (numTeams > 0 && n / numTeams > 6) {
+            numTeams += 3;
+        }
+        if (numTeams === 0) numTeams = 3;
     }
-    numSize4 = numTeams - numSize5 - numSize3;
 
-    // Build sizes array: [5...5, 4...4, 3...3]
+    const baseSize = Math.floor(n / numTeams);
+    const extra = n % numTeams;
+
+    // We will have `extra` teams of size `baseSize + 1` and `numTeams - extra` teams of size `baseSize`
     const sizes = [
-        ...Array(numSize5).fill(5),
-        ...Array(numSize4).fill(4),
-        ...Array(numSize3).fill(3)
-    ]
+        ...Array(extra).fill(baseSize + 1),
+        ...Array(numTeams - extra).fill(baseSize)
+    ];
 
     let teams = Array.from({ length: numTeams }, (_, i) => ({ id: i + 1, members: [] }));
 
-    // Prepare gender pairs representing the valid chunks (2M, 2F, 4M, 4F)
-    const pairsM = []; // arrays of 2 males
-    const pairsF = []; // arrays of 2 females
+    // Prepare gender pairs
+    const pairsM = [];
+    const pairsF = [];
     while (males.length >= 2) pairsM.push([males.pop(), males.pop()]);
     while (females.length >= 2) pairsF.push([females.pop(), females.pop()]);
 
-    // Any leftovers (since odd numbers mean 1 leftover M/F)
     const leftovers = [...males, ...females];
 
-    // Build the 4-person cores
     for (let t = 0; t < numTeams; t++) {
-        // We need to pick two pairs to make a 4-person core
-        // Valid combinations: 2M+2M (4:0), 2F+2F (0:4), or 2M+2F (2:2)
-        if (pairsM.length > 0 && pairsF.length > 0) {
-            // Prefer 2:2 to balance both genders
-            teams[t].members.push(...pairsM.pop(), ...pairsF.pop());
-        } else if (pairsM.length >= 2) {
-            // 4:0
-            teams[t].members.push(...pairsM.pop(), ...pairsM.pop());
-        } else if (pairsF.length >= 2) {
-            // 0:4
-            teams[t].members.push(...pairsF.pop(), ...pairsF.pop());
-        } else {
-            // Out of perfect pairs (e.g., uneven totals), fallback logic just fills whatever is left
-            let needed = 4 - teams[t].members.length;
-            while (needed > 0 && pairsM.length > 0) { teams[t].members.push(...pairsM.pop()); needed -= 2; }
-            while (needed > 0 && pairsF.length > 0) { teams[t].members.push(...pairsF.pop()); needed -= 2; }
-            while (needed > 0 && leftovers.length > 0) { teams[t].members.push(leftovers.pop()); needed--; }
+        let neededPairs = Math.floor(sizes[t] / 2);
+        let pairsAdded = 0;
+
+        while (pairsAdded < neededPairs) {
+            if (pairsM.length > 0 && pairsF.length > 0) {
+                // Balance genders by alternating pairs
+                if (pairsAdded % 2 === 0) teams[t].members.push(...pairsM.pop());
+                else teams[t].members.push(...pairsF.pop());
+            } else if (pairsM.length > 0) {
+                teams[t].members.push(...pairsM.pop());
+            } else if (pairsF.length > 0) {
+                teams[t].members.push(...pairsF.pop());
+            } else {
+                break;
+            }
+            pairsAdded++;
         }
     }
 
-    // Now fill the 5th spots and any holes (from imperfect math) with leftovers
-    // First flatten any remaining pairs back into leftovers
+    // Flatten remaining pairs back into leftovers
     while (pairsM.length > 0) leftovers.push(...pairsM.pop());
     while (pairsF.length > 0) leftovers.push(...pairsF.pop());
 
-    // Distribute remaining students into teams that need them to reach their target size (sizes[t])
+    // Fill the remaining spots up to sizes[t] for each team
     for (let t = 0; t < numTeams; t++) {
         let needed = sizes[t] - teams[t].members.length;
         while (needed > 0 && leftovers.length > 0) {
@@ -1315,15 +1308,15 @@ function buildTeams(students, teamSize, mode) {
         }
     }
 
-    // Final desperate check if we ran out of room but have students (math boundary conditions)
+    // Safety fallback for math boundary conditions
     let overflowIdx = 0;
     while (leftovers.length > 0) {
         teams[overflowIdx % numTeams].members.push(leftovers.pop());
         overflowIdx++;
     }
 
-    // Just format it nicely
-    return enforceMinSize(teams, 3, 5);
+    // If a class is very small, sizes could be 1 or 2. We allow that to preserve the multiple-of-3 rule.
+    return enforceMinSize(teams, 1, 6);
 }
 
 function enforceMinSize(teams, min, max) {
