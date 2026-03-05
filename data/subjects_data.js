@@ -30,17 +30,14 @@ const SUBJECTS_DATA = {
         ],
 
         "CSE": [
-            { code: "CS3301", name: "Data Structures and Algorithms" },
-            { code: "CS3302", name: "Computer Organization and Architecture" },
-            { code: "CS3391", name: "Object Oriented Programming" },
+            /* Semester 4 subjects */
+            { code: "CS3452", name: "Theory of Computation" },
+            { code: "CS3491", name: "Artificial Intelligence and Machine Learning" },
             { code: "CS3401", name: "Algorithms" },
             { code: "CS3451", name: "Introduction to Operating Systems" },
-            { code: "CS3481", name: "Database Management Systems" },
-            { code: "CS3501", name: "Software Engineering" },
-            { code: "CS3601", name: "Computer Networks" },
-            { code: "CS3691", name: "Embedded Systems and IoT" },
-            { code: "CS3811", name: "Digital Forensics" },
-            { code: "GE3451", name: "Human Values and Ethics" }
+            /* Semester 6 subjects */
+            { code: "CCS356", name: "Object Oriented Software Engineering" },
+            { code: "CS3691", name: "Embedded Systems and IoT" }
         ],
 
         "ECE": [
@@ -120,11 +117,11 @@ const SUBJECTS_DATA = {
         ],
 
         "CSE": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" }
+            { code: "MA25C02", name: "Linear Algebra" },
+            { code: "EE25C01", name: "Basic Electrical and Electronics Engineering" },
+            { code: "CS25C06", name: "Digital Principles and Computer Organization" },
+            { code: "PH25C03", name: "Applied Physics (CSIE) – II" },
+            { code: "CS25C07", name: "Object Oriented Programming" }
         ],
 
         "ECE": [

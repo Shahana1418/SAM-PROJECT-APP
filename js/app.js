@@ -1753,8 +1753,9 @@ function renderAssessments(container) {
         const batchInfo = getBatchAcademicInfo(batchYear);
         // Show Course Objective (not COs) after subject selection
         let objectiveHTML = '';
-        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode]) {
-            const spec = ATE_SUBJECTS[cfg.courseCode];
+        const _specLookup1 = (code) => (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[code]) || (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[code]) || null;
+        if (cfg.courseCode && _specLookup1(cfg.courseCode)) {
+            const spec = _specLookup1(cfg.courseCode);
             if (spec.objective) {
                 objectiveHTML = `<div style="margin-top:1.2rem;background:linear-gradient(135deg,rgba(37,99,235,0.07),rgba(124,58,237,0.07));border:1px solid rgba(37,99,235,0.18);border-radius:12px;padding:16px 20px;">
                     <div style="font-size:.72rem;font-weight:800;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">&#127919; Course Objective</div>
@@ -1794,6 +1795,11 @@ function renderAssessments(container) {
                     if (batchYear == 2029) list = ["MA3251", "PH3251", "BE3251", "GE3251", "HS3252"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2028) list = ["AU3401", "AU3402", "AU3403", "AU3404", "ML3391"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["AU3601"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
+                }
+                if (deptCode === 'CSE') {
+                    if (batchYear == 2029) list = ["MA25C02", "EE25C01", "CS25C06", "PH25C03", "CS25C07"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2028) list = ["CS3452", "CS3491", "CS3401", "CS3451"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2027) list = ["CCS356", "CS3691"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
                 }
                 if (cfg.courseCode && !list.find(s => s.code === cfg.courseCode)) {
                     cfg.courseCode = '';
@@ -1840,8 +1846,9 @@ function renderAssessments(container) {
     }
 
     if (step === 3) {
-        if (cfg.courseCode && typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[cfg.courseCode]) {
-            const spec = ATE_SUBJECTS[cfg.courseCode];
+        const _specLookup3 = (code) => (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[code]) || (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[code]) || null;
+        if (cfg.courseCode && _specLookup3(cfg.courseCode)) {
+            const spec = _specLookup3(cfg.courseCode);
             let needsUpdate = (cfg.customizedFor !== cfg.courseCode);
             if (!needsUpdate && spec.unit_descs && (!cfg.units || !cfg.units[1] || !cfg.units[1].desc)) {
                 needsUpdate = true;
@@ -2003,9 +2010,10 @@ function renderAssessments(container) {
         const units = cfg.units || {};
         const unitList = [1, 2, 3, 4, 5].map(u => (units[u] || {}).title || 'Unit ' + u).join(', ');
         // Build lab dropdown HTML for ATE practicals (shows AU3611 / AU3612 / All)
-        const showLabDropdown = (deptCode === 'ATE' && (cfg.assignType === 'practicals' || savedType === 'practicals'));
-        const spec = (typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null;
-        const semLabs = (typeof ATE_LABS !== 'undefined' && spec && spec.semester) ? (ATE_LABS[spec.semester] || []) : [];
+        const showLabDropdown = ((deptCode === 'ATE' || deptCode === 'CSE') && (cfg.assignType === 'practicals' || savedType === 'practicals'));
+        const spec = ((typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null) || ((typeof CSE_SUBJECTS !== 'undefined' && cfg.courseCode) ? CSE_SUBJECTS[cfg.courseCode] : null);
+        const _labsSource = (deptCode === 'CSE' && typeof CSE_LABS !== 'undefined') ? CSE_LABS : (typeof ATE_LABS !== 'undefined' ? ATE_LABS : {});
+        const semLabs = (spec && spec.semester) ? (_labsSource[spec.semester] || []) : [];
         const labDropdownHTML = showLabDropdown && semLabs.length > 0 ? `
             <div class="wiz-field" id="lab-select-field">
                 <label>&#128203; Select Lab</label>
@@ -2227,13 +2235,14 @@ function generateAssignments() {
     const coKeys = Object.keys(cos);
     const useUnits = cfg.focusUnits && cfg.focusUnits.length ? cfg.focusUnits : [1, 2, 3, 4, 5];
 
-    /* ── Try curated topic list from ATE_SUBJECTS first ── */
-    const spec = (typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null;
+    /* ── Try curated topic list from ATE_SUBJECTS / CSE_SUBJECTS first ── */
+    const spec = ((typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null) || ((typeof CSE_SUBJECTS !== 'undefined' && cfg.courseCode) ? CSE_SUBJECTS[cfg.courseCode] : null);
 
-    /* ── If Practicals type → pull experiments from ATE_LABS, filtered by selected lab ── */
+    /* ── If Practicals type → pull experiments from ATE_LABS / CSE_LABS, filtered by selected lab ── */
     let curatedList = null;
-    if (cfg.assignType === 'practicals' && typeof ATE_LABS !== 'undefined' && spec && spec.semester) {
-        const semLabs = ATE_LABS[spec.semester];
+    const _labsGen = (deptCode === 'CSE' && typeof CSE_LABS !== 'undefined') ? CSE_LABS : (typeof ATE_LABS !== 'undefined' ? ATE_LABS : null);
+    if (cfg.assignType === 'practicals' && _labsGen && spec && spec.semester) {
+        const semLabs = _labsGen[spec.semester];
         if (semLabs && semLabs.length > 0) {
             // Read selected lab from dropdown (AU3611, AU3612, or 'all')
             const labSel = document.getElementById('wiz-lab-select');
