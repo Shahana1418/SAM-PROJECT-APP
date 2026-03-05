@@ -1242,6 +1242,8 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
 
     if ((deptCode === 'ATE' && batchYear === 2029) || (deptCode === 'CVE' && batchYear === 2027)) {
         numTeams = 12;
+    } else if (deptCode === 'CSE' && (batchYear === 2027 || batchYear === 2028)) {
+        numTeams = 15;
     } else {
         // Dynamic team generation for other departments
         numTeams = Math.ceil(n / (teamSize || 5));
