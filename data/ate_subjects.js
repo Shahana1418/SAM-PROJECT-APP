@@ -408,18 +408,18 @@ const ATE_SUBJECTS = {
                 "Hall Effect – Coefficient Determination and Applications"
             ],
             miniproject: [
-                "Crystal Structure Model – 3D Visualization of SC, BCC and FCC",
-                "Packing Factor Calculator for Different Crystal Structures",
-                "Stress-Strain Curve Plotter Using Experimental Data",
-                "Hardness Comparison Study of Different Engineering Materials",
-                "Dielectric Constant Measurement at Different Frequencies",
-                "Hysteresis Loop Tracer for Magnetic Material Characterization",
-                "Ceramic Tile Strength Testing and Property Analysis",
-                "Composite Material Fabrication and Tensile Testing",
-                "Carbon Nanotube Properties Study Using Literature Survey",
-                "Band Gap Determination of Semiconductor Using Four Probe",
-                "Hall Effect Experimental Setup and Coefficient Calculation",
-                "Nanomaterial Synthesis Using Sol-Gel Method Demonstration"
+                "Build a simple 3D unit cell model using craft materials",
+                "Demonstrate point, line and surface defects using a physical model",
+                "Conduct a simple hooke's law experiment using rubber bands",
+                "Test and compare the scratch hardness of common household materials",
+                "Create a simple homemade electromagnet and test its strength",
+                "Visualize magnetic field lines using iron filings and magnets",
+                "Test the thermal insulation properties of different ceramic materials",
+                "Fabricate a simple composite material using paper and glue (papier-mâché)",
+                "Build a simple water filter using activated carbon",
+                "Measure the conductivity of different water solutions (salt, sugar)",
+                "Create a simple LED circuit to demonstrate semiconductor behavior",
+                "Demonstrate the Tyndall effect using common household colloidal solutions"
             ]
         }
     },
@@ -470,6 +470,52 @@ const ATE_SUBJECTS = {
                 "K-Map Simplification Tool Web Application",
                 "4-Bit Counter Design Using JK Flip-Flops",
                 "Energy Audit Calculator for Domestic Consumption"
+            ]
+        }
+    },
+
+    "BE3271": {
+        name: "Basic Electrical and Electronics Engineering Laboratory",
+        semester: 2,
+        objective: "To verify basic electrical and electronics theories through practical experiments and build foundational circuit skills.",
+        units: {
+            1: { title: "Basic Circuits", desc: "Basic electrical circuit verification" },
+            2: { title: "Machines", desc: "Electrical individual machine tests" },
+            3: { title: "Electronics", desc: "Basic electronic component characteristics" },
+            4: { title: "Digital", desc: "Digital logic verifications" },
+            5: { title: "AC Power", desc: "AC power characteristics" }
+        },
+        cos: {
+            CO1: "-", CO2: "-", CO3: "-", CO4: "-", CO5: "-"
+        },
+        topics: {
+            presentation: [
+                "Verification of KVL and KCL – Theoretical vs Practical Accuracy",
+                "Significance of Power Factor in AC Single Phase Circuits",
+                "Load Characteristics of Single Phase Transformer",
+                "Speed Control Techniques for DC Shunt Motors",
+                "PN Junction Diode vs Zener Diode Characteristic Curves",
+                "BJT Common Emitter Configuration – Practical Challenges",
+                "Inverting vs Non-Inverting Op-Amp Applications",
+                "Half Adder and Full Adder Implementation Hurdles",
+                "MOSFET Characteristic Curves – Experimental Observations",
+                "Two Wattmeter Method for Three Phase Power Measurement",
+                "Differences in Flip-Flop Operation (SR, JK, D, T)",
+                "Series RLC Circuit Resonance and Frequency Response"
+            ],
+            miniproject: [
+                "Breadboard Implementation of KVL and KCL with Varying Resistors",
+                "DIY AC Power Indicator Circuit",
+                "Small Scale Transformer Step-Down Demonstration",
+                "DC Motor Speed Controller Build Using PWM",
+                "Zener Diode Voltage Regulator Circuit Build",
+                "BJT Automatic Night Light Switch Project",
+                "Simple Audio Amplifier Using Op-Amp",
+                "Binary Addition Calculator Using Basic Logic Gates",
+                "MOSFET Based Motor Driver Circuit",
+                "Three Phase Load Miniature Simulator",
+                "4-bit Binary Counter Circuit with LEDs",
+                "Simple LC Oscillator / Resonance Project"
             ]
         }
     },
@@ -635,18 +681,26 @@ const ATE_LABS = {
         },
         {
             code: "AU3412", name: "Fuels and Lubricants Laboratory", experiments: [
-                "Determination of flash point and fire point of fuel samples",
-                "Determination of kinematic viscosity using Redwood viscometer",
-                "Determination of calorific value using Bomb calorimeter",
+                "Determination of flash point and fire point of petrol samples",
+                "Determination of flash point and fire point of diesel samples",
+                "Determination of kinematic viscosity of lubricating oil",
+                "Determination of kinematic viscosity of gear oil",
+                "Determination of calorific value of solid fuels",
+                "Determination of calorific value of liquid fuels",
                 "Determination of cloud point and pour point of diesel",
+                "Determination of cloud point and pour point of biodiesel",
                 "Determination of carbon residue using Conradson apparatus",
-                "Determination of aniline point of fuel samples",
-                "Determination of cetane number / diesel index",
-                "Determination of penetration and softening point of grease",
-                "Drop point test and consistency test on grease samples",
-                "Copper strip corrosion test on fuel samples",
-                "Distillation test on petrol and diesel samples",
-                "Study of ASTM standards for fuel and lubricant testing"
+                "Determination of aniline point of diesel",
+                "Determination of aniline point of petrol blend",
+                "Determination of cetane number and diesel index",
+                "Determination of penetration point of grease sample A",
+                "Determination of softening point of grease sample B",
+                "Drop point test and consistency test on chassis grease",
+                "Drop point test and consistency test on wheel bearing grease",
+                "Copper strip corrosion test on petrol samples",
+                "Copper strip corrosion test on diesel samples",
+                "Distillation test characteristics of petrol",
+                "Distillation test characteristics of diesel"
             ]
         }
     ],

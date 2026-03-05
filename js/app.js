@@ -1242,9 +1242,6 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
 
     if ((deptCode === 'ATE' && batchYear === 2029) || (deptCode === 'CVE' && batchYear === 2027)) {
         numTeams = 12;
-        if (n < 36) numTeams = 9;
-        if (n < 27) numTeams = 6;
-        if (n < 18) numTeams = 3;
     } else {
         // Dynamic team generation for other departments
         numTeams = Math.ceil(n / (teamSize || 5));
@@ -1315,8 +1312,8 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
         overflowIdx++;
     }
 
-    // If a class is very small, sizes could be 1 or 2. We allow that to preserve the multiple-of-3 rule.
-    return enforceMinSize(teams, 1, 6);
+    // If a class is very small, sizes could be 1 or 2 (or even 0). We allow that to preserve the multiple-of-3 rule.
+    return enforceMinSize(teams, 0, 6);
 }
 
 function enforceMinSize(teams, min, max) {
