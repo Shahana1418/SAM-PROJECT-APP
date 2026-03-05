@@ -1229,215 +1229,93 @@ function randomiseCalendarRoles() {
 function buildTeams(students, teamSize, mode, deptCode, batchYear) {
     if (students.length === 0) return [];
 
-    const n = students.length;
+    const allStudents = [...students];
+    shuffle(allStudents);
+
+    const males = allStudents.filter(s => s.gender === 'M');
+    const females = allStudents.filter(s => s.gender === 'F');
+    shuffle(males);
+    shuffle(females);
+
+    const n = allStudents.length;
     let numTeams;
 
-    // Get number of teams according to User's strict constraints
-    // 1. Total teams <= 15
-    // 2. Total teams % 3 === 0
-    // 3. Team size 4 (maximum) with few size 5 (meaning 4*T <= N <= 5*T ideally)
-    let validT = [];
-    for (let t = 3; t <= 15; t += 3) {
-        if (n >= 4 * t && n <= 5 * t) validT.push(t);
-    }
-
-    if (validT.length > 0) {
-        numTeams = Math.max(...validT);
+    if ((deptCode === 'ATE' && batchYear === 2029) || (deptCode === 'CVE' && batchYear === 2027)) {
+        numTeams = 12;
+    } else if (deptCode === 'CSE' && (batchYear === 2027 || batchYear === 2028)) {
+        numTeams = 15;
     } else {
-        if (n > 75) {
-            numTeams = 15;
-        } else if (n < 12) {
-            numTeams = 3;
-        } else {
-            let minPenalty = Infinity;
-            numTeams = 3;
-            for (let t = 3; t <= 15; t += 3) {
-                let base = Math.floor(n / t);
-                let ext = n % t;
-                let s1 = base, s2 = base + 1;
-
-                let p1 = 0, p2 = 0;
-
-                // Heavily penalize any size NOT 4 or 5
-                if (s1 < 4) p1 += (4 - s1) * 1000;
-                if (s1 > 5) p1 += (s1 - 5) * 10;
-
-                if (s2 < 4) p2 += (4 - s2) * 1000;
-                if (s2 > 5) p2 += (s2 - 5) * 10;
-
-                // Extremely heavily penalize <= 3
-                if (s1 <= 3) p1 += 50000;
-                if (s2 <= 3) p2 += 50000;
-
-                let penalty = (p1 * (t - ext)) + (p2 * ext) - t * 0.1;
-                if (penalty < minPenalty) {
-                    minPenalty = penalty;
-                    numTeams = t;
-                }
-            }
+        // Dynamic team generation for other departments
+        numTeams = Math.ceil(n / (teamSize || 5));
+        if (numTeams % 3 !== 0) numTeams += 3 - (numTeams % 3);
+        // Ensure that max size <= 6 if theoretically possible
+        while (numTeams > 0 && n / numTeams > 6) {
+            numTeams += 3;
         }
+        if (numTeams === 0) numTeams = 3;
     }
-
-    if (numTeams === 0) numTeams = 3;
 
     const baseSize = Math.floor(n / numTeams);
     const extra = n % numTeams;
 
+    // We will have `extra` teams of size `baseSize + 1` and `numTeams - extra` teams of size `baseSize`
     const sizes = [
-        ...Array(numTeams - extra).fill(baseSize),
-        ...Array(extra).fill(baseSize + 1)
+        ...Array(extra).fill(baseSize + 1),
+        ...Array(numTeams - extra).fill(baseSize)
     ];
 
     let teams = Array.from({ length: numTeams }, (_, i) => ({ id: i + 1, members: [] }));
-    let males = students.filter(s => s.gender === 'M');
-    let females = students.filter(s => s.gender === 'F');
-    shuffle(males);
-    shuffle(females);
 
-    // Initial grouping into pairs
+    // Prepare gender pairs
     const pairsM = [];
-    while (males.length >= 2) pairsM.push([males.pop(), males.pop()]);
     const pairsF = [];
+    while (males.length >= 2) pairsM.push([males.pop(), males.pop()]);
     while (females.length >= 2) pairsF.push([females.pop(), females.pop()]);
+
+    const leftovers = [...males, ...females];
 
     for (let t = 0; t < numTeams; t++) {
         let neededPairs = Math.floor(sizes[t] / 2);
-        for (let p = 0; p < neededPairs; p++) {
-            // Check to balance pairs evenly across genders
-            if (pairsM.length > pairsF.length) {
+        let pairsAdded = 0;
+
+        while (pairsAdded < neededPairs) {
+            if (pairsM.length > 0 && pairsF.length > 0) {
+                // Balance genders by alternating pairs
+                if (pairsAdded % 2 === 0) teams[t].members.push(...pairsM.pop());
+                else teams[t].members.push(...pairsF.pop());
+            } else if (pairsM.length > 0) {
                 teams[t].members.push(...pairsM.pop());
             } else if (pairsF.length > 0) {
                 teams[t].members.push(...pairsF.pop());
-            } else if (pairsM.length > 0) {
-                teams[t].members.push(...pairsM.pop());
+            } else {
+                break;
             }
+            pairsAdded++;
         }
     }
 
-    // Distribute singles based on gender rules (1:3 or 3:1 not allowed)
-    let singles = [...males, ...females];
-    while (pairsM.length > 0) singles.push(...pairsM.pop());
-    while (pairsF.length > 0) singles.push(...pairsF.pop());
-    shuffle(singles);
+    // Flatten remaining pairs back into leftovers
+    while (pairsM.length > 0) leftovers.push(...pairsM.pop());
+    while (pairsF.length > 0) leftovers.push(...pairsF.pop());
 
+    // Fill the remaining spots up to sizes[t] for each team
     for (let t = 0; t < numTeams; t++) {
-        while (teams[t].members.length < sizes[t] && singles.length > 0) {
-            let cM = teams[t].members.filter(m => m.gender === 'M').length;
-            let cF = teams[t].members.filter(m => m.gender === 'F').length;
-
-            let pickedIdx = singles.findIndex(s => {
-                if (s.gender === 'M' && cM > 0) return true;
-                if (s.gender === 'F' && cF > 0) return true;
-                return false;
-            });
-
-            if (pickedIdx === -1) pickedIdx = 0;
-            teams[t].members.push(singles.splice(pickedIdx, 1)[0]);
+        let needed = sizes[t] - teams[t].members.length;
+        while (needed > 0 && leftovers.length > 0) {
+            teams[t].members.push(leftovers.pop());
+            needed--;
         }
     }
 
-    let tIdx = 0;
-    while (singles.length > 0) {
-        teams[tIdx % numTeams].members.push(singles.pop());
-        tIdx++;
+    // Safety fallback for math boundary conditions
+    let overflowIdx = 0;
+    while (leftovers.length > 0) {
+        teams[overflowIdx % numTeams].members.push(leftovers.pop());
+        overflowIdx++;
     }
 
-    // Auto-fix gender imbalance: "1:3 and 3:1 not allowed" means no team of size 4 should
-    // have exactly 1M/3F or 3M/1F. For size 5, 2:3 and 3:2 ARE allowed (nobody is isolated).
-    // The core rule: no gender should have exactly 1 member in a mixed-gender team.
-    // All same-gender teams (0:N or N:0) are explicitly allowed.
-    function isGenderBad(mCount, fCount) {
-        // All same gender: allowed
-        if (mCount === 0 || fCount === 0) return false;
-        // Exactly 1 of either gender: not allowed (isolated person)
-        if (mCount === 1 || fCount === 1) return true;
-        // For size 4: 2:2 is fine. For size 5: 2:3 or 3:2 is fine. 
-        return false;
-    }
-
-    let changed = true;
-    let limit = 50;
-    while (changed && limit-- > 0) {
-        changed = false;
-        for (let i = 0; i < teams.length; i++) {
-            let t1 = teams[i];
-            let list1 = t1.members;
-            let m1 = list1.filter(x => x.gender === 'M').length;
-            let f1 = list1.filter(x => x.gender === 'F').length;
-
-            if (isGenderBad(m1, f1)) {
-                // The lone gender member needs to be swapped out
-                let loneGender = (m1 === 1) ? 'M' : 'F';
-                let otherGender = (loneGender === 'M') ? 'F' : 'M';
-
-                let swapped = false;
-                for (let j = 0; j < teams.length; j++) {
-                    if (i === j) continue;
-                    let t2 = teams[j];
-                    let list2 = t2.members;
-                    let m2 = list2.filter(x => x.gender === 'M').length;
-                    let f2 = list2.filter(x => x.gender === 'F').length;
-
-                    let idxLone = list1.findIndex(x => x.gender === loneGender);
-                    let idxOther = list2.findIndex(x => x.gender === otherGender);
-
-                    if (idxLone !== -1 && idxOther !== -1) {
-                        // Calculate new counts after swap
-                        let newM1 = m1 + (loneGender === 'M' ? -1 : 1);
-                        let newF1 = f1 + (loneGender === 'F' ? -1 : 1);
-                        let newM2 = m2 + (loneGender === 'M' ? 1 : -1);
-                        let newF2 = f2 + (loneGender === 'F' ? 1 : -1);
-
-                        if (!isGenderBad(newM1, newF1) && !isGenderBad(newM2, newF2)) {
-                            list1.push(list2.splice(idxOther, 1)[0]);
-                            list2.push(list1.splice(idxLone, 1)[0]);
-                            changed = true;
-                            swapped = true;
-                            break;
-                        }
-                    }
-                }
-                if (!swapped) {
-                    // If we can't swap, try moving the lone person to a same-gender team
-                    for (let j = 0; j < teams.length; j++) {
-                        if (i === j) continue;
-                        let t2 = teams[j];
-                        let list2 = t2.members;
-                        let m2 = list2.filter(x => x.gender === 'M').length;
-                        let f2 = list2.filter(x => x.gender === 'F').length;
-                        let count2lone = (loneGender === 'M') ? m2 : f2;
-
-                        // Try to find a team that already has >=2 of loneGender to swap
-                        if (count2lone >= 2) {
-                            let idxLone = list1.findIndex(x => x.gender === loneGender);
-                            let idxSame = list2.findIndex(x => x.gender === loneGender);
-                            let idxOther = list1.findIndex(x => x.gender === otherGender);
-                            let idxOther2 = list2.findIndex(x => x.gender === otherGender);
-
-                            if (idxOther !== -1 && idxSame !== -1) {
-                                // Swap an otherGender from t1 with a loneGender from t2
-                                let newM1 = m1 + (loneGender === 'M' ? 1 : -1);
-                                let newF1 = f1 + (loneGender === 'F' ? 1 : -1);
-                                let newM2 = m2 + (loneGender === 'M' ? -1 : 1);
-                                let newF2 = f2 + (loneGender === 'F' ? -1 : 1);
-
-                                if (!isGenderBad(newM1, newF1) && !isGenderBad(newM2, newF2)) {
-                                    list1.push(list2.splice(idxSame, 1)[0]);
-                                    list2.push(list1.splice(idxOther, 1)[0]);
-                                    changed = true;
-                                    swapped = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (changed) break;
-        }
-    }
-
-    return teams;
+    // If a class is very small, sizes could be 1 or 2 (or even 0). We allow that to preserve the multiple-of-3 rule.
+    return enforceMinSize(teams, 0, 6);
 }
 
 function enforceMinSize(teams, min, max) {
