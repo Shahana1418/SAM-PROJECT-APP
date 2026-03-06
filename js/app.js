@@ -1801,6 +1801,11 @@ function renderAssessments(container) {
                     else if (batchYear == 2028) list = ["CS3452", "CS3491", "CS3492", "CS3401", "CS3451"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["CCS356", "CS3691"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
                 }
+                if (deptCode === 'CVE') {
+                    if (batchYear == 2029) list = ["MA25C02", "ME25C02", "PH25C02", "EE25C01", "CY25C02", "CE25201"].map(c => ({ code: c, name: (typeof CVE_SUBJECTS !== 'undefined' && CVE_SUBJECTS[c]) ? CVE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2028) list = ["CE3401", "CE3402", "CE3403", "CE3404", "CE3405"].map(c => ({ code: c, name: (typeof CVE_SUBJECTS !== 'undefined' && CVE_SUBJECTS[c]) ? CVE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2027) list = ["CE3601", "CE3602", "AG3601"].map(c => ({ code: c, name: (typeof CVE_SUBJECTS !== 'undefined' && CVE_SUBJECTS[c]) ? CVE_SUBJECTS[c].name : c }));
+                }
                 if (cfg.courseCode && !list.find(s => s.code === cfg.courseCode)) {
                     cfg.courseCode = '';
                     cfg.courseName = '';

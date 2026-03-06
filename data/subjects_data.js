@@ -41,6 +41,19 @@ const SUBJECTS_DATA = {
             { code: "CS3691", name: "Embedded Systems and IoT" }
         ],
 
+        "CVE": [
+            /* Semester 4 subjects */
+            { code: "CE3401", name: "Applied Hydraulics Engineering" },
+            { code: "CE3402", name: "Strength of Materials" },
+            { code: "CE3403", name: "Concrete Technology" },
+            { code: "CE3404", name: "Soil Mechanics" },
+            { code: "CE3405", name: "Highway and Railway Engineering" },
+            /* Semester 6 subjects */
+            { code: "CE3601", name: "Design of Steel Structural Elements" },
+            { code: "CE3602", name: "Structural Analysis II" },
+            { code: "AG3601", name: "Engineering Geology" }
+        ],
+
         "ECE": [
             { code: "EC3301", name: "Signals and Systems" },
             { code: "EC3302", name: "Electronic Circuits – I" },
@@ -123,6 +136,15 @@ const SUBJECTS_DATA = {
             { code: "CS25C06", name: "Digital Principles and Computer Organization" },
             { code: "PH25C03", name: "Applied Physics (CSIE) – II" },
             { code: "CS25C07", name: "Object Oriented Programming" }
+        ],
+
+        "CVE": [
+            { code: "MA25C02", name: "Linear Algebra" },
+            { code: "ME25C02", name: "Engineering Mechanics" },
+            { code: "PH25C02", name: "Applied Physics (CE) – II" },
+            { code: "EE25C01", name: "Basic Electrical and Electronics Engineering" },
+            { code: "CY25C02", name: "Applied Chemistry (CE) – II" },
+            { code: "CE25201", name: "Construction Materials and Technology" }
         ],
 
         "ECE": [
