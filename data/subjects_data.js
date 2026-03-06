@@ -33,6 +33,7 @@ const SUBJECTS_DATA = {
             /* Semester 4 subjects */
             { code: "CS3452", name: "Theory of Computation" },
             { code: "CS3491", name: "Artificial Intelligence and Machine Learning" },
+            { code: "CS3492", name: "Database Management Systems" },
             { code: "CS3401", name: "Algorithms" },
             { code: "CS3451", name: "Introduction to Operating Systems" },
             /* Semester 6 subjects */

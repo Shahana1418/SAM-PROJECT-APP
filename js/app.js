@@ -1798,7 +1798,7 @@ function renderAssessments(container) {
                 }
                 if (deptCode === 'CSE') {
                     if (batchYear == 2029) list = ["MA25C02", "EE25C01", "CS25C06", "PH25C03", "CS25C07"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
-                    else if (batchYear == 2028) list = ["CS3452", "CS3491", "CS3401", "CS3451"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2028) list = ["CS3452", "CS3491", "CS3492", "CS3401", "CS3451"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["CCS356", "CS3691"].map(c => ({ code: c, name: (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[c]) ? CSE_SUBJECTS[c].name : c }));
                 }
                 if (cfg.courseCode && !list.find(s => s.code === cfg.courseCode)) {

@@ -356,6 +356,62 @@ const CSE_SUBJECTS = {
         }
     },
 
+    "CS3492": {
+        name: "Database Management Systems",
+        semester: 4,
+        objective: "To learn the fundamentals of data models and relational algebra. To represent a database system using ER diagrams and apply normalization techniques. To understand transaction processing, concurrency control, and recovery. To learn internal storage structures including file organization and indexing. To introduce distributed databases, NoSQL databases, and database security.",
+        units: {
+            1: { title: "Relational Databases", desc: "Purpose of Database Systems – Views of Data – Data Models – Database System Architecture – Relational Model – Keys – Relational Algebra – SQL Fundamentals – Advanced SQL – Embedded SQL – Dynamic SQL." },
+            2: { title: "Database Design", desc: "Entity-Relationship (ER) Model – ER Diagrams – Enhanced-ER Model – ER-to-Relational Mapping – Functional Dependencies – Non-loss Decomposition – First, Second, Third Normal Forms – BCNF – Multi-valued Dependencies – Fourth Normal Form – Join Dependencies – Fifth Normal Form." },
+            3: { title: "Transactions", desc: "Transaction Concepts – ACID Properties – Schedules – Serializability – Transaction Support in SQL – Concurrency Control: Two-Phase Locking, Timestamp-based, Multiversion, Validation, Snapshot Isolation, Multiple Granularity Locking – Deadlock Handling – Recovery Concepts: Deferred and Immediate Update, Shadow Paging, ARIES Algorithm." },
+            4: { title: "Implementation Techniques", desc: "RAID – File Organization – Organization of Records in Files – Data Dictionary Storage – Column-Oriented Storage – Indexing and Hashing: Ordered Indices, B+ Tree Index, B Tree Index, Static Hashing, Dynamic Hashing – Query Processing Overview – Algorithms for Selection, Sorting, Join – Query Optimization: Heuristics, Cost Estimation." },
+            5: { title: "Advanced Topics", desc: "Distributed Databases: Architecture, Data Storage, Transaction Processing, Query Processing and Optimization – NoSQL Databases: CAP Theorem, Document-Based, Key-Value Stores, Column-Based, Graph Databases – Database Security: Security Issues, Access Control, Role-Based Access Control, SQL Injection, Encryption." }
+        },
+        cos: {
+            CO1: "Construct SQL queries using relational algebra.",
+            CO2: "Design databases using ER model and apply normalization techniques.",
+            CO3: "Construct queries to handle transaction processing and maintain database consistency.",
+            CO4: "Understand internal storage structures and evaluate query processing and optimization techniques.",
+            CO5: "Appreciate how advanced databases differ from relational databases and select suitable databases."
+        },
+        topics: {
+            presentation: [
+                "Relational Model – Keys, Constraints and Relational Algebra Operations",
+                "SQL Fundamentals – DDL, DML, DCL Commands with Examples",
+                "Entity-Relationship Model – ER Diagrams and Components",
+                "Normalization – 1NF, 2NF, 3NF and BCNF with Examples",
+                "ACID Properties of Transactions",
+                "Concurrency Control – Two-Phase Locking Protocol",
+                "Deadlock Handling – Detection, Prevention and Avoidance",
+                "Recovery Techniques – Deferred Update and ARIES Algorithm",
+                "B+ Tree Indexing – Structure, Insertion and Deletion",
+                "Hashing Techniques – Static and Dynamic Hashing",
+                "Query Processing – Selection, Sorting and Join Algorithms",
+                "Query Optimization – Heuristic and Cost-Based Approaches",
+                "Distributed Database Architecture and Transaction Processing",
+                "NoSQL Databases – CAP Theorem, Types and Comparison with RDBMS",
+                "Database Security – SQL Injection, Access Control and Encryption"
+            ],
+            miniproject: [
+                "Library Management System with book issue, return and fine calculation",
+                "Student Database System with enrollment, grades and attendance tracking",
+                "Hospital Management System – Patient records, appointments and billing",
+                "Inventory Management System with stock tracking and supplier details",
+                "Railway Reservation System with seat booking and cancellation",
+                "Online Banking System with account management and transaction history",
+                "Employee Payroll System with salary calculation and pay slip generation",
+                "E-Commerce Database – Products, orders, customers and payment tracking",
+                "Hotel Room Booking System with availability check and billing",
+                "Blood Bank Management System – Donor records and blood stock tracking",
+                "Electricity Bill Management System with meter reading and payment",
+                "Restaurant Order Management System with menu and billing",
+                "Pharmacy Management System – Medicine stock and prescription tracking",
+                "Simple SQL Query Builder – Visual interface to construct SQL queries",
+                "ER Diagram to Relational Schema Converter tool"
+            ]
+        }
+    },
+
     /* ══════════════════════════════════════════════════════════════════
      *  SEMESTER  2  —  BATCH 2029  (R2025)
      * ══════════════════════════════════════════════════════════════════ */
