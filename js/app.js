@@ -975,13 +975,18 @@ function renderTeams(container) {
 
 // ===== Level 5: Session Schedule =====
 
-// Period time slots — each 2-period block fits 2 sessions × 30 mins + break
+// Period time slots — sessCount = how many 30-min sessions fit, sessDur = minutes per session
 const PERIOD_TYPES = {
-    morning1: { label: 'Morning (Periods 1-2)', shortLabel: 'P1-2', startH: 9, startM: 0, durMins: 100, color: '#2563eb' },
-    morning2: { label: 'Morning (Periods 3-4)', shortLabel: 'P3-4', startH: 11, startM: 0, durMins: 90, color: '#0891b2' },
-    lab: { label: 'Lab (Periods 5-6-7)', shortLabel: 'LAB', startH: 13, startM: 45, durMins: 150, color: '#059669' },
-    afternoon: { label: 'Afternoon (Periods 5-6)', shortLabel: 'P5-6', startH: 13, startM: 45, durMins: 90, color: '#7c3aed' },
+    morning1: { label: 'Morning (Periods 1-2)', shortLabel: 'P1-2', startH: 9, startM: 0, durMins: 100, sessCount: 2, sessDur: 30, color: '#2563eb' },
+    morning2: { label: 'Morning (Periods 3-4)', shortLabel: 'P3-4', startH: 11, startM: 0, durMins: 90, sessCount: 2, sessDur: 30, color: '#0891b2' },
+    lab: { label: 'Lab (Periods 5-6-7)', shortLabel: 'LAB', startH: 13, startM: 45, durMins: 150, sessCount: 3, sessDur: 30, color: '#059669' },
 };
+// Helper: count total sessions for a slot combination
+function slotSessionCount(key) {
+    const slots = DAY_SLOTS[key];
+    if (!slots) return 0;
+    return slots.reduce((sum, pk) => sum + (PERIOD_TYPES[pk] ? PERIOD_TYPES[pk].sessCount : 0), 0);
+}
 // Slot combinations selectable via dropdown
 const DAY_SLOTS = {
     'p12': ['morning1'],
@@ -1021,16 +1026,22 @@ function generateSessionCalendar(teams, config) {
             const isPast = dateStr < todayStr, isToday = dateStr === todayStr;
             for (let s = 0; s < slots.length && idx < N; s++) {
                 const pk = slots[s], pt = PERIOD_TYPES[pk];
-                sessions.push({
-                    sessNum: idx + 1, date: new Date(cur), dateStr,
-                    dayName: DAY_NAMES_SHORT[dow], dayFull: DAY_NAMES_FULL[dow],
-                    periodKey: pk,
-                    startTime: String(pt.startH).padStart(2, '0') + ':' + String(pt.startM).padStart(2, '0'),
-                    endTime: addMins(pt.startH, pt.startM, pt.durMins),
-                    presenterIdx: idx, reviewerIdx: reviewers[idx], feedbackIdx: feedbacks[idx],
-                    revealed: revealMode === 'all' || isPast || isToday,
-                });
-                idx++;
+                const sc = pt.sessCount || 1;
+                const gap = 5; // 5 min break between sessions within same period
+                for (let si = 0; si < sc && idx < N; si++) {
+                    const offsetMins = si * (pt.sessDur + gap);
+                    const sH = pt.startH, sM = pt.startM + offsetMins;
+                    sessions.push({
+                        sessNum: idx + 1, date: new Date(cur), dateStr,
+                        dayName: DAY_NAMES_SHORT[dow], dayFull: DAY_NAMES_FULL[dow],
+                        periodKey: pk, subIndex: si,
+                        startTime: addMins(sH, sM, 0),
+                        endTime: addMins(sH, sM, pt.sessDur),
+                        presenterIdx: idx, reviewerIdx: reviewers[idx], feedbackIdx: feedbacks[idx],
+                        revealed: revealMode === 'all' || isPast || isToday,
+                    });
+                    idx++;
+                }
             }
         }
         cur.setDate(cur.getDate() + 1);
@@ -1068,13 +1079,13 @@ function renderSessions(container) {
                 <input type="date" id="calEndDate" value="${cal ? cal.endDate : defEndStr}"></div>
             <div class="cal-field"><label>Session Time Slot</label>
                 <select id="calSessPerDay">
-                    <option value="p12" ${savedSpd === 'p12' ? 'selected' : ''}>Morning P1-2 only (1 session/day)</option>
-                    <option value="p34" ${savedSpd === 'p34' ? 'selected' : ''}>Morning P3-4 only (1 session/day)</option>
-                    ${isLabAssign ? `<option value="lab" ${savedSpd === 'lab' ? 'selected' : ''}>Lab Period only (1 session/day)</option>` : ''}
-                    <option value="p12_p34" ${savedSpd === 'p12_p34' ? 'selected' : ''}>P1-2 + P3-4 (2 sessions/day)</option>
-                    ${isLabAssign ? `<option value="p12_lab" ${savedSpd === 'p12_lab' ? 'selected' : ''}>P1-2 + Lab (2 sessions/day)</option>` : ''}
-                    ${isLabAssign ? `<option value="p34_lab" ${savedSpd === 'p34_lab' ? 'selected' : ''}>P3-4 + Lab (2 sessions/day)</option>` : ''}
-                    ${isLabAssign ? `<option value="p12_p34_lab" ${savedSpd === 'p12_p34_lab' ? 'selected' : ''}>P1-2 + P3-4 + Lab (3 sessions/day)</option>` : ''}
+                    <option value="p12" ${savedSpd === 'p12' ? 'selected' : ''}>Morning P1-2 only (2 sessions/day)</option>
+                    <option value="p34" ${savedSpd === 'p34' ? 'selected' : ''}>Morning P3-4 only (2 sessions/day)</option>
+                    ${isLabAssign ? `<option value="lab" ${savedSpd === 'lab' ? 'selected' : ''}>Lab Period only (3 sessions/day)</option>` : ''}
+                    <option value="p12_p34" ${savedSpd === 'p12_p34' ? 'selected' : ''}>P1-2 + P3-4 (4 sessions/day)</option>
+                    ${isLabAssign ? `<option value="p12_lab" ${savedSpd === 'p12_lab' ? 'selected' : ''}>P1-2 + Lab (5 sessions/day)</option>` : ''}
+                    ${isLabAssign ? `<option value="p34_lab" ${savedSpd === 'p34_lab' ? 'selected' : ''}>P3-4 + Lab (5 sessions/day)</option>` : ''}
+                    ${isLabAssign ? `<option value="p12_p34_lab" ${savedSpd === 'p12_p34_lab' ? 'selected' : ''}>P1-2 + P3-4 + Lab (7 sessions/day)</option>` : ''}
                 </select></div>
             <div class="cal-field"><label>Role Visibility</label>
                 <select id="calRevealMode">
@@ -1121,20 +1132,23 @@ function renderSessions(container) {
             const isToday = fs.dateStr === todayStr, isPast = fs.dateStr < todayStr;
             const dl = fs.date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
             const cells = slotKeys.map(pk => {
-                const s = daySess.find(x => x.periodKey === pk);
-                if (!s) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
+                const slotSessions = daySess.filter(x => x.periodKey === pk);
+                if (slotSessions.length === 0) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
                 const pt = PERIOD_TYPES[pk];
-                const p = `Team ${s.presenterIdx + 1}`, r = `Team ${s.reviewerIdx + 1}`, fb = `Team ${s.feedbackIdx + 1}`;
-                const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
-                const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
-                return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
-                    <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')}</div>
-                    <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
-                    ${presTopicHTML}
-                    ${s.revealed
-                        ? `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
-                        : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles on day</span></div>`}
-                </td>`;
+                const innerHTML = slotSessions.map(s => {
+                    const p = `Team ${s.presenterIdx + 1}`, r = `Team ${s.reviewerIdx + 1}`, fb = `Team ${s.feedbackIdx + 1}`;
+                    const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
+                    const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:2px;font-size:.68rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
+                    return `<div style="padding:4px 0;${slotSessions.length > 1 ? 'border-bottom:1px dashed var(--border-light);' : ''}">
+                        <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')} <span style="font-size:.62rem;color:var(--text-muted);">${s.startTime}–${s.endTime}</span></div>
+                        <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
+                        ${presTopicHTML}
+                        ${s.revealed
+                            ? `<div class="sched-role-row" style="margin-top:2px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
+                            : `<div class="sched-role-row" style="margin-top:2px;"><span class="sched-chip sched-locked">🔒 Roles on day</span></div>`}
+                    </div>`;
+                }).join('');
+                return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">${innerHTML}</td>`;
             }).join('');
             return `<tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}">
                 <td class="sched-date-cell">
