@@ -2245,264 +2245,299 @@ function toggleAssignCard(i) {
     if (!body) return;
     const isOpen = body.classList.toggle('open');
     if (expand) expand.style.transform = isOpen ? 'rotate(180deg)' : '';
-}
+    function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx, courseName = '', spec = null) {
+        const { assignType } = config;
+        const typeLabel = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce', practicals: 'Practicals' }[assignType] || 'Team Presentation';
 
-function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx, courseName = '', spec = null) {
-    const { assignType } = config;
-    const typeLabel = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce', practicals: 'Practicals' }[assignType] || 'Team Presentation';
+        // Extract highly specific unique details from the subject's Anna University syllabus mapping
+        const courseObj = (spec && spec.objective) ? spec.objective : `Understand in-depth engineering concepts from ${courseName}.`;
+        const targetCOText = (spec && spec.cos && spec.cos[coKey]) ? spec.cos[coKey] : `Achieve the targeted course learning outcome for ${coKey}.`;
 
-    // Extract highly specific unique details from the subject's Anna University syllabus mapping
-    const courseObj = (spec && spec.objective) ? spec.objective : `Understand in-depth engineering concepts from ${courseName}.`;
-    const targetCOText = (spec && spec.cos && spec.cos[coKey]) ? spec.cos[coKey] : `Achieve the targeted course learning outcome for ${coKey}.`;
+        // Pseudorandom choice based on team index to ensure variety without shifting on re-render
+        const getChoice = (arr, seed) => arr[(seed + unitNum) % arr.length];
 
-    const descMap = {
-        presentation: `Prepare a highly tailored 12–15 minute technical presentation focusing entirely on <strong>"${unitTitle}"</strong>. As part of the <strong>${courseName}</strong> curriculum, your presentation must explore how this specific topic applies to real-world scenarios. Reference Anna University important questions directly related to this topic, include highly relevant diagrams, and clearly demonstrate how this fulfills the targeted course outcome: <em>"${targetCOText}"</em>.`,
-        assignment: `Write a highly detailed individual analytical report exclusively covering <strong>"${unitTitle}"</strong>. This assignment directly supports the <strong>${courseName}</strong> syllabus. You must include derivations, solved Anna University examination problems specific to this topic, necessary diagrams, and a summary explaining how your work achieves the outcome: <em>"${targetCOText}"</em>. Minimum 1500 words.`,
-        miniproject: `Design, build or simulate a working mini project explicitly based on <strong>"${unitTitle}"</strong> from the <strong>${courseName}</strong> course. Demonstrate a working outcome (prototype, simulation or data analysis) that physically validates the course outcome: <em>"${targetCOText}"</em>. Prepare a comprehensive project report and present findings to the team.`,
-        practicals: `Perform laboratory experiments strictly related to <strong>"${unitTitle}"</strong> in the <strong>${courseName}</strong> laboratory. Record detailed observations, analyse results, answer Viva-Voce questions proving you have practically achieved <em>"${targetCOText}"</em>, and submit a complete observation book entry.`,
-    };
+        // Extract a small contextual snippet from the unit description if available
+        let contextSnippet = '';
+        if (unitDesc && unitDesc.length > 15) {
+            const words = unitDesc.split(' ').slice(0, 12).join(' ');
+            contextSnippet = ` Topics will likely involve concepts such as ${words}...`;
+        }
 
-    const objectiveMap = {
-        presentation: `<strong>Course Alignment:</strong> To master the specific theoretical/practical concepts of "${unitTitle}". This directly supports the primary course objective: <em>"${courseObj}"</em> and specifically targets the course outcome: <strong>"${targetCOText}"</strong>.`,
-        assignment: `<strong>Course Alignment:</strong> To analyse and solve Anna University examination problems accurately for "${unitTitle}". This directly addresses the specific course outcome: <strong>"${targetCOText}"</strong> and supports the overall goal to <em>"${courseObj}"</em>.`,
-        miniproject: `<strong>Course Alignment:</strong> To apply theoretical knowledge of "${unitTitle}" in a practical engineering mini project. This demonstrates core principles to achieve the outcome: <strong>"${targetCOText}"</strong> in alignment with <em>"${courseObj}"</em>.`,
-        practicals: `<strong>Course Alignment:</strong> To verify concepts of "${unitTitle}" through strict hands-on experiments, ensuring the practical achievement of outcome: <strong>"${targetCOText}"</strong>.`,
-    };
+        // Dynamic Paragraph Generation Arrays
+        const introPhrases = [
+            `Prepare a highly tailored 12–15 minute technical presentation focusing entirely on <strong>"${unitTitle}"</strong>.`,
+            `Your team is tasked with delivering an in-depth, 12-15 minute presentation exploring the intricacies of <strong>"${unitTitle}"</strong>.`,
+            `Design a comprehensive 15-minute technical briefing that covers <strong>"${unitTitle}"</strong> in detail.`,
+            `Develop a structured presentation specifically breaking down the concepts of <strong>"${unitTitle}"</strong>.`
+        ];
 
-    const deliverableMap = {
-        presentation: [
-            `10-15 slide presentation deck specifically answering the topic: <strong>"${unitTitle}"</strong>.`,
-            `Detailed breakdown in your slides explaining exactly how you achieved ${coKey} (<em>"${targetCOText}"</em>).`,
-            `Live 12–15 minute presentation focused strictly on this syllabus portion with Q&A.`,
-            `Reference list mapping your slides to the ${courseName} standard Anna University textbooks.`
-        ],
-        assignment: [
-            `Typed report (minimum 1500 words) strictly focused on <strong>"${unitTitle}"</strong>.`,
-            `Step-by-step solutions to at least 3 previous Anna University important questions for this explicit topic.`,
-            `Clear explanation of how the report fulfills ${coKey} (<em>"${targetCOText}"</em>).`,
-            `Diagrams, graphs or flowcharts where mathematically/conceptually applicable.`
-        ],
-        miniproject: [
-            `Working prototype, simulation output or experimental data proving <strong>"${unitTitle}"</strong> concepts.`,
-            `Project report containing: Abstract, Introduction, Design/Method, Results, Conclusion.`,
-            `Live demonstration proving the achievement of ${coKey} (<em>"${targetCOText}"</em>) through the project output.`,
-            `Live explanation and Q&A with the evaluating team.`
-        ],
-        practicals: [
-            `Completed observation book entry with aim, apparatus, procedure, result for <strong>"${unitTitle}"</strong>.`,
-            `Graphs and calculations as exactly required by this specific experiment scope.`,
-            `Clear physical demonstration of achieving ${coKey} (<em>"${targetCOText}"</em>) during the lab execution.`,
-            `Viva-Voce responses covering the core physics/engineering theory behind the experiment.`
-        ],
-    };
+        const contextPhrases = [
+            `As part of the <strong>${courseName}</strong> curriculum, your presentation must explore how this specific topic applies to real-world scenarios.${contextSnippet}`,
+            `This assignment directly supports the core syllabus of <strong>${courseName}</strong> by mapping theoretical knowledge to practical applications.${contextSnippet}`,
+            `Within the context of <strong>${courseName}</strong>, your goal is to explain this topic clearly to your peers, highlighting key engineering principles.${contextSnippet}`
+        ];
 
-    const criteriaMap = {
-        presentation: [
-            `Accurate coverage and technical depth of "${unitTitle}" (30%)`,
-            `Demonstrated achievement of the specific course outcome: ${coKey} (20%)`,
-            `Clarity of slides, specific diagrams, and visual aids (25%)`,
-            `Delivery, confidence and answering specific Q&A (25%)`
-        ],
-        assignment: [
-            `Correctness of problem solutions and derivations specific to "${unitTitle}" (35%)`,
-            `Direct fulfillment of the target course outcome ${coKey} (20%)`,
-            `Writing clarity, report structure, and relevant diagrams (25%)`,
-            `Adherence to the specific syllabus scope and references (20%)`
-        ],
-        miniproject: [
-            `Working functionality validating "${unitTitle}" concepts (40%)`,
-            `Demonstration of achieving course outcome ${coKey} (20%)`,
-            `Project report quality and structured documentation (20%)`,
-            `Demonstration and precise explanation to reviewing team (20%)`
-        ],
-        practicals: [
-            `Successful and accurate execution of the "${unitTitle}" experiment (40%)`,
-            `Demonstrated practical achievement of course outcome ${coKey} (30%)`,
-            `Observation book quality, accuracy and calculations (20%)`,
-            `Debugging and troubleshooting skills shown during the lab (10%)`
-        ],
-    };
-    const complexityCycle = ['Easy', 'Medium', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Hard', 'Easy'];
-    const usedComplexity = config.complexity === 'mixed'
-        ? complexityCycle[teamIdx % complexityCycle.length]
-        : config.complexity;
-    return {
-        assessId: 'ASSIGN_' + String(teamIdx + 1).padStart(3, '0'),
-        unit: 'Unit ' + unitNum, unitTitle, title: unitTitle,
-        co: coKey, complexity: usedComplexity, duration: config.duration, type: typeLabel,
-        objective: objectiveMap[assignType] || objectiveMap.presentation,
-        description: descMap[assignType] || descMap.presentation,
-        deliverables: deliverableMap[assignType] || deliverableMap.presentation,
-        criteria: criteriaMap[assignType] || criteriaMap.presentation,
-    };
-}
+        const conclusionPhrases = [
+            `Reference Anna University important questions directly related to this topic, include highly relevant diagrams, and clearly demonstrate how this fulfills the targeted course outcome: <em>"${targetCOText}"</em>.`,
+            `You must include derivations where applicable, solved Anna University examination problems specific to this topic, necessary diagrams, and a summary explaining how your work achieves: <em>"${targetCOText}"</em>.`,
+            `Ensure your presentation physically validates the course outcome: <em>"${targetCOText}"</em> by providing concrete examples and referencing previous exam questions.`
+        ];
 
-function generateAssignments() {
-    if (!navState.assignConfig) navState.assignConfig = {};
-    const cfg = navState.assignConfig;
-    const typeEl = document.getElementById('wiz-type');
-    cfg.assignType = typeEl ? typeEl.value : (cfg.assignType || 'presentation');
-    cfg.complexity = document.getElementById('wiz-complexity')?.value || cfg.complexity || 'mixed';
-    cfg.duration = document.getElementById('wiz-duration')?.value || cfg.duration || '15-20 min';
+        const descMap = {
+            presentation: `${getChoice(introPhrases, teamIdx)} ${getChoice(contextPhrases, teamIdx * 2)} ${getChoice(conclusionPhrases, teamIdx * 3)}`,
 
-    // Read checked focus units (checkboxes)
-    const cbAll = document.querySelectorAll('.focus-unit-cb');
-    if (cbAll.length > 0) {
-        const sel = Array.from(cbAll).filter(cb => cb.checked).map(cb => parseInt(cb.value));
-        cfg.focusUnits = sel.length ? sel : [1, 2, 3, 4, 5];
-    } else {
-        cfg.focusUnits = cfg.focusUnits || [];
+            assignment: `Write a highly detailed individual analytical report exclusively covering <strong>"${unitTitle}"</strong>. ${getChoice(contextPhrases, teamIdx)}. You must include derivations, solved Anna University examination problems specific to this topic, necessary diagrams, and a summary explaining how your work achieves the outcome: <em>"${targetCOText}"</em>. Minimum 1500 words.`,
+
+            miniproject: `Design, build or simulate a working mini project explicitly based on <strong>"${unitTitle}"</strong> from the <strong>${courseName}</strong> course. Demonstrate a working outcome (prototype, simulation or data analysis) that physically validates the course outcome: <em>"${targetCOText}"</em>. Prepare a comprehensive project report and present findings to the team.`,
+
+            practicals: `Perform laboratory experiments strictly related to <strong>"${unitTitle}"</strong> in the <strong>${courseName}</strong> laboratory. Record detailed observations, analyse results, answer Viva-Voce questions proving you have practically achieved <em>"${targetCOText}"</em>, and submit a complete observation book entry.`,
+        };
+
+        const objIntro = [
+            `<strong>Course Alignment:</strong> To master the specific theoretical/practical concepts of "${unitTitle}".`,
+            `<strong>Primary Goal:</strong> To thoroughly analyze and understand "${unitTitle}".`,
+            `<strong>Learning Target:</strong> To develop a deep engineering understanding of "${unitTitle}".`
+        ];
+
+        const objectiveMap = {
+            presentation: `${getChoice(objIntro, teamIdx)} This directly supports the primary course objective: <em>"${courseObj}"</em> and specifically targets the course outcome: <strong>"${targetCOText}"</strong>.`,
+            assignment: `<strong>Course Alignment:</strong> To analyse and solve Anna University examination problems accurately for "${unitTitle}". This directly addresses the specific course outcome: <strong>"${targetCOText}"</strong> and supports the overall goal to <em>"${courseObj}"</em>.`,
+            miniproject: `<strong>Course Alignment:</strong> To apply theoretical knowledge of "${unitTitle}" in a practical engineering mini project. This demonstrates core principles to achieve the outcome: <strong>"${targetCOText}"</strong> in alignment with <em>"${courseObj}"</em>.`,
+            practicals: `<strong>Course Alignment:</strong> To verify concepts of "${unitTitle}" through strict hands-on experiments, ensuring the practical achievement of outcome: <strong>"${targetCOText}"</strong>.`,
+        };
+
+        const deliverableMap = {
+            presentation: [
+                `10-15 slide presentation deck specifically answering the topic: <strong>"${unitTitle}"</strong>.`,
+                `Detailed breakdown in your slides explaining exactly how you achieved ${coKey} (<em>"${targetCOText}"</em>).`,
+                `Live 12–15 minute presentation focused strictly on this syllabus portion with Q&A.`,
+                `Reference list mapping your slides to the ${courseName} standard Anna University textbooks.`
+            ],
+            assignment: [
+                `Typed report (minimum 1500 words) strictly focused on <strong>"${unitTitle}"</strong>.`,
+                `Step-by-step solutions to at least 3 previous Anna University important questions for this explicit topic.`,
+                `Clear explanation of how the report fulfills ${coKey} (<em>"${targetCOText}"</em>).`,
+                `Diagrams, graphs or flowcharts where mathematically/conceptually applicable.`
+            ],
+            miniproject: [
+                `Working prototype, simulation output or experimental data proving <strong>"${unitTitle}"</strong> concepts.`,
+                `Project report containing: Abstract, Introduction, Design/Method, Results, Conclusion.`,
+                `Live demonstration proving the achievement of ${coKey} (<em>"${targetCOText}"</em>) through the project output.`,
+                `Live explanation and Q&A with the evaluating team.`
+            ],
+            practicals: [
+                `Completed observation book entry with aim, apparatus, procedure, result for <strong>"${unitTitle}"</strong>.`,
+                `Graphs and calculations as exactly required by this specific experiment scope.`,
+                `Clear physical demonstration of achieving ${coKey} (<em>"${targetCOText}"</em>) during the lab execution.`,
+                `Viva-Voce responses covering the core physics/engineering theory behind the experiment.`
+            ],
+        };
+
+        const criteriaMap = {
+            presentation: [
+                `Accurate coverage and technical depth of "${unitTitle}" (30%)`,
+                `Demonstrated achievement of the specific course outcome: ${coKey} (20%)`,
+                `Clarity of slides, specific diagrams, and visual aids (25%)`,
+                `Delivery, confidence and answering specific Q&A (25%)`
+            ],
+            assignment: [
+                `Correctness of problem solutions and derivations specific to "${unitTitle}" (35%)`,
+                `Direct fulfillment of the target course outcome ${coKey} (20%)`,
+                `Writing clarity, report structure, and relevant diagrams (25%)`,
+                `Adherence to the specific syllabus scope and references (20%)`
+            ],
+            miniproject: [
+                `Working functionality validating "${unitTitle}" concepts (40%)`,
+                `Demonstration of achieving course outcome ${coKey} (20%)`,
+                `Project report quality and structured documentation (20%)`,
+                `Demonstration and precise explanation to reviewing team (20%)`
+            ],
+            practicals: [
+                `Successful and accurate execution of the "${unitTitle}" experiment (40%)`,
+                `Demonstrated practical achievement of course outcome ${coKey} (30%)`,
+                `Observation book quality, accuracy and calculations (20%)`,
+                `Debugging and troubleshooting skills shown during the lab (10%)`
+            ],
+        };
+        const complexityCycle = ['Easy', 'Medium', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Hard', 'Easy'];
+        const usedComplexity = config.complexity === 'mixed'
+            ? complexityCycle[teamIdx % complexityCycle.length]
+            : config.complexity;
+        return {
+            assessId: 'ASSIGN_' + String(teamIdx + 1).padStart(3, '0'),
+            unit: 'Unit ' + unitNum, unitTitle, title: unitTitle,
+            co: coKey, complexity: usedComplexity, duration: config.duration, type: typeLabel,
+            objective: objectiveMap[assignType] || objectiveMap.presentation,
+            description: descMap[assignType] || descMap.presentation,
+            deliverables: deliverableMap[assignType] || deliverableMap.presentation,
+            criteria: criteriaMap[assignType] || criteriaMap.presentation,
+        };
     }
 
-    const teams = navState.teams || [];
-    const numTeams = teams.length || 12;
-    const deptCode = navState.dept;
-    const batchYear = navState.batch;
-    const units = cfg.units || {};
-    const cos = cfg.courseOutcomes || { CO1: 'CO1', CO2: 'CO2', CO3: 'CO3', CO4: 'CO4', CO5: 'CO5' };
-    const coKeys = Object.keys(cos);
-    const useUnits = cfg.focusUnits && cfg.focusUnits.length ? cfg.focusUnits : [1, 2, 3, 4, 5];
+    function generateAssignments() {
+        if (!navState.assignConfig) navState.assignConfig = {};
+        const cfg = navState.assignConfig;
+        const typeEl = document.getElementById('wiz-type');
+        cfg.assignType = typeEl ? typeEl.value : (cfg.assignType || 'presentation');
+        cfg.complexity = document.getElementById('wiz-complexity')?.value || cfg.complexity || 'mixed';
+        cfg.duration = document.getElementById('wiz-duration')?.value || cfg.duration || '15-20 min';
 
-    /* ── Try curated topic list from respective SUBJECTS first ── */
-    const spec = getSubjectSpec(cfg.courseCode);
+        // Read checked focus units (checkboxes)
+        const cbAll = document.querySelectorAll('.focus-unit-cb');
+        if (cbAll.length > 0) {
+            const sel = Array.from(cbAll).filter(cb => cb.checked).map(cb => parseInt(cb.value));
+            cfg.focusUnits = sel.length ? sel : [1, 2, 3, 4, 5];
+        } else {
+            cfg.focusUnits = cfg.focusUnits || [];
+        }
 
-    /* ── If Practicals type → pull experiments from respective LABS, filtered by selected lab ── */
-    let curatedList = null;
-    const _labsGen = getLabsGen(deptCode);
-    if (cfg.assignType === 'practicals' && _labsGen && spec && spec.semester) {
-        const semLabs = _labsGen[spec.semester];
-        if (semLabs && semLabs.length > 0) {
-            // Read selected lab from dropdown (AU3611, AU3612, or 'all')
-            const labSel = document.getElementById('wiz-lab-select');
-            const selectedLab = labSel ? labSel.value : (cfg.selectedLab || 'all');
-            cfg.selectedLab = selectedLab;
+        const teams = navState.teams || [];
+        const numTeams = teams.length || 12;
+        const deptCode = navState.dept;
+        const batchYear = navState.batch;
+        const units = cfg.units || {};
+        const cos = cfg.courseOutcomes || { CO1: 'CO1', CO2: 'CO2', CO3: 'CO3', CO4: 'CO4', CO5: 'CO5' };
+        const coKeys = Object.keys(cos);
+        const useUnits = cfg.focusUnits && cfg.focusUnits.length ? cfg.focusUnits : [1, 2, 3, 4, 5];
 
-            curatedList = [];
-            semLabs.forEach(lab => {
-                if (selectedLab === 'all' || lab.code === selectedLab) {
-                    (lab.experiments || []).forEach(exp => {
-                        curatedList.push(lab.code + ': ' + exp);
+        /* ── Try curated topic list from respective SUBJECTS first ── */
+        const spec = getSubjectSpec(cfg.courseCode);
+
+        /* ── If Practicals type → pull experiments from respective LABS, filtered by selected lab ── */
+        let curatedList = null;
+        const _labsGen = getLabsGen(deptCode);
+        if (cfg.assignType === 'practicals' && _labsGen && spec && spec.semester) {
+            const semLabs = _labsGen[spec.semester];
+            if (semLabs && semLabs.length > 0) {
+                // Read selected lab from dropdown (AU3611, AU3612, or 'all')
+                const labSel = document.getElementById('wiz-lab-select');
+                const selectedLab = labSel ? labSel.value : (cfg.selectedLab || 'all');
+                cfg.selectedLab = selectedLab;
+
+                curatedList = [];
+                semLabs.forEach(lab => {
+                    if (selectedLab === 'all' || lab.code === selectedLab) {
+                        (lab.experiments || []).forEach(exp => {
+                            curatedList.push(lab.code + ': ' + exp);
+                        });
+                    }
+                });
+                // Fallback: all labs if selection yields nothing
+                if (curatedList.length === 0) {
+                    semLabs.forEach(lab => {
+                        (lab.experiments || []).forEach(exp => curatedList.push(lab.code + ': ' + exp));
                     });
                 }
-            });
-            // Fallback: all labs if selection yields nothing
-            if (curatedList.length === 0) {
-                semLabs.forEach(lab => {
-                    (lab.experiments || []).forEach(exp => curatedList.push(lab.code + ': ' + exp));
-                });
             }
         }
-    }
 
-    /* ── For non-practicals: filter SYLLABUS_DATA by focusUnits AND complexity ── */
-    if (!curatedList) {
-        if (spec && spec.topics && spec.topics[cfg.assignType] && spec.topics[cfg.assignType].length > 0) {
-            // First Priority: explicitly curated topics in ATE_SUBJECTS matching the assignType
-            curatedList = spec.topics[cfg.assignType];
+        /* ── For non-practicals: filter SYLLABUS_DATA by focusUnits AND complexity ── */
+        if (!curatedList) {
+            if (spec && spec.topics && spec.topics[cfg.assignType] && spec.topics[cfg.assignType].length > 0) {
+                // First Priority: explicitly curated topics in ATE_SUBJECTS matching the assignType
+                curatedList = spec.topics[cfg.assignType];
+            } else {
+                // Second Priority: use generic SYLLABUS_DATA topics
+                const isR2025 = batchYear >= 2029;
+                const regulation = isR2025 ? 'R2025' : 'R2021';
+                let syllTopics = (typeof SYLLABUS_DATA !== 'undefined' &&
+                    SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
+                    ? SYLLABUS_DATA[regulation][deptCode] : [];
+
+                // Keep only topics from checked/selected units
+                syllTopics = syllTopics.filter(t => useUnits.includes(t.unit));
+
+                // Filter by complexity when not 'mixed'
+                if (cfg.complexity !== 'mixed' && syllTopics.length > 0) {
+                    const complexFiltered = syllTopics.filter(t => t.complexity === cfg.complexity);
+                    // Only apply filter if we get at least one match; otherwise keep all focusUnit topics
+                    if (complexFiltered.length > 0) syllTopics = complexFiltered;
+                }
+
+                if (syllTopics.length > 0) {
+                    curatedList = syllTopics.map(t => t.title);
+                }
+            }
+        }
+
+        let pool = [];
+
+        if (curatedList && curatedList.length > 0) {
+            const coUnits = [1, 2, 3, 4, 5];
+            for (let i = 0; i < curatedList.length; i++) {
+                const uIdx = Math.floor(i / curatedList.length * 5);
+                const uNum = coUnits[uIdx] || 1;
+                // Only include this topic if its mapped unit is among selected focus units
+                if (useUnits.includes(uNum)) {
+                    pool.push({
+                        unitNum: uNum,
+                        title: curatedList[i],
+                        co: coKeys[(uNum - 1) % coKeys.length] || 'CO1'
+                    });
+                }
+            }
         } else {
-            // Second Priority: use generic SYLLABUS_DATA topics
-            const isR2025 = batchYear >= 2029;
-            const regulation = isR2025 ? 'R2025' : 'R2021';
-            let syllTopics = (typeof SYLLABUS_DATA !== 'undefined' &&
-                SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
-                ? SYLLABUS_DATA[regulation][deptCode] : [];
-
-            // Keep only topics from checked/selected units
-            syllTopics = syllTopics.filter(t => useUnits.includes(t.unit));
-
-            // Filter by complexity when not 'mixed'
-            if (cfg.complexity !== 'mixed' && syllTopics.length > 0) {
-                const complexFiltered = syllTopics.filter(t => t.complexity === cfg.complexity);
-                // Only apply filter if we get at least one match; otherwise keep all focusUnit topics
-                if (complexFiltered.length > 0) syllTopics = complexFiltered;
+            /* ── Fallback: derive topics only from selected unit descriptions ── */
+            const allTopics = [];
+            useUnits.forEach(u => {
+                const uObj = units[u] || {};
+                const uTitle = uObj.title || 'Unit ' + u;
+                const uDesc = uObj.desc || '';
+                let subtopics = [];
+                if (uDesc.trim().length > 10) {
+                    subtopics = uDesc.split(/[-—–.,;]+/).map(s => s.trim()).filter(s => s.length > 5 && s.toLowerCase() !== 'and');
+                }
+                if (subtopics.length === 0) subtopics = [uTitle];
+                subtopics.forEach(sub => {
+                    allTopics.push({ unitNum: u, title: sub, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
+                });
+            });
+            if (allTopics.length > numTeams) {
+                const buckets = Array.from({ length: numTeams }, () => []);
+                allTopics.forEach((t, i) => {
+                    const bIdx = Math.min(Math.floor(i / (allTopics.length / numTeams)), numTeams - 1);
+                    buckets[bIdx].push(t);
+                });
+                buckets.forEach(b => { if (b.length > 0) pool.push({ unitNum: b[0].unitNum, title: b.map(x => x.title).join(' & '), co: b[0].co }); });
+            } else {
+                pool = allTopics;
             }
-
-            if (syllTopics.length > 0) {
-                curatedList = syllTopics.map(t => t.title);
-            }
+            if (pool.length === 0) useUnits.forEach(u => pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u, co: coKeys[(u - 1) % coKeys.length] || 'CO1' }));
         }
+
+        const generated = [];
+        for (let i = 0; i < numTeams; i++) {
+            const topic = pool[i % pool.length];
+            generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i, cfg.courseName, spec));
+        }
+        cfg.generatedAssignments = generated;
+        navState.assignStep = 4;
+        render();
+        setTimeout(() => {
+            const res = document.querySelector('.assign-result-grid');
+            if (res) res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     }
 
-    let pool = [];
-
-    if (curatedList && curatedList.length > 0) {
-        const coUnits = [1, 2, 3, 4, 5];
-        for (let i = 0; i < curatedList.length; i++) {
-            const uIdx = Math.floor(i / curatedList.length * 5);
-            const uNum = coUnits[uIdx] || 1;
-            // Only include this topic if its mapped unit is among selected focus units
-            if (useUnits.includes(uNum)) {
-                pool.push({
-                    unitNum: uNum,
-                    title: curatedList[i],
-                    co: coKeys[(uNum - 1) % coKeys.length] || 'CO1'
-                });
-            }
-        }
-    } else {
-        /* ── Fallback: derive topics only from selected unit descriptions ── */
-        const allTopics = [];
-        useUnits.forEach(u => {
-            const uObj = units[u] || {};
-            const uTitle = uObj.title || 'Unit ' + u;
-            const uDesc = uObj.desc || '';
-            let subtopics = [];
-            if (uDesc.trim().length > 10) {
-                subtopics = uDesc.split(/[-—–.,;]+/).map(s => s.trim()).filter(s => s.length > 5 && s.toLowerCase() !== 'and');
-            }
-            if (subtopics.length === 0) subtopics = [uTitle];
-            subtopics.forEach(sub => {
-                allTopics.push({ unitNum: u, title: sub, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
-            });
+    function exportAssignmentsCSV() {
+        const cfg = navState.assignConfig || {};
+        const assignments = cfg.generatedAssignments;
+        if (!assignments || !assignments.length) { showToast('⚠️ Please generate assignments first.', 'warning'); return; }
+        const deptCode = navState.dept, batchYear = navState.batch;
+        let csv = 'Assignment ID,Team,Course Code,Course Name,Topic Title,Unit,Complexity,Course Outcome,Duration,Type,Objective\n';
+        assignments.forEach((a, i) => {
+            csv += [a.assessId, 'Team ' + (i + 1), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
         });
-        if (allTopics.length > numTeams) {
-            const buckets = Array.from({ length: numTeams }, () => []);
-            allTopics.forEach((t, i) => {
-                const bIdx = Math.min(Math.floor(i / (allTopics.length / numTeams)), numTeams - 1);
-                buckets[bIdx].push(t);
-            });
-            buckets.forEach(b => { if (b.length > 0) pool.push({ unitNum: b[0].unitNum, title: b.map(x => x.title).join(' & '), co: b[0].co }); });
-        } else {
-            pool = allTopics;
-        }
-        if (pool.length === 0) useUnits.forEach(u => pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u, co: coKeys[(u - 1) % coKeys.length] || 'CO1' }));
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'assignments_' + deptCode + '_' + batchYear + '_' + (cfg.courseCode || 'course') + '.csv'; a.click();
+        URL.revokeObjectURL(url);
     }
 
-    const generated = [];
-    for (let i = 0; i < numTeams; i++) {
-        const topic = pool[i % pool.length];
-        generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i, cfg.courseName, spec));
+    function openSyllabusPdf(path) {
+        if (!path) { showToast('⚠️ Syllabus PDF not available for this regulation.', 'error'); return; }
+        window.open(path, '_blank');
     }
-    cfg.generatedAssignments = generated;
-    navState.assignStep = 4;
-    render();
-    setTimeout(() => {
-        const res = document.querySelector('.assign-result-grid');
-        if (res) res.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
 }
 
-function exportAssignmentsCSV() {
-    const cfg = navState.assignConfig || {};
-    const assignments = cfg.generatedAssignments;
-    if (!assignments || !assignments.length) { showToast('⚠️ Please generate assignments first.', 'warning'); return; }
-    const deptCode = navState.dept, batchYear = navState.batch;
-    let csv = 'Assignment ID,Team,Course Code,Course Name,Topic Title,Unit,Complexity,Course Outcome,Duration,Type,Objective\n';
-    assignments.forEach((a, i) => {
-        csv += [a.assessId, 'Team ' + (i + 1), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
-    });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'assignments_' + deptCode + '_' + batchYear + '_' + (cfg.courseCode || 'course') + '.csv'; a.click();
-    URL.revokeObjectURL(url);
-}
-
-
-
-
-
-function openSyllabusPdf(path) {
-    if (!path) { showToast('⚠️ Syllabus PDF not available for this regulation.', 'error'); return; }
-    window.open(path, '_blank');
-}
