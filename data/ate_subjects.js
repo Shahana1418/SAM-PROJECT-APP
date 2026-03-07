@@ -321,301 +321,285 @@ const ATE_SUBJECTS = {
     },
 
     /* ══════════════════════════════════════════════════════════════════
-     *  SEMESTER  2  —  BATCH 2029  (R2021 Common)
+     *  SEMESTER  2  —  BATCH 2029  (R2025)
      * ══════════════════════════════════════════════════════════════════ */
 
-    "MA3251": {
-        name: "Statistics and Numerical Methods",
+    "MA25C02": {
+        name: "Linear Algebra",
         semester: 2,
-        objective: "To acquaint the knowledge of testing of hypothesis for small and large samples, design of experiments and to introduce the basic concepts of numerical methods and their applications.",
+        objective: "To impart foundational knowledge in linear algebra essential for analysing and solving problems in engineering applications and to provide the knowledge on computation using software.",
         units: {
-            1: { title: "Testing of Hypothesis", desc: "Sampling distributions – Estimation of parameters – Statistical Hypothesis – Large sample tests based on Normal distribution for single mean and difference of means – Tests based on t, F and Chi-square distributions for mean, variance and proportion – Goodness of fit." },
-            2: { title: "Design of Experiments", desc: "One way and Two way classifications - Completely Randomized Design – Randomized Block Design – Latin Square Design – 2 power 2 Factorial Design." },
-            3: { title: "Solution of Equations and Eigenvalue Problems", desc: "Solution of algebraic and transcendental equations – Fixed point iteration method – Newton Raphson method – Solution of linear system of equations – Gauss elimination method – Pivoting – Gauss Jordan method – Iterative methods of Gauss Jacobi and Gauss Seidel – Eigen values of a matrix by Power method and Jacobi's method." },
-            4: { title: "Interpolation, Numerical Differentiation and Integration", desc: "Lagrange's and Newton's divided difference interpolations – Newton's forward and backward difference interpolation – Approximation of derivatives using interpolation polynomials – Numerical single and double integrations using Trapezoidal and Simpson's 1/3 rules." },
-            5: { title: "Numerical Solution of Ordinary Differential Equations", desc: "Single step methods: Taylor's series method – Euler's method – Modified Euler's method – Fourth order Runge – Kutta method for solving first order equations – Multi step methods: Milne's and Adams – Bash forth predictor corrector methods for solving first order equations." }
+            1: { title: "Vector Spaces", desc: "Introduction to Vector Spaces, Examples, Subspaces, Linear Combinations, Span, Generating Sets, Linear Dependence and Independence, Basis and Dimension, Dimension of Subspaces." },
+            2: { title: "Linear Transformations and Diagonalization", desc: "Null space, Range, Dimension Theorem (statement only), Matrix representation of a linear transformation, Eigenvalues & Eigenvectors, Diagonalizability." },
+            3: { title: "Inner Product Spaces", desc: "Inner product, Norms, Cauchy, Schwarz inequality, Gram, Schmidt orthogonalization, Simple problems (up to R3)." },
+            4: { title: "Matrix Decomposition", desc: "Orthogonal transformation of a symmetric matrix to diagonal form - Positive definite matrices, QR decomposition, Singular Value Decomposition (SVD), Least squares solutions- simple problems (up to 3x3 matrices)." },
+            5: { title: "Applications", desc: "Applications of linear algebra in solving engineering problems using software (Implicit based on activities)." }
         },
         cos: {
-            CO1: "Apply the concept of testing of hypothesis for small and large samples in real life problems.",
-            CO2: "Apply the concept of design of experiments in the field of agriculture and statistical quality control.",
-            CO3: "Appreciate the numerical techniques of solving algebraic and transcendental equations.",
-            CO4: "Apply numerical techniques in interpolation, differentiation and integration.",
-            CO5: "Solve ordinary differential equations numerically using single and multi-step methods."
+            CO1: "Test linear dependence and compute span and basis of vectors.",
+            CO2: "Compute matrix representations and find null space, range, and eigenvalues.",
+            CO3: "Compute inner products, vector norms, and apply Gram-Schmidt process.",
+            CO4: "Perform QR decomposition and Singular Value Decomposition (SVD).",
+            CO5: "Solve least squares problems and apply linear algebra to structural networks."
         },
         topics: {
             presentation: [
-                "Sampling Distributions and Parameter Estimation",
-                "Large Sample Tests – Z Test for Single and Difference of Means",
-                "Small Sample Tests – t, F and Chi-Square Distributions",
-                "One Way and Two Way ANOVA Classification",
-                "Latin Square Design and Factorial Experiments",
-                "Newton Raphson Method – Algorithm and Applications",
-                "Gauss Elimination and Gauss Jordan Methods",
-                "Iterative Methods – Gauss Jacobi and Gauss Seidel",
-                "Lagrange's and Newton's Divided Difference Interpolation",
-                "Simpson's 1/3 Rule and Trapezoidal Rule for Numerical Integration",
-                "Runge-Kutta Fourth Order Method for ODE",
-                "Adams-Bashforth Predictor Corrector Method"
+                "Applications of Linear Transformations in 3D Automobile Modeling",
+                "Eigenvalues in Vehicle Structural Frequency Analysis",
+                "Singular Value Decomposition (SVD) in Engineering Data Compression",
+                "Least Squares Solutions for Automotive Sensor Calibration",
+                "Gram-Schmidt Orthogonalization Process Explained",
+                "Matrix Representation of Robotic Arm Kinematics in Automobile Assembly",
+                "Positive Definite Matrices in Vehicle Suspension Optimization",
+                "Vector Spaces and Span in CAD Software Algorithms",
+                "Understanding the Dimension Theorem and Null Space",
+                "QR Decomposition for Solving Systems of Linear Equations",
+                "Cayley-Hamilton Theorem Applications",
+                "Diagonalization of Matrices in Dynamic Systems",
+                "Cauchy-Schwarz Inequality in Inner Product Spaces",
+                "Role of Linear Independence in Engine Control Mapping",
+                "Matrix Computations in Autonomous Vehicle Path Planning"
             ],
             miniproject: [
-                "Statistical Hypothesis Testing Tool Using Python",
-                "ANOVA Calculator Application for Agricultural Data",
-                "Root Finding Visualizer – Newton Raphson and Fixed Point Iteration",
-                "Linear System Solver – Gauss Elimination with Pivoting",
-                "Eigenvalue Calculator Using Power Method with GUI",
-                "Interpolation Polynomial Plotter Using Lagrange's Method",
-                "Numerical Differentiation and Integration Web Calculator",
-                "ODE Solver Comparison – Euler vs Runge-Kutta Methods",
-                "Statistical Quality Control Chart Generator",
-                "Excel-Based Design of Experiments Tool",
-                "Simpson's Rule Area Calculator for Engineering Curves",
-                "Milne's Predictor-Corrector Method Step-by-Step Simulator"
+                "Automobile Suspension Matrix Calculator using Python",
+                "SVD Image Compression Visualizer Tool",
+                "2D Kinematic Transformation Simulator",
+                "Eigenvalue Calculator for Simple Vehicle Vibration Models",
+                "Least Squares Regression Tool for Mileage Data",
+                "Robotic Arm Joint Angle Matrix Solver",
+                "QR Decomposition Step-by-Step App",
+                "Gram-Schmidt Process Visualization Software",
+                "Vehicle Center of Gravity Coordinate Matrix Program",
+                "Linear Equation Solver Array Interface",
+                "Subspace Basis Identifier Tool",
+                "Dashboard for Matrix Norm Computations",
+                "Interactive Matrix Diagonalization Tool",
+                "Automotive Sensor Data Least Squares Filter",
+                "Linear Algebra Visualization Game"
             ]
         }
     },
 
-    "PH3251": {
-        name: "Materials Science",
+    "ME25C02": {
+        name: "Engineering Mechanics",
         semester: 2,
-        objective: "To introduce the essential principles of crystal structures, mechanical properties of materials, dielectric and magnetic properties, ceramics, composites and semiconducting materials.",
+        objective: "To introduce the fundamental concepts and principles of statics related to forces acting on particles and rigid bodies. To develop the ability to formulate and apply equilibrium equations.",
         units: {
-            1: { title: "Crystal Physics", desc: "Lattice – Unit cell – Bravais lattices – Lattice planes – Miller indices – d spacing in cubic lattice – Calculation of number of atoms per unit cell – Atomic radius – Coordination number – Packing factor for SC, BCC, FCC and HCP structures – Diamond and graphite structures – Crystal imperfections: Point, line, surface and volume defects." },
-            2: { title: "Properties of Materials and Testing", desc: "Stress and Strain – Stress-Strain diagram – Elastic modulus – Poisson's ratio – Relationship between elastic constants – Hardness – Types of hardness testing methods – Brinell, Vickers, Rockwell and Micro-hardness – Fatigue – Creep – Fracture – Types of fracture." },
-            3: { title: "Dielectric and Magnetic Properties", desc: "Electrical susceptibility – Dielectric constant – Polarization - Types of polarization – Equation of internal field in liquids and solids – Clausius-Mosotti equation – Piezo – Ferro and Pyro electricity – Frequency dependence of dielectric constant – Classification of magnetic materials – Domain theory of ferromagnetism – Hysteresis – Applications." },
-            4: { title: "Ceramics, Composites and Nanomaterials", desc: "Classification of ceramics – Properties and applications of ceramics – Classification of composites – Fibre reinforced composites – Particle reinforced composites – Applications – Nano materials – Properties and applications – Carbon nanotubes – Synthesis of nanomaterials: Top down approach – Ball milling, Bottom up approach – Sol-gel, CVD." },
-            5: { title: "Semiconducting Materials", desc: "Intrinsic semiconductor – Carrier concentration derivation – Fermi level – Hall effect – Determination of Hall coefficient – Experimental determination of band gap – Direct band gap and indirect band gap – Elemental and compound semiconductors – Applications of Hall effect – Semiconductor devices." }
+            1: { title: "Statics of Particles", desc: "Resultant of forces in a plane, Equilibrium of a particle in a plane, Addition of concurrent forces in space, Equilibrium of a particle in space." },
+            2: { title: "Statics of Rigid Bodies", desc: "Concept of Free Body Diagram, Equivalent systems of forces, Transmissibility, Moment of a force about a point and an axis, Couples and force-couple systems, Equilibrium of rigid bodies in two and three dimensions, Principle of virtual work." },
+            3: { title: "Moments of Inertia", desc: "First moments of areas and lines, Centroids of composite areas and lines, Theorems of Pappus-Guldinus, Second moment of area, Parallel axis theorem, Rectangular and Polar Moments of inertia of composite areas, Radius of Gyration, Product of Inertia, Principal Axes and Principal Moments of Inertia, Mass moments of inertia of thin plates." },
+            4: { title: "Friction", desc: "Laws of friction, Coefficients of Friction, Angles of Friction, Types of Friction Problems, Wedges and Ladder friction, Belt friction." },
+            5: { title: "Applications of Statics", desc: "Solving GATE questions and practical applications of equilibrium, moments of inertia, and friction in mechanical systems." }
         },
         cos: {
-            CO1: "Appreciate the knowledge of crystal structures and crystal imperfections.",
-            CO2: "Understand the mechanical properties of materials in engineering applications.",
-            CO3: "Explain the dielectric and magnetic properties of materials.",
-            CO4: "Describe ceramics, composites, and nanomaterials with their applications.",
-            CO5: "Relate the semiconductor properties and Hall effect for device applications."
+            CO1: "Explain the principles of statics in determination of forces acting on particles and rigid bodies.",
+            CO2: "Apply equilibrium conditions to predict the response of particles and rigid bodies.",
+            CO3: "Calculate the centroid, center of gravity and moment of inertia of basic and composite areas.",
+            CO4: "Analyze the effect of dry friction in various mechanical systems.",
+            CO5: "Solve complex static problems using the principle of virtual work."
         },
         topics: {
             presentation: [
-                "Crystal Systems, Bravais Lattices and Miller Indices",
-                "Packing Factor Calculation for SC, BCC, FCC and HCP",
-                "Crystal Imperfections – Point, Line and Surface Defects",
-                "Stress-Strain Diagram and Elastic Constants Relationship",
-                "Hardness Testing Methods – Brinell, Vickers, Rockwell",
-                "Polarization Types and Clausius-Mosotti Equation",
-                "Piezoelectricity, Ferroelectricity and Pyroelectricity",
-                "Domain Theory of Ferromagnetism and Hysteresis Loop",
-                "Ceramics – Classification, Properties and Applications",
-                "Composites – Fibre and Particle Reinforced Types",
-                "Nanomaterials Synthesis – Ball Milling, Sol-Gel, CVD",
-                "Hall Effect – Coefficient Determination and Applications"
+                "Free Body Diagrams in Automotive Chassis Design",
+                "Belt Friction Principles in Engine Pulley Systems",
+                "Moment of Inertia and its Impact on Vehicle Roll Over",
+                "Equilibrium of Rigid Bodies in 3D Automobile Structures",
+                "Wedge Friction Applications in Braking Mechanisms",
+                "Theorems of Pappus-Guldinus for Complex Volume Generation",
+                "Polar Moment of Inertia in Automotive Drive Shafts",
+                "Calculations of Center of Gravity in Commercial Vehicles",
+                "Principle of Virtual Work in Linkage Analysis",
+                "Laws of Dry (Coulomb) Friction and Tire Grip",
+                "Analysis of Concurrent Forces in Suspension Mounts",
+                "Effect of Transmissibility on Load Bearing Components",
+                "Force-Couple Systems in Steering Geometry",
+                "Mass Moment of Inertia of a Flywheel",
+                "Calculation of Support Reactions in Vehicle Frames"
             ],
             miniproject: [
-                "Build a simple 3D unit cell model using craft materials",
-                "Demonstrate point, line and surface defects using a physical model",
-                "Conduct a simple hooke's law experiment using rubber bands",
-                "Test and compare the scratch hardness of common household materials",
-                "Create a simple homemade electromagnet and test its strength",
-                "Visualize magnetic field lines using iron filings and magnets",
-                "Test the thermal insulation properties of different ceramic materials",
-                "Fabricate a simple composite material using paper and glue (papier-mâché)",
-                "Build a simple water filter using activated carbon",
-                "Measure the conductivity of different water solutions (salt, sugar)",
-                "Create a simple LED circuit to demonstrate semiconductor behavior",
-                "Demonstrate the Tyndall effect using common household colloidal solutions"
+                "Center of Gravity Calculator for Car Configurations",
+                "Interactive Free Body Diagram Drawer Tool",
+                "Belt Drive Tension and Friction Calculator",
+                "Flywheel Mass Moment of Inertia Simulator",
+                "Vehicle Roll-Over Angle Estimator",
+                "Wedge Friction Multiplier Test Rig Model",
+                "Truss / Frame Joint Reaction Force Calculator",
+                "Static Equilibrium Simulator for 2D Objects",
+                "Parallel Axis Theorem Visualizer App",
+                "Centroid Locator for Composite Cross-Sections",
+                "Drive Shaft Polar Moment of Inertia Calculator",
+                "Virtual Work Linkage Displacement Calculator",
+                "Tire-Road Friction Coefficient Data Logger",
+                "Vector Addition and Resultant Force Graphic Tool",
+                "Steering Force-Couple Simulator"
             ]
         }
     },
 
-    "BE3251": {
+    "EE25C01": {
         name: "Basic Electrical and Electronics Engineering",
         semester: 2,
-        objective: "To introduce the basics of electric circuits, electrical machines, and electronic devices for understanding electrical and electronics engineering fundamentals.",
+        objective: "To impart foundational knowledge in principles and applications of electrical and electronics engineering.",
         units: {
-            1: { title: "DC Circuits and AC Circuits", desc: "Ohm's law – Kirchhoff's laws – Series and parallel combinations of resistances – Mesh and Node analysis – Star-Delta transformation – AC fundamentals – Representation of sinusoidal waveforms – Peak, RMS and Average values – Form factor and peak factor – Impedance – Power factor – Power in AC circuits – Single phase and three phase balanced circuits." },
-            2: { title: "Electrical Machines", desc: "Construction and principle of DC motors – Types of DC motors – Speed control of DC motors – Single phase transformer – EMF equation – Voltage regulation – Construction and principle of three phase induction motor – Slip – Applications." },
-            3: { title: "Utilization of Electrical Energy", desc: "Renewable energy sources – Wind energy, Solar energy – Concept of domestic wiring – Staircase wiring – Godown wiring – Electrical safety – Fuses – MCB – ELCB – Earthing – Energy conservation and audit." },
-            4: { title: "Electronic Devices and Circuits", desc: "PN junction diode – Zener diode – Bipolar Junction Transistor (BJT) – Operating point – Transistor as a switch – MOSFET – Operational amplifier – Inverting and Non-inverting amplifier – Applications: Adder, Subtractor, Integrator, Differentiator." },
-            5: { title: "Digital Electronics", desc: "Number systems – Decimal, Binary, Octal and Hexadecimal – Boolean algebra – Logic gates – De Morgan's theorems – K-Map simplification – Half adder and Full adder – Flip-flops: SR, JK, D and T – Counters and Shift registers." }
+            1: { title: "DC Fundamentals", desc: "Current and Voltage sources, Resistance, Inductance and Capacitance; Ohm’s law, Kirchhoff’s law, Series parallel combination of R, L and C components, Voltage Divider and Current Divider Rules." },
+            2: { title: "AC Fundamentals", desc: "Faraday’s Laws of Electro-magnetic Induction, Definition of Self and Mutual Inductances, Generation of sinusoidal voltage, Instantaneous & RMS values of sinusoidal signals, Introduction to 3-phase systems, Electrical Safety, Fuses and Earthing." },
+            3: { title: "Electric Machines", desc: "DC Machines, Transformers, Star and delta Connections, Three phase Induction motors, Synchronous Generators, Single Phase Induction Motors, Stepper Motor, Universal Motor and BLDC motor." },
+            4: { title: "Semiconductor Devices", desc: "PN junction diodes, Zener Diode, Voltage regulator, BJT & FET Transistors, Timers, Operational Amplifiers." },
+            5: { title: "Digital Electronics & Microcontrollers", desc: "Boolean algebra, Basic and Universal Gates, adders, multiplexers, demultiplexers and flip-flops. Microcontrollers: Introduction, Architecture, Potential Applications." }
         },
         cos: {
-            CO1: "Analyze DC and AC circuits using network theorems.",
-            CO2: "Understand the construction and working of electrical machines.",
-            CO3: "Apply concepts of wiring and energy conservation in practical scenarios.",
-            CO4: "Describe the working of electronic devices and op-amp circuits.",
-            CO5: "Design simple combinational and sequential digital circuits."
+            CO1: "Understand and explain basic electrical and electronic concepts.",
+            CO2: "Apply and analyze electrical DC and AC circuits in real-time applications.",
+            CO3: "Understand the operation and applications of electrical machines like BLDC and Stepper motors.",
+            CO4: "Identify and utilize key electronic semiconductor devices.",
+            CO5: "Design simple digital electronic circuits and understand microcontroller architecture."
         },
         topics: {
             presentation: [
-                "Kirchhoff's Laws and Mesh-Node Analysis Methods",
-                "Star-Delta Transformation and AC Impedance Circuits",
-                "Single Phase and Three Phase Balanced AC Circuits",
-                "DC Motor Types and Speed Control Methods",
-                "Single Phase Transformer – EMF Equation and Regulation",
-                "Three Phase Induction Motor – Construction and Slip",
-                "Solar and Wind Energy Systems Overview",
-                "Electrical Safety – Fuses, MCB, ELCB and Earthing",
-                "PN Junction Diode and Zener Diode Characteristics",
-                "Operational Amplifier – Inverting and Non-Inverting Circuits",
-                "Boolean Algebra, Logic Gates and K-Map Simplification",
-                "Flip-Flops, Counters and Shift Registers"
+                "BLDC Motors in Modern Electric Vehicles",
+                "Working Principle of Automotive Alternators (Synchronous Generators)",
+                "Application of Stepper Motors in Automobile Instrumentation",
+                "Kirchhoff's Laws Applied to Vehicle Wiring Harness",
+                "Role of Fuses and Relays in Automotive Electrical Safety",
+                "Zener Diode Voltage Regulators in Car Charging Systems",
+                "Operational Amplifiers in Automotive Sensor Signal Conditioning",
+                "Microcontrollers (ECUs) in Engine Management Systems",
+                "Faraday’s Law of Induction in Ignition Coils",
+                "Characteristics of PN Junction Diodes in Automotive Rectifiers",
+                "Three-Phase AC vs DC Charging for EVs",
+                "Logic Gates in Vehicle Alarm Logic Circuits",
+                "BJT and FET Transistors as Electronic Switches",
+                "Measurement of RMS Values in Vehicle AC Circuits",
+                "Star and Delta Connections in EV Traction Motors"
             ],
             miniproject: [
-                "DC Circuit Simulator Using Kirchhoff's Laws",
-                "AC Power Factor Calculator for Single and Three Phase Circuits",
-                "DC Motor Speed Control Using Arduino",
-                "Transformer Efficiency Test and EMF Equation Verification",
-                "Solar Panel I-V Characteristic Measurement",
-                "Home Wiring Model with Safety Devices (MCB, ELCB)",
-                "PN Junction Diode Characteristic Curve Plotter",
-                "Op-Amp Based Adder and Subtractor Circuit Breadboard Demo",
-                "Logic Gate Tester Using LED Display",
-                "K-Map Simplification Tool Web Application",
-                "4-Bit Counter Design Using JK Flip-Flops",
-                "Energy Audit Calculator for Domestic Consumption"
+                "Miniature BLDC Motor Speed Controller",
+                "Automotive Relay and Fuse Fusebox Simulator",
+                "Zener Diode 12V Voltage Regulator Circuit",
+                "Simple ECU Logic Simulator using Logic Gates",
+                "Arduino-based Stepper Motor Dashboard Needle Simulator",
+                "Car Battery Voltage Divider Measurement Circuit",
+                "Op-Amp Temperature Sensor Signal Amplifier",
+                "Vehicle Headlight Switching BJT Circuit",
+                "Alternator AC to DC Rectification Breadboard Model",
+                "Kirchhoff's Law DC Circuit Current Solver",
+                "Simple RC Delay Timer for Dome Lights",
+                "Digital Multiplexer for Multiple Sensor Inputs",
+                "Faraday Induction Flashlight Model",
+                "Logic Gate Seatbelt Warning Chime Simulator",
+                "Basic Microcontroller Traffic Light Controller"
             ]
         }
     },
 
-    "BE3271": {
-        name: "Basic Electrical and Electronics Engineering Laboratory",
+    "PH25C05": {
+        name: "Applied Physics (ME) – II",
         semester: 2,
-        objective: "To verify basic electrical and electronics theories through practical experiments and build foundational circuit skills.",
+        objective: "To impart fundamental knowledge of rigid body dynamics, thermal physics, phase transitions, and functional materials. To provide analytical abilities for evaluating physical phenomena in mechanical engineering applications.",
         units: {
-            1: { title: "Basic Circuits", desc: "Basic electrical circuit verification" },
-            2: { title: "Machines", desc: "Electrical individual machine tests" },
-            3: { title: "Electronics", desc: "Basic electronic component characteristics" },
-            4: { title: "Digital", desc: "Digital logic verifications" },
-            5: { title: "AC Power", desc: "AC power characteristics" }
+            1: { title: "Rigid Body Dynamics", desc: "Centre of mass – Moment of inertia (circular disc, solid cylinder, hollow cylinder, solid sphere, hollow sphere), Gear, shaft, gyroscope." },
+            2: { title: "Thermal Physics", desc: "Thermal conductivity –Transient plane source method, Transient Line Source method- Forbe’s method - conduction through compound media, Laws of Thermodynamics." },
+            3: { title: "Phase Transitions", desc: "Solid solutions - single component system, binary phase diagrams - iron-carbon equilibrium diagram, T-T-T-diagram - heat treatment of steels – hardening techniques." },
+            4: { title: "Functional Materials", desc: "Ceramics – Composites, Fiber Reinforced Plastics, Metallic Glasses, LED Characteristics." },
+            5: { title: "Applications", desc: "Demonstrations and applications of gyroscopes, thermal insulators, steel hardening, and LED working in mechanical systems." }
         },
         cos: {
-            CO1: "-", CO2: "-", CO3: "-", CO4: "-", CO5: "-"
+            CO1: "Explain the concepts of physics in mechanical engineering stream.",
+            CO2: "Apply moment of inertia and rigid body dynamics to mechanical components.",
+            CO3: "Evaluate thermal conductivity and apply laws of thermodynamics.",
+            CO4: "Analyze phase diagrams and heat treatment techniques for steels.",
+            CO5: "Understand the properties and applications of composites, metallic glasses, and LEDs."
         },
         topics: {
             presentation: [
-                "Verification of KVL and KCL – Theoretical vs Practical Accuracy",
-                "Significance of Power Factor in AC Single Phase Circuits",
-                "Load Characteristics of Single Phase Transformer",
-                "Speed Control Techniques for DC Shunt Motors",
-                "PN Junction Diode vs Zener Diode Characteristic Curves",
-                "BJT Common Emitter Configuration – Practical Challenges",
-                "Inverting vs Non-Inverting Op-Amp Applications",
-                "Half Adder and Full Adder Implementation Hurdles",
-                "MOSFET Characteristic Curves – Experimental Observations",
-                "Two Wattmeter Method for Three Phase Power Measurement",
-                "Differences in Flip-Flop Operation (SR, JK, D, T)",
-                "Series RLC Circuit Resonance and Frequency Response"
+                "Gyroscopic Effect on Two-Wheeler Stability",
+                "Moment of Inertia of Automotive Shafts and Gears",
+                "Thermal Conductivity in Engine Cylinder Walls",
+                "Iron-Carbon Equilibrium Diagram for Automotive Steels",
+                "Heat Treatment and Hardening of Gear Teeth",
+                "Fiber Reinforced Plastics (FRP) in Car Body Panels",
+                "Laws of Thermodynamics in Internal Combustion Engines",
+                "Characteristics of LEDs in Automotive Lighting",
+                "Metallic Glasses – Properties and Future Uses in Auto Parts",
+                "T-T-T Diagram in Steel Quenching Processes",
+                "Conduction through Compound Media in Exhaust Systems",
+                "Automotive Ceramics – Catalytic Converters and Spark Plugs",
+                "Transient Line Source Method for Thermal Conductivity",
+                "Role of Solid Solutions in Alloy Wheels",
+                "Dynamics of Solid Cylinders vs Hollow Cylinders in Drivetrains"
             ],
             miniproject: [
-                "Breadboard Implementation of KVL and KCL with Varying Resistors",
-                "DIY AC Power Indicator Circuit",
-                "Small Scale Transformer Step-Down Demonstration",
-                "DC Motor Speed Controller Build Using PWM",
-                "Zener Diode Voltage Regulator Circuit Build",
-                "BJT Automatic Night Light Switch Project",
-                "Simple Audio Amplifier Using Op-Amp",
-                "Binary Addition Calculator Using Basic Logic Gates",
-                "MOSFET Based Motor Driver Circuit",
-                "Three Phase Load Miniature Simulator",
-                "4-bit Binary Counter Circuit with LEDs",
-                "Simple LC Oscillator / Resonance Project"
+                "Gyroscopic Precession Demonstration Model",
+                "Interactive Iron-Carbon Phase Diagram Explorer",
+                "Thermal Conductivity Comparison of Heat Shield Materials",
+                "LED Voltage-Current Characteristic Grapher",
+                "Flywheel Moment of Inertia Calculator",
+                "Engine Heat Conduction Simulator (1D)",
+                "Virtual Steel Quenching and Hardness Estimator",
+                "Center of Mass Calculator for Asymmetrical Vehicle Parts",
+                "Composite Material Strength vs Weight Calculator",
+                "Thermodynamics First Law Piston-Cylinder Simulator",
+                "T-T-T Diagram Cooling Rate Plotter",
+                "Shaft Rotational Kinetic Energy App",
+                "Ceramics vs Metals Automotive Application Database",
+                "Heat Loss Estimator for Compound Engine Walls",
+                "Bicycle Wheel Gyroscope Stabilization Rig"
             ]
         }
     },
 
-    "GE3251": {
-        name: "Engineering Graphics",
+    "CY25C03": {
+        name: "Applied Chemistry (ME) – II",
         semester: 2,
-        objective: "To develop the graphic skill for communication of concepts, ideas and design of engineering products through graphical representations and to develop the ability to create and interpret engineering drawings.",
+        objective: "To impart knowledge and expose to applications of chemistry in mechanical engineering stream. To explore the mechanisms and working principles of smart materials and coatings with real-world applications.",
         units: {
-            1: { title: "Plane Curves and Freehand Sketching", desc: "Curves used in engineering practices: Conics – Construction of ellipse, parabola and hyperbola by eccentricity method – Construction of cycloid – Construction of involute of circle and square – Drawing of tangents and normals to curves – Freehand sketching: Sketching of machine parts." },
-            2: { title: "Projection of Points, Lines and Plane Surfaces", desc: "Orthographic projection – First angle and third angle projection – Projection of points – Projection of straight lines inclined to both planes – Determination of true lengths and true inclinations – Projection of planes inclined to both planes." },
-            3: { title: "Projection of Solids", desc: "Projection of simple solids such as prisms, pyramids, cylinders and cones – Axis inclined to one plane and parallel to the other – Axis inclined to both the planes." },
-            4: { title: "Section of Solids and Development of Surfaces", desc: "Sectioning of above solids by planes inclined to one plane – Obtaining true shape of sections – Development of lateral surfaces of simple and truncated solids – Prisms, pyramids, cylinders and cones." },
-            5: { title: "Isometric and Perspective Projections", desc: "Principles of isometric projection – Isometric scale – Isometric projections of simple solids and truncated solids – Prisms, pyramids, cylinders, cones – Perspective projection of prisms, pyramids and cylinders by visual ray method." }
+            1: { title: "Functional Materials", desc: "Types, Smart coatings, Mechanisms, Sustainable energy materials." },
+            2: { title: "Fuels", desc: "Classification, Chemical Composition, natural resources, Calorific Value Alternative Fuels - Natural gas benefits." },
+            3: { title: "Composites and Lubricants", desc: "Matrix materials – Reinforcements, Hybrid composites, Engineering applications. Lubricants: Types, Functions. Key properties, Synthetic lubricants, Mechanisms, Emerging lubricants." },
+            4: { title: "Combustion", desc: "Reaction Kinetics, Stoichiometric combustion and air-fuel ratio calculations, Knocking and Anti-knocking agents, Hydrogen combustion, Flue Gas analysis." },
+            5: { title: "Adhesives", desc: "Adhesives: Adhesion Mechanisms, Classification, Bond strength, Industrial adhesives." }
         },
         cos: {
-            CO1: "Construct conics, involutes and cycloid curves used in engineering.",
-            CO2: "Draw the projection of points, lines and plane surfaces.",
-            CO3: "Draw the projection of simple solids in various positions.",
-            CO4: "Draw the section of solids and develop lateral surfaces.",
-            CO5: "Draw isometric and perspective projections of simple solids."
+            CO1: "Explain the major concepts of chemistry with regard to applications in mechanical systems.",
+            CO2: "Analyze smart coatings and sustainable energy materials.",
+            CO3: "Evaluate alternative fuels and calculate stoichiometric air-fuel ratios.",
+            CO4: "Understand the properties and mechanisms of composites and synthetic lubricants.",
+            CO5: "Assess combustion kinetics, knocking phenomena, and industrial adhesives."
         },
         topics: {
             presentation: [
-                "Conic Sections – Ellipse, Parabola and Hyperbola Construction",
-                "Cycloid and Involute Curve Construction Methods",
-                "Orthographic Projection – First and Third Angle Systems",
-                "Projection of Lines Inclined to Both Planes",
-                "Projection of Plane Surfaces Inclined to Both Planes",
-                "Projection of Prisms and Pyramids – Axis Inclined",
-                "Projection of Cylinders and Cones – Various Orientations",
-                "Sectioning of Solids by Inclined Cutting Planes",
-                "True Shape of Sections – Methods and Applications",
-                "Development of Lateral Surfaces – Truncated Solids",
-                "Isometric Projection – Principles and Scale",
-                "Perspective Projection – Visual Ray Method"
+                "Chemistry of Smart Coatings and Self-Cleaning Car Paint",
+                "Stoichiometric Air-Fuel Ratio Calculations in IC Engines",
+                "Knocking in Petrol Engines and Anti-Knocking Agents",
+                "Synthetic Lubricants vs Mineral Oils for Engines",
+                "Hydrogen Combustion – The Future of Automotive Fuels",
+                "Flue Gas Analysis to Determine Combustion Efficiency",
+                "Automotive Structural Adhesives for Chassis Bonding",
+                "Alternative Fuels – Benefits of CNG and LNG",
+                "Polymer Matrix Composites in Lightweight Vehicles",
+                "Mechanism of Lubrication in Engine Bearings",
+                "Sustainable Energy Materials in EV Battery Chemistry",
+                "Calorific Value of Different Automotive Fuels",
+                "Reaction Kinetics of Fuel Combustion",
+                "Hybrid Composites in High-Performance Auto Parts",
+                "Bond Strength Testing of Industrial Adhesives"
             ],
             miniproject: [
-                "CAD Drawing of Conic Sections with Eccentricity Method",
-                "AutoCAD Model of Orthographic Projections of Machine Part",
-                "3D SolidWorks Model of Prism and Pyramid with Sections",
-                "Development of Truncated Cylinder and Cone Sheet Metal Pattern",
-                "Isometric Drawing of a Simple Assembly Using CAD Software",
-                "Perspective View Generation of Building Block Using AutoCAD",
-                "Engineering Drawing Standards – BIS vs ISO Comparison Study",
-                "Freehand Sketching Portfolio of Common Machine Parts",
-                "Section Drawing of Engine Piston and Connecting Rod",
-                "3D Printed Model from Engineering Drawing",
-                "True Length and Inclination Calculator Application",
-                "Surface Development Template for Sheet Metal Workshop"
-            ]
-        }
-    },
-
-    "HS3252": {
-        name: "Professional English - II",
-        semester: 2,
-        objective: "To enhance the communication skills of the students with emphasis on professional context and technical vocabulary for academic and career readiness.",
-        units: {
-            1: { title: "Printers and Publishers", desc: "Reading: Comprehension passages on printing and publishing industry. Vocabulary: Technical terms related to media and publishing. Grammar: Tenses – Active and Passive voice. Writing: Letter writing – Formal and informal. Speaking: Self-introduction and description." },
-            2: { title: "Science and Technology", desc: "Reading: Comprehension passages on scientific discoveries and innovations. Vocabulary: Technical vocabulary in science and technology. Grammar: Subject-verb agreement – Prepositions. Writing: Report writing – Technical report format. Speaking: Presentation skills – Describing a process." },
-            3: { title: "Art and Media", desc: "Reading: Comprehension passages on art, cinema and mass media. Vocabulary: Terms related to visual and performing arts. Grammar: Clauses – Relative and conditional. Writing: Review writing – Film and book reviews. Speaking: Group discussion techniques." },
-            4: { title: "Business and Management", desc: "Reading: Comprehension passages on business, commerce and management. Vocabulary: Business and management terminology. Grammar: Transformation of sentences – Direct to indirect speech. Writing: Memo and circular writing. Speaking: Mock interview preparation." },
-            5: { title: "Environment and Ecology", desc: "Reading: Comprehension passages on environment, pollution and ecology. Vocabulary: Environmental and ecological terms. Grammar: Error correction and sentence completion. Writing: Essay writing – Environmental topics. Speaking: Debate and extempore speaking." }
-        },
-        cos: {
-            CO1: "Read and comprehend passages from various domains effectively.",
-            CO2: "Use appropriate vocabulary and grammar in professional communication.",
-            CO3: "Write formal letters, reports and reviews following standard formats.",
-            CO4: "Deliver effective presentations and participate in group discussions.",
-            CO5: "Demonstrate confidence in interviews and debate scenarios."
-        },
-        topics: {
-            presentation: [
-                "Evolution of Printing Technology – From Gutenberg to Digital",
-                "Technical Report Writing – Structure and Best Practices",
-                "Emerging Technologies in Science – AI, IoT and Robotics",
-                "Impact of Mass Media and Social Media on Society",
-                "Business Communication Skills for Engineers",
-                "Environmental Awareness and Sustainability Practices",
-                "Effective Presentation Techniques for Technical Topics",
-                "Interview Skills and Resume Building for Freshers",
-                "Active and Passive Voice in Technical Writing",
-                "Review Writing – Analyzing Films and Technical Books",
-                "Group Discussion Ethics and Team Communication",
-                "Essay Writing on Current Environmental Challenges"
-            ],
-            miniproject: [
-                "Technical Report on College Department – Structure and Analysis",
-                "Business Letter Writing Portfolio for Engineering Professionals",
-                "Mock Interview Practice Video Recording and Self-Assessment",
-                "Group Discussion Evaluation Rubric Design",
-                "Environmental Awareness Campaign Poster and Presentation",
-                "Technical Vocabulary Flashcard App for Engineering Students",
-                "Film Review Blog with Professional English Standards",
-                "Resume and Cover Letter Design for Campus Placement",
-                "Grammar Quiz Application – Tenses, Voice and Prepositions",
-                "Science Communication Video on Recent Innovation",
-                "Debate Script Writing on Technology vs Environment",
-                "Publishing Process Infographic and Presentation"
+                "Stoichiometric Air-Fuel Ratio Calculator App",
+                "Fuel Calorific Value to Engine Output Converter",
+                "Smart Coating Hydrophobic Contact Angle Measurer",
+                "Flue Gas Composition Analyzer Software",
+                "Lubricant Viscosity Index Calculator",
+                "Hydrogen vs Petrol Combustion Energy Comparison Tool",
+                "Engine Knocking Threshold Predictor based on Octane",
+                "Automotive Adhesive Curing Time Estimator",
+                "Composite Material Weight Saving Calculator",
+                "Alternative Fuel Cost/Mileage Comparison Dashboard",
+                "Virtual Flame Ionization Detector for Emissions",
+                "Reaction Kinetics Cooling Curve Plotter",
+                "Lubricant Film Thickness Estimator for Bearings",
+                "Natural Gas vs Diesel Emission Footprint Calculator",
+                "Bond Strength vs Temperature Curve Generator"
             ]
         }
     }
@@ -626,38 +610,22 @@ const ATE_SUBJECTS = {
  *  Key = semester number, value = array of lab entries
  * ══════════════════════════════════════════════════════════════════ */
 const ATE_LABS = {
-    /* Semester 2 Labs (Batch 2029) */
+    /* Semester 2 Labs (Batch 2029 - R2025) */
     2: [
         {
-            code: "GE3271", name: "Engineering Practices Laboratory", experiments: [
-                "Plumbing: Connecting various pipe fittings — valves, taps, couplings, unions, reducers and elbows used in households",
-                "Plumbing: Laying pipe connections to suction and delivery sides of a pump; connecting metal, plastic and flexible pipes",
-                "Wood Work: Sawing and planing; making T-Joint, Mortise, Tenon and Dovetail joints; studying door panels and trusses",
-                "Electrical: Basic switchboard wiring with lamp, fan and three-pin socket",
-                "Electrical: Staircase wiring; fluorescent lamp (CFL and LED) wiring",
-                "Electrical: Energy meter wiring, calculations and calibration",
-                "Electrical: Study of iron box, emergency lamp and fan regulator wiring",
-                "Welding: Butt joint, Lap joint and Tee joint using arc welding; gas welding practice",
-                "Machining: Simple turning, drilling and tapping operations",
-                "Assembly: Assembling centrifugal pump, household mixer and air conditioner",
-                "Sheet Metal Work: Making square tray and funnel; basic foundry operations",
-                "Soldering: Simple electronic circuit soldering; continuity check and PCB assembly"
-            ]
-        },
-        {
-            code: "BE3271", name: "Basic Electrical and Electronics Engineering Laboratory", experiments: [
-                "Verification of KVL and KCL in DC circuits",
-                "Measurement of power and power factor in single phase AC circuit",
-                "Performance test on single phase transformer (load test)",
-                "Speed control of DC shunt motor",
-                "Study of characteristics of PN junction and Zener diode",
-                "Characteristics of BJT in CE configuration",
-                "Op-Amp circuits – Inverting and Non-inverting amplifier",
-                "Half adder and Full adder circuit using logic gates",
-                "Characteristics of MOSFET",
-                "Measurement of three phase power using two wattmeter method",
-                "Study of flip-flops – SR, JK, D and T",
-                "Frequency response of series RLC circuit"
+            code: "ME25C05", name: "Re-Engineering for Innovation", experiments: [
+                "Bootcamp 1: Introduction to Product Development, Reverse Engineering",
+                "Bootcamp 1: Overview of the product lifecycle and hands-on disassembly of simple products",
+                "Bootcamp 1: Practice of basic measurements and sketching",
+                "Bootcamp 1: Introduction to CAD modeling of disassembled parts and virtual assembly",
+                "Bootcamp 2: Embedded System Programming (Open-source platforms)",
+                "Bootcamp 2: Practice of interfacing sensors and reading data",
+                "Bootcamp 2: Automation in home, healthcare and agriculture",
+                "Reverse Engineering: Sketch and prototype alternative designs",
+                "Reverse Engineering: Group brainstorming sessions for product improvement",
+                "Reverse Engineering: Manufacture prototype parts using 3D printing and workshop tools",
+                "Reverse Engineering: Assemble prototype product and test",
+                "Reverse Engineering: Final project demonstration and documentation"
             ]
         }
     ],

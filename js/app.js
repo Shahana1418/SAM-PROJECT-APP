@@ -1792,7 +1792,7 @@ function renderAssessments(container) {
                         ${(function () {
                 let list = (SUBJECTS_DATA[regulation] && SUBJECTS_DATA[regulation][deptCode] ? SUBJECTS_DATA[regulation][deptCode] : []);
                 if (deptCode === 'ATE') {
-                    if (batchYear == 2029) list = ["MA3251", "PH3251", "BE3251", "GE3251", "HS3252"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
+                    if (batchYear == 2029) list = ["MA25C02", "ME25C02", "EE25C01", "PH25C05", "CY25C03"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2028) list = ["AU3401", "AU3402", "AU3403", "AU3404", "ML3391"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["AU3601"].map(c => ({ code: c, name: (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[c]) ? ATE_SUBJECTS[c].name : c }));
                 }

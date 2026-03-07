@@ -419,20 +419,20 @@ const CSE_SUBJECTS = {
     "MA25C02": {
         name: "Linear Algebra",
         semester: 2,
-        objective: "To understand vector spaces and linear transformations. To learn eigenvalues, eigenvectors and diagonalization. To understand inner product spaces and orthogonalization. To learn singular value decomposition (SVD). To apply linear algebra in solving systems of equations.",
+        objective: "To impart foundational knowledge in linear algebra essential for analysing and solving problems in engineering applications. To provide the knowledge on computation using software and interpret key linear algebra concepts using software.",
         units: {
-            1: { title: "Vector Spaces", desc: "Vector Spaces – Subspaces – Linear Combinations – Linear Independence – Bases and Dimension – Row Space and Column Space – Rank and Nullity." },
-            2: { title: "Linear Transformations", desc: "Linear Transformations – Null Space and Range – Dimension Theorem – Matrix Representation of Linear Transformations – Change of Basis – Similarity." },
-            3: { title: "Eigenvalues and Diagonalization", desc: "Eigenvalues and Eigenvectors – Characteristic Polynomial – Cayley-Hamilton Theorem – Diagonalizability – Diagonalization of Symmetric Matrices." },
-            4: { title: "Inner Product Spaces", desc: "Inner Products – Norms – Cauchy-Schwarz Inequality – Gram-Schmidt Orthogonalization Process – Orthogonal Complements – QR Decomposition." },
-            5: { title: "SVD and Applications", desc: "Singular Value Decomposition (SVD) – Pseudoinverse – Least Squares Solutions – Principal Component Analysis (PCA) Basics – Applications of SVD." }
+            1: { title: "Vector Spaces", desc: "Introduction to Vector Spaces, Examples, Subspaces, Linear Combinations, Span, Generating Sets, Linear Dependence and Independence, Basis and Dimension, Dimension of Subspaces." },
+            2: { title: "Linear Transformations and Diagonalization", desc: "Null space, Range, Dimension Theorem (statement only), Matrix representation of a linear transformation, Eigenvalues & Eigenvectors, Diagonalizability." },
+            3: { title: "Inner Product Spaces", desc: "Inner product, Norms, Cauchy, Schwarz inequality, Gram, Schmidt orthogonalization, Simple problems (up to R3)." },
+            4: { title: "Matrix Decomposition", desc: "Orthogonal transformation of a symmetric matrix to diagonal form Positive definite matrices, QR decomposition, Singular Value Decomposition (SVD), Least squares solutions- simple problems (up to 3 × 3 matrices)." },
+            5: { title: "Applications", desc: "Open-Source software exercises to compute the matrix representation of a linear transformation, find the null space and range of a matrix, and compute eigenvalues and eigenvectors of a matrix." }
         },
         cos: {
-            CO1: "Understand vector spaces, subspaces and their properties.",
-            CO2: "Apply linear transformations and find matrix representations.",
-            CO3: "Compute eigenvalues, eigenvectors and perform diagonalization.",
-            CO4: "Apply Gram-Schmidt process and inner product space concepts.",
-            CO5: "Perform SVD and apply it for solving least squares problems."
+            CO1: "Explain the fundamental concepts of Linear Algebra.",
+            CO2: "Compute and interpret eigenvalues and eigenvectors.",
+            CO3: "Apply inner product concepts and perform orthogonalization.",
+            CO4: "Compute least squares solutions of linear system of equations.",
+            CO5: "Use MATLAB to implement and validate key linear algebra concepts."
         },
         topics: {
             presentation: [
@@ -475,20 +475,18 @@ const CSE_SUBJECTS = {
     "EE25C01": {
         name: "Basic Electrical and Electronics Engineering",
         semester: 2,
-        objective: "To understand the fundamentals of DC and AC circuits. To learn the working principles of electrical machines. To understand basic electronic devices and circuits. To learn digital electronics fundamentals. To understand the basics of power systems.",
+        objective: "To impart foundational knowledge in principles and applications of electrical and electronics engineering.",
         units: {
-            1: { title: "DC and AC Circuits", desc: "Kirchhoff's Laws – Mesh and Node Analysis – Star-Delta Transformation – AC Fundamentals – Impedance – Power Factor – Single Phase and Three Phase Systems – Power Measurement." },
-            2: { title: "Electrical Machines", desc: "Principle and Working of DC Motor and Generator – Single Phase Transformer – Load Test – Speed Control of DC Motor – Three Phase Induction Motor." },
-            3: { title: "Electronic Devices", desc: "PN Junction Diode Characteristics – Zener Diode – BJT – Common Emitter Configuration – MOSFET Characteristics – Op-Amp: Inverting and Non-Inverting Amplifiers." },
-            4: { title: "Digital Electronics", desc: "Number Systems – Boolean Algebra – Logic Gates – Half Adder and Full Adder – Flip-Flops: SR, JK, D, T – Registers and Counters." },
-            5: { title: "Power Systems Basics", desc: "Power Generation – Transmission and Distribution – Renewable Energy Sources – Solar and Wind Energy Basics – Electrical Safety." }
+            1: { title: "DC Fundamentals", desc: "Current and Voltage sources, Resistance, Inductance and Capacitance; Ohm’s law, Kirchhoff’s law, Series parallel combination of R, L and C components, Voltage Divider and Current Divider Rules." },
+            2: { title: "AC Fundamentals", desc: "Faraday’s Laws of Electro-magnetic Induction, Definition of Self and Mutual Inductances, Generation of sinusoidal voltage, Instantaneous & RMS values of sinusoidal signals, Introduction to 3-phase systems, Electrical Safety, Fuses and Earthing." },
+            3: { title: "Electric Machines", desc: "DC Machines, Transformers, Star and delta Connections, Three phase Induction motors, Synchronous Generators, Single Phase Induction Motors, Stepper Motor, Universal Motor and BLDC motor." },
+            4: { title: "Semiconductor Devices", desc: "PN junction diodes, Zener Diode, Voltage regulator, BJT & FET Transistors, Timers, Operational Amplifiers." },
+            5: { title: "Digital Electronics and Microcontrollers", desc: "Boolean algebra, Basic and Universal Gates, adders, multiplexers, demultiplexers and flip-flops. Microcontrollers: Introduction, Architecture, Potential Applications." }
         },
         cos: {
-            CO1: "Apply Kirchhoff's laws and network theorems for circuit analysis.",
-            CO2: "Explain the working principle of electrical machines.",
-            CO3: "Describe the characteristics of electronic devices.",
-            CO4: "Design simple combinational and sequential digital circuits.",
-            CO5: "Understand the basics of power generation and distribution."
+            CO1: "Understand and explain basic electrical and electronic concepts.",
+            CO2: "Apply and analyse electrical circuits in real-time applications.",
+            CO3: "Identify and utilise key electronic devices used in engineering applications"
         },
         topics: {
             presentation: [
@@ -531,20 +529,19 @@ const CSE_SUBJECTS = {
     "CS25C06": {
         name: "Digital Principles and Computer Organization",
         semester: 2,
-        objective: "To understand digital logic fundamentals and Boolean algebra. To learn the basic structure and functioning of a computer. To understand arithmetic and logic unit design. To learn instruction set architecture and pipelining concepts. To understand memory hierarchy and I/O organization.",
+        objective: "To impart knowledge on digital logic and provide functional concepts of computer systems with necessary illustrations.",
         units: {
-            1: { title: "Digital Logic", desc: "Digital Systems – Boolean Algebra – Theorems and Postulates – Canonical Forms – K-Maps – Logic Gates – Universal Gates – Integrated Circuits." },
-            2: { title: "Computer System Overview", desc: "Basic Structure of a Computer – Functional Units – Interconnection – Von Neumann and Harvard Architectures – Instruction Execution Cycle – Performance Metrics: MIPS, MFLOPS, CPI." },
-            3: { title: "ALU and Sequential Circuits", desc: "Combinational Circuits: Adders, Subtractors, Multiplexers, Decoders – Signed and Unsigned Multiplication – Booth's Algorithm – Floating Point Operations – Flip-Flops – Registers – Counters." },
-            4: { title: "Processing and Pipelining", desc: "Instruction Set Architecture – RISC vs CISC – Addressing Modes – Control Unit: Hardwired and Microprogrammed – Pipelining Concepts – Pipeline Hazards – Instruction-Level Parallelism." },
-            5: { title: "Memory and I/O", desc: "Memory Hierarchy – Cache Memory: Mapping Techniques – Virtual Memory – I/O Organization – Programmed I/O – Interrupt-Driven I/O – DMA." }
+            1: { title: "Digital Logic", desc: "Digital Systems, Integer Arithmetic, Addition and Subtraction of Signed Numbers, Boolean Algebra, Theorems and Postulates, Functions, Truth Table, Canonical and Standard Forms, Simplification using K-Maps, Digital Logic Gates, Universal gates, Implementation of Logic Gates, Integrated Circuits." },
+            2: { title: "Computer System", desc: "Basic structure of a computer, Classes of Computer, Functional units - Interconnection of components, Von Neumann architecture and Harvard architecture - Instruction execution cycle, Performance metrics: MIPS, MFLOPS, CPI, throughput." },
+            3: { title: "Arithmetic and Logic Unit", desc: "Combinational Circuits: Adders, Binary Adder, Binary Parallel Adder, Subtractor, Multiplexers, Decoders, Design of Fast Adder, Multiplication of Signed and Unsigned Numbers, Fast Multiplication - Integer Division, Floating Point Numbers and Operations, Booth’s algorithm for signed multiplication, Sequential Circuits: Flip-Flops, Registers, Counters." },
+            4: { title: "Processing and Pipelining", desc: "Instruction Set Architecture: RISC vs CISC, Addressing modes, Hardwired control and Micro programmed control unit, Concepts of Pipelining, Pipeline stages and Timing diagram, Hazards: Structural, Data and Control Hazards, Instruction-level parallelism, Parallel processing concepts: SIMD, MIMD, Superscalar processors, Vector and Array Processor." },
+            5: { title: "Memory and I/O Systems", desc: "Memory hierarchy: Registers, Cache, Main Memory, RAM, ROM, HDD, SSD, Cache Organization and replacement policies, NUMA, DMA, ECC. I/O Techniques: Programmed, Interrupt-Driven, DMA, I/O Devices and Interface Standards: PCI, USB, SATA, Interrupts, Buses, Arbitration." }
         },
         cos: {
-            CO1: "Simplify Boolean expressions and design combinational circuits.",
-            CO2: "Explain the basic structure and operation of a computer system.",
-            CO3: "Design arithmetic circuits and sequential circuits.",
-            CO4: "Compare RISC and CISC architectures and explain pipelining.",
-            CO5: "Describe memory hierarchy and I/O organization."
+            CO1: "Identify basic digital components and their functions in a computer system.",
+            CO2: "Apply Boolean algebra and number systems to design simple digital circuits and simulate them using tools.",
+            CO3: "Analyze instruction sets, arithmetic units, and performance metrics to evaluate processor design.",
+            CO4: "Engage in continuous learning to update with advancements through evolving computing trends."
         },
         topics: {
             presentation: [
@@ -587,20 +584,18 @@ const CSE_SUBJECTS = {
     "PH25C03": {
         name: "Applied Physics (CSIE) – II",
         semester: 2,
-        objective: "To understand the principles of quantum mechanics and its applications. To learn about semiconductor physics and devices. To understand the basics of photonics and fibre optics. To learn about nanoscience and nanotechnology. To understand the physics of energy harvesting.",
+        objective: "To provide a comprehensive understanding of physics concepts in computer science and engineering applications.",
         units: {
-            1: { title: "Quantum Mechanics", desc: "Wave-Particle Duality – de Broglie Hypothesis – Heisenberg Uncertainty Principle – Schrödinger Wave Equation – Particle in a Box – Quantum Tunnelling." },
-            2: { title: "Semiconductor Physics", desc: "Band Theory of Solids – Intrinsic and Extrinsic Semiconductors – Hall Effect – PN Junction Diode – Zener Breakdown – LED and Solar Cell." },
-            3: { title: "Photonics and Fibre Optics", desc: "Laser: Principle, Types (Ruby, He-Ne, Semiconductor) – Applications – Fibre Optics: Principle, Types, Numerical Aperture – Fibre Optic Communication System." },
-            4: { title: "Nanoscience and Nanotechnology", desc: "Basics of Nanoscience – Quantum Confinement – Carbon Nanostructures: Fullerene, Carbon Nanotubes, Graphene – Synthesis Methods – Applications of Nanomaterials." },
-            5: { title: "Energy Harvesting", desc: "Solar Energy – Photovoltaic Cells – Wind Energy – Piezoelectric Energy Harvesting – Thermoelectric Energy Harvesting – Hydrogen and Fuel Cells." }
+            1: { title: "Magnetic Materials", desc: "Parameters, Ferromagnetic materials, Ferrites - Soft and Hard magnetic materials – GMR sensors - magnetic disk memories – Principle of magnetic recording – Magnetic data storage." },
+            2: { title: "Logic Gates", desc: "Conversion of Binary to decimal - decimal to binary – binary coded decimal code-logic gates (OR, AND, NOT, NAND and NOR)–Exclusive OR gate- simplification based on basic Boolean theorems (sum of products, product of sums expression)- simplification by Karnaugh Map method (don’t care conditions)." },
+            3: { title: "Nano-Devices", desc: "Introduction – electron density in bulk material – size dependence of Fermi energy-quantum confinement – quantum structures: quantum wells, wires and dots – band gap of nanomaterials. Tunneling- Coulomb blockade - single electron transistor - resonant-tunneling diode- Carbon nanotubes: Properties and applications." },
+            4: { title: "Quantum Computing", desc: "Quantum system for information processing - quantum states – classical bits – quantum bits or qubits – Bloch sphere -CNOT gate – Single and multiple qubits – quantum gates (Pauli – X, Y and Z Gates, Hadamard Gate, Phase gate - T gate .CNOT Gate) – advantage of quantum computing over classical computing." },
+            5: { title: "Emerging Technologies", desc: "Review of emergence of spin electronics in data storage and applications of quantum computing and nano-devices in modern computing systems." }
         },
         cos: {
-            CO1: "Apply quantum mechanical concepts to simple systems.",
-            CO2: "Explain semiconductor physics and device characteristics.",
-            CO3: "Describe laser principles and fibre optic communication.",
-            CO4: "Understand nanomaterials and their applications.",
-            CO5: "Explain energy harvesting techniques and their applications."
+            CO1: "Explain the concepts of physics in computer science stream.",
+            CO2: "Apply appropriate techniques in physics to solve engineering problems.",
+            CO3: "Analyse physical systems and interpret data from the virtual studies in the core branches in computer science and engineering."
         },
         topics: {
             presentation: [
@@ -643,20 +638,19 @@ const CSE_SUBJECTS = {
     "CS25C07": {
         name: "Object Oriented Programming",
         semester: 2,
-        objective: "To understand the principles of object-oriented programming. To learn classes, objects, constructors and destructors. To understand inheritance, polymorphism and operator overloading. To learn virtual functions and abstract classes. To understand templates, exception handling and file handling.",
+        objective: "To impart the principles of object-oriented programming and their advantages over procedural programming. To develop problem-solving skills by creating real-world applications using OOP features.",
         units: {
-            1: { title: "OOP Principles and C++ Basics", desc: "Characteristics of OOP Languages – C++ Program Structure – Tokens, Variables, Data Types – Operators, Expressions – Namespaces – Control Flow Statements." },
-            2: { title: "Classes and Objects", desc: "Abstraction – Class and Object Definitions – Member Data and Functions – Constructors (types) – Destructors – Inline and Friend Functions – Arrays of Objects – Static Members." },
-            3: { title: "Inheritance and Compile-Time Polymorphism", desc: "Types of Inheritance: Single, Multiple, Multilevel, Hierarchical, Hybrid – Function Overloading – Operator Overloading: Unary and Binary Operators." },
-            4: { title: "Pointers and Runtime Polymorphism", desc: "Pointers and Pointer Arithmetic – this Pointer – Pointers to Derived and Base Classes – Virtual Functions – Late Binding – Abstract Classes – Pure Virtual Functions – Virtual Destructors." },
-            5: { title: "Templates, Exception Handling and File I/O", desc: "Class Templates – Function Templates – Template Overloading – Exception Handling: try, catch, throw – I/O Streams – File Modes – Binary and ASCII File Handling." }
+            1: { title: "Principles of Object-Oriented Programming", desc: "Characteristics of object-oriented languages, C++ Program structure, Procedure Oriented Programming vs Object Oriented Programming, C++ constructs and syntax, tokens, variables, data-types, type conversion, operators, Expressions, Namespace, flow Control and decision, making statements." },
+            2: { title: "Classes and Objects", desc: "Abstraction mechanism: Classes, Objects, member data, member functions - Constructors and types - destructors, inline function, friend function -- array of objects, objects as function arguments - memory allocation for objects, static members static data and static function." },
+            3: { title: "Inheritance and Compile Time Polymorphism", desc: "Inheritance: Derived Classes – Single inheritance – Multilevel Inheritance – Multiple Inheritance - Hierarchical inheritance – Hybrid inheritance. Operator Overloading: Compile time Polymorphism – Overloading Functions, Overloading Operators, Overloading Unary Operators – Overloading Binary Operators – Operator Overloading with Friend Functions." },
+            4: { title: "Pointers and Runtime Polymorphism", desc: "Pointers with arithmetic operations - this pointer – Pointers to Derived classes and Base classes - Compile time versus Runtime Polymorphism - Virtual functions - Late Binding - Abstract classes- Pure virtual functions and Virtual Destructors - Virtual base class." },
+            5: { title: "Templates and Exception Handling, I/O Systems", desc: "Class Templates - Function Templates – Overloading of Template Functions - String, iterators, hashes, IO streams; Exception Handling. C++ Streams - Formatted and Unformatted I/O –File stream classes – File modes - File operations, Sequential Read / Write operations – Binary and ASCII Files - Error handling in file I/O." }
         },
         cos: {
-            CO1: "Understand OOP concepts and C++ program structure.",
-            CO2: "Implement classes, objects, constructors, and destructors.",
-            CO3: "Apply inheritance and operator overloading.",
-            CO4: "Implement runtime polymorphism using virtual functions.",
-            CO5: "Use templates, exception handling and file operations."
+            CO1: "Understand the core OOP concepts and applications",
+            CO2: "Apply Object Oriented Paradigms to solve problems using C++",
+            CO3: "Design and Analyze solutions involving code reusability and complexity management",
+            CO4: "Demonstrate life-long learning skills through application development"
         },
         topics: {
             presentation: [

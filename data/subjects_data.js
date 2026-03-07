@@ -114,12 +114,11 @@ const SUBJECTS_DATA = {
     "R2025": {
 
         "ATE": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" },
-            { code: "BE3271", name: "Basic Electrical and Electronics Engineering Laboratory" }
+            { code: "MA25C02", name: "Linear Algebra" },
+            { code: "ME25C02", name: "Engineering Mechanics" },
+            { code: "EE25C01", name: "Basic Electrical and Electronics Engineering" },
+            { code: "PH25C05", name: "Applied Physics (ME) – II" },
+            { code: "CY25C03", name: "Applied Chemistry (ME) – II" }
         ],
 
         "MCE": [
