@@ -90,13 +90,14 @@ const SUBJECTS_DATA = {
         ],
 
         "IMT": [
-            { code: "IT3301", name: "Data Structures and Algorithms" },
-            { code: "CS3391", name: "Object Oriented Programming" },
-            { code: "IT3401", name: "Database Management Systems" },
-            { code: "IT3501", name: "Computer Networks" },
-            { code: "IT3601", name: "Cloud Computing" },
-            { code: "IT3811", name: "Cyber Security" },
-            { code: "GE3792", name: "Disaster Relief Engineering" }
+            /* Semester 4 subjects */
+            { code: "CS3452", name: "Theory of Computation" },
+            { code: "CS3491", name: "Artificial Intelligence and Machine Learning" },
+            { code: "CS3492", name: "Database Management Systems" },
+            { code: "IT3401", name: "Web Essentials" },
+            { code: "CS3451", name: "Introduction to Operating Systems" },
+            /* Semester 6 subjects */
+            { code: "CCS356", name: "Object Oriented Software Engineering" }
         ],
 
         "CDS": [
