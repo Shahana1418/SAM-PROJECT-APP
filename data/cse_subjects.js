@@ -31,6 +31,42 @@ const CSE_SUBJECTS = {
             "CO3": "Apply software design concepts and design patterns for system design.",
             "CO4": "Apply testing strategies and techniques for software quality assurance.",
             "CO5": "Apply project management practices and DevOps concepts."
+        },
+        "topics": {
+            "presentation": [
+                "Software Process Models – Waterfall vs Agile Comparison",
+                "Extreme Programming (XP) – Values, Practices and Process",
+                "UML Use Case Diagrams for Requirements Modelling",
+                "UML Class Diagrams and Sequence Diagrams",
+                "Coupling and Cohesion in Software Design",
+                "Design Patterns – MVC, Observer and Strategy Patterns",
+                "Architectural Styles – Layered and Client-Server Architecture",
+                "White Box Testing – Basis Path and Control Structure Testing",
+                "Black Box Testing – Equivalence Partitioning and Boundary Value",
+                "Object-Oriented Testing Methods and Interclass Testing",
+                "Software Configuration Management and Version Control",
+                "DevOps Pipeline – CI/CD, Building, Testing and Deployment",
+                "User Interface Design Principles and Guidelines",
+                "Agile Scrum Framework – Roles, Events and Artifacts",
+                "Validation Testing and System Testing Strategies"
+            ],
+            "miniproject": [
+                "Build a simple Student Management System using MVC pattern",
+                "Design UML diagrams for an Online Shopping System",
+                "Create a basic Bug Tracker web application with CRUD operations",
+                "Implement Observer pattern in a simple Notification System",
+                "Build a To-Do List app following Agile user stories",
+                "Design and test a simple Calculator using White Box Testing",
+                "Create a Library Management System with ER and Class Diagrams",
+                "Build a CI/CD pipeline demo using GitHub Actions",
+                "Implement a simple Chat Application using Client-Server architecture",
+                "Design a Hospital Appointment Booking System with UML models",
+                "Build a basic E-Commerce cart system with Strategy pattern",
+                "Create automated test cases for a Login Module",
+                "Implement a simple Blog platform with layered architecture",
+                "Build a basic Inventory System with validation testing",
+                "Design a simple DevOps deployment workflow using Docker"
+            ]
         }
     },
     "CS3691": {
@@ -65,6 +101,42 @@ const CSE_SUBJECTS = {
             "CO3": "Design simple embedded applications using Arduino.",
             "CO4": "Compare and apply communication models in IoT.",
             "CO5": "Design IoT applications using Arduino and Raspberry Pi."
+        },
+        "topics": {
+            "presentation": [
+                "8051 Microcontroller Architecture and Pin Diagram",
+                "Programming 8051 Timers and Interrupts",
+                "Embedded C vs Assembly Language Programming",
+                "Real-Time Operating Systems (RTOS) – Need and Features",
+                "Introduction to Arduino – Types, IDE and Programming",
+                "Interfacing Sensors with Arduino – Temperature, IR, Ultrasonic",
+                "IoT Communication Protocols – Bluetooth, WiFi, ZigBee",
+                "Raspberry Pi Architecture and GPIO Programming",
+                "IoT Cloud Platforms – ThingSpeak, Blynk, AWS IoT",
+                "Smart Home Automation Using IoT",
+                "Smart Agriculture – Soil Moisture Monitoring System",
+                "Context Switching and Priority Scheduling in RTOS",
+                "GSM and GPS Module Interfacing with Microcontrollers",
+                "Arduino Shields – Motor Shield, WiFi Shield, Ethernet Shield",
+                "Smart Healthcare – Patient Monitoring Using IoT"
+            ],
+            "miniproject": [
+                "LED Blinking and Traffic Light simulation using Arduino",
+                "Temperature and Humidity Monitor using DHT11 sensor and Arduino",
+                "Ultrasonic Distance Measurement display on LCD with Arduino",
+                "Simple Home Automation – Control LED and Fan via Bluetooth app",
+                "Soil Moisture Monitoring System with buzzer alert using Arduino",
+                "Smart Dustbin – Servo-operated lid using ultrasonic sensor",
+                "Line Follower Robot using IR sensors and Arduino",
+                "IoT Weather Station – Upload sensor data to ThingSpeak",
+                "Smart Door Lock using Keypad and Servo with Arduino",
+                "Fire and Gas Detection Alert System using MQ2 sensor",
+                "Automatic Plant Watering System using soil moisture sensor",
+                "Bluetooth Controlled Car using Arduino and HC-05 module",
+                "Simple Attendance System using RFID and Arduino",
+                "Heart Rate Monitor using Pulse Sensor with Arduino",
+                "Smart Parking System indicator using IR sensors and LEDs"
+            ]
         }
     },
     "CS3452": {
@@ -99,6 +171,42 @@ const CSE_SUBJECTS = {
             "CO3": "Design context-free grammars and pushdown automata.",
             "CO4": "Construct Turing machines for given languages.",
             "CO5": "Understand decidability and P vs NP concepts."
+        },
+        "topics": {
+            "presentation": [
+                "DFA and NFA – Construction and Equivalence",
+                "NFA to DFA Conversion with Examples",
+                "Regular Expressions and Their Applications",
+                "Pumping Lemma for Regular Languages – Proof Technique",
+                "Context-Free Grammars – Derivations and Parse Trees",
+                "Pushdown Automata – Definition and Working",
+                "Chomsky Normal Form – Conversion Steps",
+                "Greibach Normal Form – Conversion Steps",
+                "Turing Machine – Basic Model and Operations",
+                "Recursive and Recursively Enumerable Languages",
+                "P vs NP Problem – Significance in Computer Science",
+                "Closure Properties of Regular and Context-Free Languages",
+                "Ambiguity in Context-Free Grammars",
+                "Chomsky Hierarchy of Languages",
+                "Universal Turing Machine and Church-Turing Thesis"
+            ],
+            "miniproject": [
+                "DFA Simulator – Input a DFA and test string acceptance",
+                "NFA to DFA Converter – Visual step-by-step conversion tool",
+                "Regular Expression Tester – Match patterns against strings",
+                "CFG Parser – Enter grammar rules and generate parse trees",
+                "PDA Simulator – Simulate stack operations for input strings",
+                "Turing Machine Simulator – Visual tape and head movement",
+                "DFA Minimization Tool – Remove unreachable and equivalent states",
+                "Pumping Lemma Checker – Interactive proof helper",
+                "Grammar to CNF Converter – Step-by-step transformation",
+                "Finite Automata Visualizer – Draw state diagrams from input",
+                "String Generator from Regular Expression",
+                "Language Membership Tester for DFA and NFA",
+                "Simple Lexical Analyzer using Finite Automata",
+                "Binary Number Divisibility Checker using DFA",
+                "Palindrome Checker using PDA simulation"
+            ]
         }
     },
     "CS3491": {
@@ -133,6 +241,42 @@ const CSE_SUBJECTS = {
             "CO3": "Apply supervised learning algorithms for classification and regression.",
             "CO4": "Apply ensemble and unsupervised learning techniques.",
             "CO5": "Design simple neural network models."
+        },
+        "topics": {
+            "presentation": [
+                "BFS and DFS – Uninformed Search Strategies",
+                "A* Search Algorithm – Heuristic Search with Examples",
+                "Constraint Satisfaction Problems – N-Queens and Map Colouring",
+                "Bayesian Networks – Structure and Inference",
+                "Naive Bayes Classifier – Working and Applications",
+                "Linear Regression – Simple and Multiple Variable",
+                "Logistic Regression for Binary Classification",
+                "Decision Tree – ID3 Algorithm and Entropy Calculation",
+                "Support Vector Machine – Maximum Margin Classifier",
+                "K-Means Clustering Algorithm with Examples",
+                "Random Forest – Ensemble of Decision Trees",
+                "Bagging and Boosting – Ensemble Techniques Comparison",
+                "Perceptron and Multilayer Perceptron Architecture",
+                "Backpropagation Algorithm – Step by Step",
+                "Activation Functions – Sigmoid, ReLU, Tanh Comparison"
+            ],
+            "miniproject": [
+                "Tic-Tac-Toe AI using Minimax Algorithm",
+                "Spam Email Classifier using Naive Bayes",
+                "House Price Predictor using Linear Regression",
+                "Iris Flower Classifier using Decision Tree",
+                "Student Grade Predictor using Logistic Regression",
+                "Customer Segmentation using K-Means Clustering",
+                "Handwritten Digit Recognizer using Simple Neural Network",
+                "Movie Recommendation System using KNN",
+                "Sentiment Analysis of Product Reviews using Naive Bayes",
+                "Rock-Paper-Scissors game with AI using Random Forest",
+                "Weather Prediction model using Decision Tree",
+                "Image Classifier for Cats vs Dogs using MLP",
+                "Credit Card Fraud Detection using SVM",
+                "Simple Chatbot using Rule-Based AI",
+                "Maze Solver using BFS and A* Search Algorithm"
+            ]
         }
     },
     "CS3401": {
@@ -167,6 +311,42 @@ const CSE_SUBJECTS = {
             "CO3": "Design algorithms using Divide and Conquer, DP, and Greedy techniques.",
             "CO4": "Solve problems using Backtracking and Branch and Bound.",
             "CO5": "Understand NP-completeness and approximation algorithms."
+        },
+        "topics": {
+            "presentation": [
+                "Asymptotic Notations – Big-O, Omega, Theta with Examples",
+                "Binary Search and Interpolation Search Comparison",
+                "KMP Pattern Matching Algorithm with Examples",
+                "BFS and DFS Graph Traversal Techniques",
+                "Dijkstra's Shortest Path Algorithm",
+                "Kruskal's and Prim's MST Algorithms Comparison",
+                "Merge Sort – Divide and Conquer Approach",
+                "Quick Sort – Partitioning and Pivot Selection",
+                "Dynamic Programming – Matrix Chain Multiplication",
+                "Huffman Coding – Greedy Algorithm for Data Compression",
+                "N-Queens Problem using Backtracking",
+                "0/1 Knapsack Problem using Branch and Bound",
+                "Travelling Salesman Problem – Approaches and Complexity",
+                "P vs NP – Understanding Computational Complexity",
+                "Floyd-Warshall All-Pairs Shortest Path Algorithm"
+            ],
+            "miniproject": [
+                "Sorting Algorithm Visualizer – Compare Bubble, Merge, Quick Sort",
+                "Graph Visualizer with BFS and DFS Traversal Animation",
+                "Dijkstra's Shortest Path Finder on a Map Grid",
+                "Huffman Encoding and Decoding Tool",
+                "N-Queens Solver with Visual Board Display",
+                "Binary Search Visualizer with Step-by-Step Comparison",
+                "MST Visualizer using Kruskal's and Prim's Algorithms",
+                "Matrix Chain Multiplication Calculator with Optimal Parenthesization",
+                "Knapsack Problem Solver – Compare Greedy vs DP Approach",
+                "TSP Solver for Small Graphs with Brute Force and Approximation",
+                "String Pattern Matcher using KMP Algorithm",
+                "Activity Selection Scheduler using Greedy Algorithm",
+                "Sudoku Solver using Backtracking",
+                "Graph Colouring Visualizer using Backtracking",
+                "Simple Spell Checker using Edit Distance (DP)"
+            ]
         }
     },
     "CS3451": {
@@ -201,6 +381,42 @@ const CSE_SUBJECTS = {
             "CO3": "Compare memory management and page replacement techniques.",
             "CO4": "Explain file system implementation and disk scheduling.",
             "CO5": "Understand virtualization and mobile OS concepts."
+        },
+        "topics": {
+            "presentation": [
+                "Evolution of Operating Systems – Batch to Real-Time",
+                "System Calls – Types and Examples in Linux",
+                "CPU Scheduling Algorithms – FCFS, SJF, Round Robin, Priority",
+                "Process Synchronization – Critical Section and Semaphores",
+                "Deadlock – Prevention, Avoidance using Banker's Algorithm",
+                "Paging and Page Table Structure in Memory Management",
+                "Virtual Memory and Demand Paging Concepts",
+                "Page Replacement Algorithms – FIFO, LRU, Optimal",
+                "File Allocation Methods – Contiguous, Linked, Indexed",
+                "Disk Scheduling Algorithms – FCFS, SSTF, SCAN, C-SCAN",
+                "Thread vs Process – Multithreading Models",
+                "Thrashing – Causes and Solutions",
+                "Virtualization – Types, Hypervisors and Containers",
+                "Android OS Architecture and Components",
+                "Inter-Process Communication – Shared Memory and Message Passing"
+            ],
+            "miniproject": [
+                "CPU Scheduling Simulator – Compare FCFS, SJF, RR algorithms",
+                "Page Replacement Algorithm Visualizer – FIFO, LRU, Optimal",
+                "Banker's Algorithm Simulator for Deadlock Avoidance",
+                "Memory Allocation Simulator – First Fit, Best Fit, Worst Fit",
+                "Disk Scheduling Algorithm Comparator – FCFS, SSTF, SCAN",
+                "Simple Shell Implementation in C – Execute basic commands",
+                "Producer-Consumer Problem simulator using Semaphores",
+                "File System Simulator – Create, Read, Delete files",
+                "Process Scheduler Visualizer with Gantt Chart output",
+                "Dining Philosophers Problem simulator",
+                "Virtual Memory Simulator with page fault tracking",
+                "Thread Pool Implementation demo in Java or Python",
+                "Simple Task Manager – List and kill processes",
+                "Reader-Writer Problem simulator using Mutex",
+                "Round Robin Scheduler with adjustable time quantum"
+            ]
         }
     },
     "CS3492": {
@@ -235,6 +451,42 @@ const CSE_SUBJECTS = {
             "CO3": "Construct queries to handle transaction processing and maintain database consistency.",
             "CO4": "Understand internal storage structures and evaluate query processing and optimization techniques.",
             "CO5": "Appreciate how advanced databases differ from relational databases and select suitable databases."
+        },
+        "topics": {
+            "presentation": [
+                "Relational Model – Keys, Constraints and Relational Algebra Operations",
+                "SQL Fundamentals – DDL, DML, DCL Commands with Examples",
+                "Entity-Relationship Model – ER Diagrams and Components",
+                "Normalization – 1NF, 2NF, 3NF and BCNF with Examples",
+                "ACID Properties of Transactions",
+                "Concurrency Control – Two-Phase Locking Protocol",
+                "Deadlock Handling – Detection, Prevention and Avoidance",
+                "Recovery Techniques – Deferred Update and ARIES Algorithm",
+                "B+ Tree Indexing – Structure, Insertion and Deletion",
+                "Hashing Techniques – Static and Dynamic Hashing",
+                "Query Processing – Selection, Sorting and Join Algorithms",
+                "Query Optimization – Heuristic and Cost-Based Approaches",
+                "Distributed Database Architecture and Transaction Processing",
+                "NoSQL Databases – CAP Theorem, Types and Comparison with RDBMS",
+                "Database Security – SQL Injection, Access Control and Encryption"
+            ],
+            "miniproject": [
+                "Library Management System with book issue, return and fine calculation",
+                "Student Database System with enrollment, grades and attendance tracking",
+                "Hospital Management System – Patient records, appointments and billing",
+                "Inventory Management System with stock tracking and supplier details",
+                "Railway Reservation System with seat booking and cancellation",
+                "Online Banking System with account management and transaction history",
+                "Employee Payroll System with salary calculation and pay slip generation",
+                "E-Commerce Database – Products, orders, customers and payment tracking",
+                "Hotel Room Booking System with availability check and billing",
+                "Blood Bank Management System – Donor records and blood stock tracking",
+                "Electricity Bill Management System with meter reading and payment",
+                "Restaurant Order Management System with menu and billing",
+                "Pharmacy Management System – Medicine stock and prescription tracking",
+                "Simple SQL Query Builder – Visual interface to construct SQL queries",
+                "ER Diagram to Relational Schema Converter tool"
+            ]
         }
     },
     "MA25C02": {
@@ -269,6 +521,42 @@ const CSE_SUBJECTS = {
             "CO3": "Apply inner product concepts and perform orthogonalization.",
             "CO4": "Compute least squares solutions of linear system of equations.",
             "CO5": "Use MATLAB to implement and validate key linear algebra concepts."
+        },
+        "topics": {
+            "presentation": [
+                "Vector Spaces and Subspaces – Definition and Examples",
+                "Linear Independence, Basis and Dimension",
+                "Rank and Nullity Theorem with Applications",
+                "Linear Transformations – Matrix Representation",
+                "Eigenvalues and Eigenvectors – Computation Methods",
+                "Cayley-Hamilton Theorem – Statement and Verification",
+                "Diagonalization of Matrices – Step by Step",
+                "Gram-Schmidt Orthogonalization Process",
+                "Inner Product Spaces – Cauchy-Schwarz Inequality",
+                "Singular Value Decomposition (SVD) – Steps and Examples",
+                "QR Decomposition and Its Applications",
+                "Least Squares Solutions Using SVD",
+                "PCA Basics – Dimensionality Reduction Concept",
+                "Applications of Linear Algebra in Data Science",
+                "Change of Basis and Similarity of Matrices"
+            ],
+            "miniproject": [
+                "Matrix Calculator – Add, Multiply, Inverse, Determinant",
+                "Eigenvalue and Eigenvector Calculator with step-by-step solution",
+                "Gram-Schmidt Orthogonalization Visualizer",
+                "Simple Image Compression using SVD",
+                "Linear Equation Solver using Gaussian Elimination",
+                "2D Transformation Visualizer – Rotation, Scaling, Reflection",
+                "Rank Calculator for any m×n Matrix",
+                "QR Decomposition step-by-step Calculator",
+                "Simple PCA Demo on a 2D dataset with visualization",
+                "Matrix Diagonalization checker and calculator",
+                "Basis and Dimension Finder for given set of vectors",
+                "Linear Transformation Visualizer in 2D plane",
+                "Least Squares Curve Fitting tool",
+                "Determinant Calculator using Cofactor Expansion",
+                "Null Space and Column Space Finder for matrices"
+            ]
         }
     },
     "EE25C01": {
@@ -301,6 +589,42 @@ const CSE_SUBJECTS = {
             "CO1": "Understand and explain basic electrical and electronic concepts.",
             "CO2": "Apply and analyse electrical circuits in real-time applications.",
             "CO3": "Identify and utilise key electronic devices used in engineering applications"
+        },
+        "topics": {
+            "presentation": [
+                "Kirchhoff's Laws – KVL and KCL with Circuit Examples",
+                "Star-Delta Transformation in AC Circuits",
+                "Power Factor and Its Significance in AC Circuits",
+                "DC Motor – Working Principle and Speed Control",
+                "Single Phase Transformer – Construction and Working",
+                "PN Junction Diode – Characteristics and Applications",
+                "Zener Diode as Voltage Regulator",
+                "BJT Common Emitter Configuration and Characteristics",
+                "Op-Amp – Inverting and Non-Inverting Amplifier Circuits",
+                "Boolean Algebra and Logic Gate Simplification",
+                "Half Adder and Full Adder Design",
+                "Flip-Flops – SR, JK, D, T Types and Applications",
+                "Solar Energy – Photovoltaic Cell Working Principle",
+                "Three Phase Induction Motor – Working Principle",
+                "Electrical Safety and Earthing Systems"
+            ],
+            "miniproject": [
+                "Simple DC Circuit Simulator using Kirchhoff's Laws",
+                "AC Power Factor Calculator for Single Phase Circuits",
+                "LED Dimmer Circuit using PWM",
+                "Zener Diode Voltage Regulator Circuit on Breadboard",
+                "Half Adder and Full Adder using Logic Gate ICs",
+                "4-bit Binary Counter using JK Flip-Flops",
+                "Simple Audio Amplifier using Op-Amp IC 741",
+                "DC Motor Speed Controller using Potentiometer",
+                "Logic Gate Truth Table Verifier Circuit",
+                "Simple Solar Cell Voltage and Current Measurement Setup",
+                "BJT as a Switch – LED ON/OFF Controller",
+                "Binary to Decimal Converter Circuit",
+                "Simple Burglar Alarm using basic electronic components",
+                "Star-Delta Starter Model Demonstration",
+                "Transformer Turns Ratio Verification Experiment"
+            ]
         }
     },
     "CS25C06": {
@@ -334,6 +658,42 @@ const CSE_SUBJECTS = {
             "CO2": "Apply Boolean algebra and number systems to design simple digital circuits and simulate them using tools.",
             "CO3": "Analyze instruction sets, arithmetic units, and performance metrics to evaluate processor design.",
             "CO4": "Engage in continuous learning to update with advancements through evolving computing trends."
+        },
+        "topics": {
+            "presentation": [
+                "Boolean Algebra – Theorems and Simplification using K-Maps",
+                "Logic Gates – AND, OR, NOT, Universal Gates (NAND, NOR)",
+                "Von Neumann vs Harvard Architecture Comparison",
+                "Instruction Execution Cycle – Fetch, Decode, Execute",
+                "Adder and Subtractor Circuit Design",
+                "Booth's Algorithm for Signed Multiplication",
+                "Multiplexer and Decoder – Design and Applications",
+                "RISC vs CISC Architecture – Comparison",
+                "Pipelining – Stages, Hazards and Solutions",
+                "Cache Memory – Direct, Associative, Set-Associative Mapping",
+                "Virtual Memory – Page Table and TLB",
+                "DMA – Direct Memory Access Concept and Working",
+                "Flip-Flops – Types and Applications in Registers",
+                "Addressing Modes – Immediate, Direct, Indirect, Register",
+                "Performance Metrics – CPI, MIPS, Speedup with Pipelining"
+            ],
+            "miniproject": [
+                "Boolean Expression Simplifier using K-Map method",
+                "Logic Gate Simulator – Build and test circuits visually",
+                "Simple ALU Simulator – Add, Subtract, AND, OR Operations",
+                "Booth's Multiplication Algorithm step-by-step Calculator",
+                "Cache Memory Simulator – Direct and Set-Associative Mapping",
+                "Instruction Cycle Simulator – Fetch-Decode-Execute Animation",
+                "Binary Adder and Subtractor circuit using Logic Gates",
+                "RISC vs CISC Instruction Comparison Tool",
+                "Pipeline Hazard Detector – Identify data and control hazards",
+                "Virtual Memory Page Replacement Simulator",
+                "Multiplexer-based Function Generator",
+                "Simple Counter Design using Flip-Flops (Mod-N Counter)",
+                "Number System Converter – Binary, Octal, Decimal, Hex",
+                "Addressing Mode Demonstrator with example instructions",
+                "K-Map solver for up to 4 variables"
+            ]
         }
     },
     "PH25C03": {
@@ -366,6 +726,42 @@ const CSE_SUBJECTS = {
             "CO1": "Explain the concepts of physics in computer science stream.",
             "CO2": "Apply appropriate techniques in physics to solve engineering problems.",
             "CO3": "Analyse physical systems and interpret data from the virtual studies in the core branches in computer science and engineering."
+        },
+        "topics": {
+            "presentation": [
+                "de Broglie Hypothesis and Wave-Particle Duality",
+                "Heisenberg Uncertainty Principle with Examples",
+                "Particle in a Box – Energy Quantization",
+                "Band Theory of Solids – Conductors, Semiconductors, Insulators",
+                "Hall Effect – Principle and Applications",
+                "PN Junction Diode – Working and V-I Characteristics",
+                "LASER – Principle, Ruby and He-Ne Laser",
+                "Semiconductor Laser and LED Working",
+                "Fibre Optics – Total Internal Reflection and Types",
+                "Carbon Nanotubes – Structure and Properties",
+                "Graphene – Properties and Applications",
+                "Solar Cell – Working Principle and Efficiency",
+                "Piezoelectric Energy Harvesting Concept",
+                "Quantum Tunnelling and Its Applications",
+                "Nanomaterial Synthesis Methods – Top-Down and Bottom-Up"
+            ],
+            "miniproject": [
+                "Simple Photoelectric Effect demonstration setup",
+                "LED characteristics measurement – V-I curve plotter",
+                "Solar cell efficiency measurement under different light conditions",
+                "Fibre optic light transmission demonstration model",
+                "Simple laser pointer based communication demo",
+                "Hall Effect measurement and carrier type identification",
+                "Build a simple Thermoelectric Generator using Peltier module",
+                "Carbon nanotube properties presentation model",
+                "Solar powered LED light project",
+                "Simple piezoelectric energy harvester demo (press to light LED)",
+                "PN junction diode forward and reverse bias characteristic plotter",
+                "Graphene properties study using literature review poster",
+                "Simple wind energy model using DC motor as generator",
+                "Optical fibre numerical aperture measurement setup",
+                "Quantum tunnelling probability calculator for different barriers"
+            ]
         }
     },
     "CS25C07": {
@@ -399,6 +795,42 @@ const CSE_SUBJECTS = {
             "CO2": "Apply Object Oriented Paradigms to solve problems using C++",
             "CO3": "Design and Analyze solutions involving code reusability and complexity management",
             "CO4": "Demonstrate life-long learning skills through application development"
+        },
+        "topics": {
+            "presentation": [
+                "Object Oriented vs Procedure Oriented Programming Comparison",
+                "Classes and Objects – Encapsulation and Abstraction",
+                "Constructors – Default, Parameterized, Copy Constructors",
+                "Destructors and Memory Management in C++",
+                "Single and Multiple Inheritance with Examples",
+                "Multilevel and Hierarchical Inheritance",
+                "Function Overloading – Rules and Examples",
+                "Operator Overloading – Unary and Binary Operators",
+                "Pointers in C++ – this Pointer and Dynamic Allocation",
+                "Virtual Functions and Late Binding (Runtime Polymorphism)",
+                "Abstract Classes and Pure Virtual Functions",
+                "Function Templates and Class Templates",
+                "Exception Handling – try, catch, throw Mechanism",
+                "File Handling in C++ – Read and Write Operations",
+                "Friend Functions and Friend Classes"
+            ],
+            "miniproject": [
+                "Student Record Management System using Classes and File I/O",
+                "Simple Bank Account System with Inheritance (Savings, Current)",
+                "Calculator with Operator Overloading for Complex Numbers",
+                "Library Book Management System using File Handling",
+                "Shape Area Calculator using Virtual Functions and Inheritance",
+                "Simple Phonebook Application using Class and Arrays",
+                "Employee Payroll System with Multiple Inheritance",
+                "Tic-Tac-Toe Game using OOP concepts in C++",
+                "Simple Quiz Application with Exception Handling",
+                "Matrix Operations Library using Class Templates",
+                "Vehicle Rental System using Hierarchical Inheritance",
+                "Simple ATM Simulator with File-based account storage",
+                "Hospital Patient Record System using Classes",
+                "Temperature Converter using Function Overloading",
+                "Simple Inventory System with Binary File Operations"
+            ]
         }
     }
 };
