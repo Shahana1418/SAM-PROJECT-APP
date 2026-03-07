@@ -1144,6 +1144,7 @@ function renderSessions(container) {
                     return `<div style="padding:4px 0;${slotSessions.length > 1 ? 'border-bottom:1px dashed var(--border-light);' : ''}">
                         <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')} <span style="font-size:.62rem;color:var(--text-muted);">${s.startTime}–${s.endTime}</span></div>
                         <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
+                        ${presTopicHTML}
                         ${s.revealed
                             ? `<div class="sched-role-row" style="margin-top:2px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
                             : `<div class="sched-role-row" style="margin-top:2px;"><span class="sched-chip sched-locked">🔒 Roles on day</span></div>`}
