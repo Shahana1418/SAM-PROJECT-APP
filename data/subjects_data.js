@@ -67,16 +67,15 @@ const SUBJECTS_DATA = {
         ],
 
         "EEE": [
-            { code: "EE3301", name: "Electric Circuits" },
-            { code: "EE3302", name: "Electromagnetic Theory" },
-            { code: "EE3303", name: "Electronic Devices and Circuits" },
-            { code: "EE3401", name: "Electrical Machines – I" },
-            { code: "EE3402", name: "Electrical Machines – II" },
-            { code: "EE3405", name: "Power Systems" },
-            { code: "EE3501", name: "Control Systems" },
-            { code: "EE3512", name: "Power Electronics" },
-            { code: "EE3601", name: "High Voltage Engineering" },
-            { code: "EE3811", name: "Renewable Energy Systems" }
+            /* Semester 4 subjects */
+            { code: "EE3401", name: "Transmission and Distribution" },
+            { code: "EE3402", name: "Linear Integrated Circuits" },
+            { code: "EE3403", name: "Measurements and Instrumentation" },
+            { code: "EE3404", name: "Microprocessor and Microcontroller" },
+            { code: "EE3405", name: "Electrical Machines – II" },
+            /* Semester 6 subjects */
+            { code: "EE3601", name: "Protection and Switchgear" },
+            { code: "EE3602", name: "Power System Operation and Control" }
         ],
 
         "CVE": [

@@ -204,6 +204,301 @@ const EEE_SUBJECTS = {
                 "Employee Hierarchy using Trees"
             ]
         }
+    },
+
+    /* ══════════════════════════════════════════════════════════════════
+     *  SEMESTER  4  —  BATCH 2028  (R2021)
+     * ══════════════════════════════════════════════════════════════════ */
+
+    "EE3401": {
+        name: "Transmission and Distribution",
+        semester: 4,
+        objective: "To impart knowledge about the configuration of the electrical power systems, line parameters, mechanical design, and performance analysis of transmission lines and distribution systems.",
+        units: {
+            1: { title: "Transmission Line Parameters", desc: "Structure of electric power systems, parameters of single/three phase transmission lines, single/double circuits, conductor types, symmetrical/unsymmetrical spacing, transposition, GMD, skin and proximity effects, effect of earth." },
+            2: { title: "Modelling and Performance of Transmission Lines", desc: "Short, medium, and long transmission lines, equivalent circuits, phasor diagrams, attenuation constant, surge impedance, transmission efficiency, voltage regulation, Power Circle diagrams, Ferranti effect, Corona." },
+            3: { title: "Sag Calculation and Line Supports", desc: "Mechanical design of overhead lines, line supports, tension/sag calculations, methods of grounding, insulators (types, voltage distribution, string efficiency improvement, testing)." },
+            4: { title: "Underground Cables", desc: "Underground cables types, construction of single-core/3-core belted cables, insulation resistance, potential gradient, capacitance of cables, grading of cables, power factor and heating." },
+            5: { title: "Distribution Systems", desc: "General aspects of distribution systems, Kelvin's Law, AC and DC distributions, techniques for voltage control and power factor improvement, types of substations, introduction to EHVAC, HVDC, and FACTS." }
+        },
+        cos: {
+            CO1: "Understand the structure of power systems and compute transmission line parameters.",
+            CO2: "Analyze the performance of short, medium, and long transmission lines.",
+            CO3: "Evaluate the mechanical design of transmission lines and insulators.",
+            CO4: "Analyze the characteristics of underground cables.",
+            CO5: "Understand and design effective power distribution systems."
+        },
+        topics: {
+            presentation: [
+                "Skin Effect and Proximity Effect in Transmission Lines",
+                "Ferranti Effect and its Mitigation",
+                "Corona Discharge in Overhead Lines",
+                "Methods to Improve String Efficiency of Insulators",
+                "Grading of Underground Cables",
+                "Smart Grid Distribution Systems",
+                "HVDC vs EHVAC Transmission Systems",
+                "Flexible AC Transmission Systems (FACTS)",
+                "Kelvin's Law for Conductor Size Optimization",
+                "Types and Applications of Electrical Substations"
+            ],
+            miniproject: [
+                "Sag and Tension Calculation App",
+                "Transmission Line Parameter Calculator",
+                "Power Circle Diagram Plotter in Python",
+                "String Efficiency Simulator",
+                "Underground Cable Grading Analysis Tool"
+            ]
+        }
+    },
+
+    "EE3402": {
+        name: "Linear Integrated Circuits",
+        semester: 4,
+        objective: "To provide knowledge on IC fabrication, signal analysis using Op-amps, applications of Op-amps, functional blocks and applications of special ICs (Timers, PLL, Regulators).",
+        units: {
+            1: { title: "IC Fabrication", desc: "IC classification, fundamental monolithic IC technology, epitaxial growth, masking, etching, diffusion, fabrication of diodes, capacitance, resistance, FETs, and PV cells." },
+            2: { title: "Characteristics of Op-amp", desc: "Ideal and practical Op-amp characteristics, DC/AC characteristics, differential amplifiers, frequency response, voltage-shunt/series feedback, basic applications (summers, differentiators, integrators)." },
+            3: { title: "Applications of Op-amp", desc: "Instrumentation amplifiers, log/antilog amplifiers, analog multipliers, active filters, comparators, multivibrators, waveform generators, clippers, clampers, peak detectors, S/H circuits, D/A and A/D converters." },
+            4: { title: "Special ICs", desc: "555 Timer functional block and applications, Voltage Controlled Oscillator (VCO) IC 566, Phase-Locked Loop (PLL) circuits." },
+            5: { title: "Application ICs", desc: "AD623 Instrumentation Amplifier (load cell measurement), IC voltage regulators (LM78XX, LM79XX, LM317), switching regulators (SMPS), ICL8038 function generator IC." }
+        },
+        cos: {
+            CO1: "Explain the fabrication processes of integrated circuits.",
+            CO2: "Analyze the DC and AC characteristics of operational amplifiers.",
+            CO3: "Design signal conditioning circuits and converters using Op-amps.",
+            CO4: "Understand the working and applications of Special ICs like Timers and PLLs.",
+            CO5: "Design power supply and specialized application circuits using specific ICs."
+        },
+        topics: {
+            presentation: [
+                "Monolithic IC Fabrication Process",
+                "Slew Rate and CMRR in Op-amps",
+                "Instrumentation Amplifier in Transducer Bridges",
+                "Successive Approximation A/D Converter",
+                "Astable and Monostable Modes of 555 Timer",
+                "Applications of Phase-Locked Loops (PLL)",
+                "Switch Mode Power Supply (SMPS) Operation",
+                "Active Filters vs Passive Filters",
+                "Logarithmic and Anti-logarithmic Amplifiers",
+                "ICL8038 Function Generator Capabilities"
+            ],
+            miniproject: [
+                "Op-amp based Active Audio Filter",
+                "555 Timer LED Flasher Circuit",
+                "Precision Full-Wave Rectifier",
+                "Voltage Regulator utilizing LM317",
+                "Simple Digital to Analog Converter (R-2R)"
+            ]
+        }
+    },
+
+    "EE3403": {
+        name: "Measurements and Instrumentation",
+        semester: 4,
+        objective: "To educate students on fundamental measurement concepts, functional aspects of measuring instruments, bridge circuits, sensors/transducers, and digital instrumentation.",
+        units: {
+            1: { title: "Concepts of Measurements", desc: "Classification and applications of instruments, elements of a generalized measurement system, static/dynamic characteristics, errors in measurement, statistical evaluation." },
+            2: { title: "Measurement of Parameters in Electrical Systems", desc: "Moving coil/iron meters, induction and dynamometer type wattmeters, energy meters, Megger, Instrument transformers (CT & PT)." },
+            3: { title: "AC/DC Bridges and Instrumentation Amplifiers", desc: "Wheatstone, Kelvin double bridge, Maxwell, Hay, Wien, and Schering bridges. Errors and compensation in AC bridges, instrumentation amplifiers." },
+            4: { title: "Transducers for Measurement of Non-Electrical Parameters", desc: "Classification of transducers, measurement of pressure, temperature, displacement, flow, angular velocity, digital transducers, smart sensors." },
+            5: { title: "Digital Instrumentation", desc: "A/D converters, measurement of voltage/current/frequency, D/A converters, Digital Storage Oscilloscope (DSO), Data Loggers, basics of PLC programming, Virtual Instrumentation." }
+        },
+        cos: {
+            CO1: "Understand measurement errors and evaluate measurement data statistically.",
+            CO2: "Comprehend the working principles of various electrical measuring instruments.",
+            CO3: "Analyze and balance various AC/DC bridge circuits.",
+            CO4: "Select and apply appropriate transducers for non-electrical parameter measurements.",
+            CO5: "Utilize digital instrumentation and virtual instrumentation tools."
+        },
+        topics: {
+            presentation: [
+                "Static vs Dynamic Characteristics of Instruments",
+                "Error Analysis in Measurements",
+                "Working of Dynamometer Type Wattmeter",
+                "Current Transformers (CT) and Potential Transformers (PT)",
+                "Anderson and Schering Bridges",
+                "Linear Variable Differential Transformer (LVDT)",
+                "Piezoelectric Transducers and Applications",
+                "Digital Storage Oscilloscope (DSO) Operations",
+                "Introduction to Virtual Instrumentation (LabVIEW)",
+                "Smart Sensors in Modern Industry"
+            ],
+            miniproject: [
+                "Digital Multimeter Simulation App",
+                "Wheatstone Bridge Balance Calculator",
+                "Temperature Measurement System using LM35",
+                "Distance Measurement using Ultrasonic Sensor",
+                "Simple PLC Logic Simulator"
+            ]
+        }
+    },
+
+    "EE3404": {
+        name: "Microprocessor and Microcontroller",
+        semester: 4,
+        objective: "To study the architecture, addressing modes, and instruction sets of 8085 and 8051, develop assembly language programming skills, and introduce peripheral interfacing ICs.",
+        units: {
+            1: { title: "Introduction to 8085 Architecture", desc: "Block diagram of 8085 microprocessor, memory interfacing, I/O ports, data transfer concepts, timing diagrams, interrupt structure." },
+            2: { title: "8085 Instruction Set and Programming", desc: "Instruction formats, addressing modes, assembly language format, data transfer, arithmetic, control instructions. Loop structures, look-up tables, subroutines, stacks." },
+            3: { title: "Interfacing Basics and ICs", desc: "Architecture and programming of interfacing ICs: 8255 PPI, 8259 PIC, 8251 USART, 8279 Keyboard display controller, 8254 Timer/Counter. Interfacing with A/D and D/A converters." },
+            4: { title: "Introduction to 8051 Microcontroller", desc: "Block diagram of 8051, instruction format, addressing modes, interrupt structure, timers, I/O ports, serial communication. Keyboard/display interfacing, IDE usage." },
+            5: { title: "Introduction to RISC Based Architecture", desc: "RISC architecture basics, PIC16/18 microcontrollers, memory organization, addressing modes, instruction sets, timers, I/O ports, interrupt programming." }
+        },
+        cos: {
+            CO1: "Understand the architecture and interrupt structure of the 8085 microprocessor.",
+            CO2: "Write and analyze assembly language programs for the 8085 microprocessor.",
+            CO3: "Design interfacing circuits using peripheral ICs with the 8085.",
+            CO4: "Understand the architecture and program the 8051 microcontroller.",
+            CO5: "Gain knowledge on basic RISC architectures like the PIC microcontroller."
+        },
+        topics: {
+            presentation: [
+                "8085 Microprocessor Architecture and Pin Diagram",
+                "Timing Diagrams for 8085 Instructions",
+                "Interrupt Structure of 8085",
+                "8255 Programmable Peripheral Interface Modes",
+                "Serial Communication using 8251 USART",
+                "8051 Timer/Counter Operations",
+                "A/D Converter Interfacing with 8255",
+                "CISC vs RISC Architectures",
+                "PIC Microcontroller Memory Organization",
+                "Stepper Motor Control Sequence using 8051"
+            ],
+            miniproject: [
+                "8085 Instruction Simulator",
+                "Traffic Light Controller using 8051",
+                "Simple Calculator using 8085 Assembly",
+                "DAC Interfacing for Waveform Generation",
+                "LCD Display Interfacing with Microcontroller"
+            ]
+        }
+    },
+
+    "EE3405": {
+        name: "Electrical Machines – II",
+        semester: 4,
+        objective: "To impart knowledge on the construction, operating principles, performance characteristics, and control methods of synchronous machines and induction motors.",
+        units: {
+            1: { title: "Synchronous Generator", desc: "Construction, EMF equation, armature reaction, phasor diagrams (non-salient), synchronizing/parallel operation, voltage regulation (EMF, MMF, ZPF, ASA), two-reaction theory, capability curves." },
+            2: { title: "Synchronous Motor", desc: "Principle of operation, torque equation, infinite bus bars operation, V and inverted V curves, starting methods, hunting, synchronous condensers." },
+            3: { title: "Three-Phase Induction Motor", desc: "Construction, principle of operation, slip, cogging and crawling, equivalent circuits, torque-slip characteristics, circle diagrams, double cage motors, induction generators." },
+            4: { title: "Starting and Speed Control of Three-Phase Induction Motor", desc: "Starters (DOL, rotor resistance, autotransformer, star-delta). Speed control (voltage, frequency, pole changing, cascaded, V/f). Slip power recovery, braking methods." },
+            5: { title: "Single-Phase Induction Motors and Special Machines", desc: "Single-phase induction motor construction, double field revolving theory, equivalent circuit, starting methods (capacitor, shaded pole, repulsion). Servo, stepper motors, magnetic levitation." }
+        },
+        cos: {
+            CO1: "Analyze the performance characteristics of synchronous generators and compute voltage regulation.",
+            CO2: "Understand the operation and draw the performance curves of synchronous motors.",
+            CO3: "Evaluate the equivalent circuit parameters and performance of three-phase induction motors.",
+            CO4: "Analyze different starting, speed control, and braking methods for three-phase induction motors.",
+            CO5: "Understand the operation of single-phase induction motors and special electrical machines."
+        },
+        topics: {
+            presentation: [
+                "Voltage Regulation Methods of Alternator (ZPF vs MMF)",
+                "Parallel Operation of Synchronous Generators",
+                "V and Inverted V Curves of Synchronous Motor",
+                "Hunting in Synchronous Machines and Damper Windings",
+                "Torque-Slip Characteristics of 3-Phase Induction Motor",
+                "Cogging and Crawling in Induction Motors",
+                "Circle Diagram of Induction Motor",
+                "V/f Speed Control Technique",
+                "Double Field Revolving Theory in Single Phase Motors",
+                "Applications of Stepper and Servo Motors"
+            ],
+            miniproject: [
+                "Alternator Voltage Regulation Calculator",
+                "V-Curve Simulation for Synchronous Motor",
+                "Induction Motor Equivalent Circuit Solver",
+                "V/f Control Logic Simulator",
+                "Stepper Motor Sequence Visualizer"
+            ]
+        }
+    },
+
+    /* ══════════════════════════════════════════════════════════════════
+     *  SEMESTER  6  —  BATCH 2027  (R2021)
+     * ══════════════════════════════════════════════════════════════════ */
+
+    "EE3601": {
+        name: "Protection and Switchgear",
+        semester: 6,
+        objective: "To impart knowledge on various protective schemes, relay operating principles, power system faults, static/numerical relays, and circuit breaker functionalities.",
+        units: {
+            1: { title: "Protection Schemes", desc: "Significance of protective schemes, nature/causes of faults, zones of protection, essential qualities of protection, protection scheme types, power system grounding." },
+            2: { title: "Basics of Relays", desc: "Operating principles of relays, universal torque equation, R-X diagrams, electromagnetic relays (overcurrent, directional, distance, differential, negative sequence, under-frequency)." },
+            3: { title: "Overview of Equipment Protection", desc: "Current and potential transformers for protection. Protection of transformers, generators, motors, bus bars, and transmission lines." },
+            4: { title: "Static Relays and Numerical Protection", desc: "Static relays, phase and amplitude comparators, block diagram of numerical relays, application in overcurrent, transformer differential, and distance protection." },
+            5: { title: "Circuit Breakers", desc: "Arcing phenomena, arc interruption (DC and AC), re-striking/recovery voltage, current chopping, resistance switching. Circuit breakers (air blast, oil, SF6, vacuum), HVDC breakers." }
+        },
+        cos: {
+            CO1: "Analyze the causes of faults and the necessity of different protection schemes.",
+            CO2: "Understand the operating principles and characteristics of various electromagnetic relays.",
+            CO3: "Apply suitable protection schemes for different power system apparatus/equipment.",
+            CO4: "Evaluate the architecture and operation of static and numerical relays.",
+            CO5: "Understand the physics of arc interruption and select appropriate circuit breakers."
+        },
+        topics: {
+            presentation: [
+                "Zones of Protection and Primary/Backup Relaying",
+                "Methods of Power System Grounding",
+                "Universal Torque Equation of Relays",
+                "Distance Protection of Transmission Lines",
+                "Differential Protection associated with Transformers",
+                "Advantages of Numerical Relays over Electromagnetic Relays",
+                "Current Chopping Phenomenon in Circuit Breakers",
+                "SF6 Circuit Breaker Principle and Advantages",
+                "Vacuum Circuit Breaker Operation",
+                "HVDC Circuit Breaking Challenges"
+            ],
+            miniproject: [
+                "Relay Coordination Time Calculator",
+                "Fault Current Level Estimation Script",
+                "Transformer Differential Protection Simulator",
+                "Arc Interruption Voltage Graph Plotter",
+                "Circuit Breaker Selection Tool based on MVA Rating"
+            ]
+        }
+    },
+
+    "EE3602": {
+        name: "Power System Operation and Control",
+        semester: 6,
+        objective: "To impart knowledge on power-frequency interaction, reactive power-voltage interaction, generation scheduling, economic operation of power systems, and SCADA applications.",
+        units: {
+            1: { title: "Introduction to Power System Operation", desc: "Necessity of voltage/frequency regulation, load variation, load curves, load forecasting computational methods, load shedding, islanding, deregulation, energy tariffs." },
+            2: { title: "Real Power - Frequency Control", desc: "Real power vs frequency control loops, ALFC, speed governing systems, load frequency control of single and two-area systems, static/dynamic analysis, tie-line bias control." },
+            3: { title: "Reactive Power - Voltage Control", desc: "Reactive power vs voltage control loops, exciter types, AVR models, static/dynamic analysis of AVR, generation/absorption of reactive power, compensators (STATCOM)." },
+            4: { title: "Economic Operation of Power Systems", desc: "Generation scheduling, incremental cost curve, economic dispatch problem without/with losses, exact coordination equation, Unit Commitment problem methods." },
+            5: { title: "Computer Control of Power Systems", desc: "Energy control centers, PMU system monitoring, SCADA and EMS functions, state estimation, measurements/errors, WLS estimation, security analysis, state transition diagrams." }
+        },
+        cos: {
+            CO1: "Analyze load curves and understand the basics of load forecasting and power tariffs.",
+            CO2: "Model and analyze load frequency control (ALFC) in single and multi-area systems.",
+            CO3: "Model and analyze automatic voltage regulators (AVR) and voltage control methods.",
+            CO4: "Formulate and solve economic dispatch and unit commitment problems.",
+            CO5: "Understand SCADA, Energy Management Systems, and power system state estimation."
+        },
+        topics: {
+            presentation: [
+                "Load Curve Analysis and Load Factoring",
+                "Spinning Reserve and Load Shedding",
+                "Automatic Load Frequency Control (ALFC) Block Diagram",
+                "Tie-Line Bias Control in Interconnected Systems",
+                "Automatic Voltage Regulator (AVR) Dynamics",
+                "Methods of Reactive Power Compensation",
+                "Economic Dispatch vs Unit Commitment",
+                "Incremental Fuel Cost Optimization",
+                "SCADA Architecture in Power Systems",
+                "Phasor Measurement Units (PMU) in Grid Monitoring"
+            ],
+            miniproject: [
+                "Load Factor and Diversity Factor Calculator",
+                "Single Area ALFC Simulation Script",
+                "Economic Dispatch Lambda Iteration Solver",
+                "Unit Commitment Priority List Generator",
+                "Simple SCADA Dashboard UI Mockup"
+            ]
+        }
     }
 };
 
