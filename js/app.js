@@ -1836,6 +1836,21 @@ function renderAssessments(container) {
                     else if (batchYear == 2028) list = ["CE3401", "CE3402", "CE3403", "CE3404", "CE3405"].map(c => ({ code: c, name: (typeof CVE_SUBJECTS !== 'undefined' && CVE_SUBJECTS[c]) ? CVE_SUBJECTS[c].name : c }));
                     else if (batchYear == 2027) list = ["CE3601", "CE3602", "AG3601"].map(c => ({ code: c, name: (typeof CVE_SUBJECTS !== 'undefined' && CVE_SUBJECTS[c]) ? CVE_SUBJECTS[c].name : c }));
                 }
+                if (deptCode === 'ECE') {
+                    if (batchYear == 2029) list = ["MA25C02", "EE25C01", "EC25C01", "EC25C02", "CS25C05"].map(c => ({ code: c, name: (typeof ECE_SUBJECTS !== 'undefined' && ECE_SUBJECTS[c]) ? ECE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2028) list = ["EC3452", "EC3401", "EC3451", "EC3492", "EC3491"].map(c => ({ code: c, name: (typeof ECE_SUBJECTS !== 'undefined' && ECE_SUBJECTS[c]) ? ECE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2027) list = ["ET3491", "CS3491"].map(c => ({ code: c, name: (typeof ECE_SUBJECTS !== 'undefined' && ECE_SUBJECTS[c]) ? ECE_SUBJECTS[c].name : c }));
+                }
+                if (deptCode === 'EEE') {
+                    if (batchYear == 2029) list = ["MA25C03", "GE25C01", "PH25C04", "ME25C01", "CS25C04"].map(c => ({ code: c, name: (typeof EEE_SUBJECTS !== 'undefined' && EEE_SUBJECTS[c]) ? EEE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2028) list = ["EE3401", "EE3402", "EE3403", "EE3404", "EE3405"].map(c => ({ code: c, name: (typeof EEE_SUBJECTS !== 'undefined' && EEE_SUBJECTS[c]) ? EEE_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2027) list = ["EE3601", "EE3602"].map(c => ({ code: c, name: (typeof EEE_SUBJECTS !== 'undefined' && EEE_SUBJECTS[c]) ? EEE_SUBJECTS[c].name : c }));
+                }
+                if (deptCode === 'IMT') {
+                    if (batchYear == 2029) list = ["MA25C02", "PH25C03", "IT25201", "IT25202", "ME25C05"].map(c => ({ code: c, name: (typeof IMT_SUBJECTS !== 'undefined' && IMT_SUBJECTS[c]) ? IMT_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2028) list = ["CS3452", "CS3491", "CS3492", "IT3401", "CS3451"].map(c => ({ code: c, name: (typeof IMT_SUBJECTS !== 'undefined' && IMT_SUBJECTS[c]) ? IMT_SUBJECTS[c].name : c }));
+                    else if (batchYear == 2027) list = ["CCS356"].map(c => ({ code: c, name: (typeof IMT_SUBJECTS !== 'undefined' && IMT_SUBJECTS[c]) ? IMT_SUBJECTS[c].name : c }));
+                }
                 if (cfg.courseCode && !list.find(s => s.code === cfg.courseCode)) {
                     cfg.courseCode = '';
                     cfg.courseName = '';
