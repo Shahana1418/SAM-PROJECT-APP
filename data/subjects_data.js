@@ -55,15 +55,15 @@ const SUBJECTS_DATA = {
         ],
 
         "ECE": [
-            { code: "EC3301", name: "Signals and Systems" },
-            { code: "EC3302", name: "Electronic Circuits – I" },
-            { code: "EC3351", name: "Digital Electronics" },
-            { code: "EC3352", name: "Electronic Circuits – II" },
-            { code: "EC3401", name: "Electromagnetic Fields" },
-            { code: "EC3452", name: "Linear Integrated Circuits" },
-            { code: "EC3501", name: "Digital Signal Processing" },
-            { code: "EC3601", name: "VLSI Design" },
-            { code: "EC3811", name: "Internet of Things" }
+            /* Semester 4 subjects */
+            { code: "EC3452", name: "Electromagnetic Fields" },
+            { code: "EC3401", name: "Networks and Security" },
+            { code: "EC3451", name: "Linear Integrated Circuits" },
+            { code: "EC3492", name: "Digital Signal Processing" },
+            { code: "EC3491", name: "Communication Systems" },
+            /* Semester 6 subjects */
+            { code: "ET3491", name: "Embedded Systems and IoT Design" },
+            { code: "CS3491", name: "Artificial Intelligence and Machine Learning" }
         ],
 
         "EEE": [

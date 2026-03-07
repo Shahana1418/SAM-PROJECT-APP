@@ -213,6 +213,301 @@ const ECE_SUBJECTS = {
                 "File Compression using Huffman Coding"
             ]
         }
+    },
+
+    /* ══════════════════════════════════════════════════════════════════
+     *  SEMESTER  4  —  BATCH 2028  (R2021)
+     * ══════════════════════════════════════════════════════════════════ */
+
+    "EC3452": {
+        name: "Electromagnetic Fields",
+        semester: 4,
+        objective: "To impart knowledge on the basics of static electric and magnetic fields, their associated laws, and the propagation behavior of electromagnetic waves.",
+        units: {
+            1: { title: "Introduction / Electrostatics – I", desc: "Electromagnetic models, coordinate systems, Coulomb's Law, electric field intensity, Gauss's law and its applications." },
+            2: { title: "Electrostatics – II", desc: "Electric potential, conductors and dielectrics, electric flux density, boundary conditions, Poisson's and Laplace's equations." },
+            3: { title: "Magnetostatics", desc: "Lorentz force, Biot-Savart's Law, Ampere's Circuit Law, magnetic flux density, scalar and vector potential, magnetic force and torque." },
+            4: { title: "Time-Varying Fields and Maxwell's Equations", desc: "Faraday's law, displacement current, Maxwell-Ampere law, Maxwell's equations in differential and integral forms, wave equations." },
+            5: { title: "Electromagnetic Waves", desc: "Electromagnetic wave generation and equations, wave parameters, waves in free space, lossy and lossless dielectrics, Poynting vector, reflection and refraction." }
+        },
+        cos: {
+            CO1: "Understand the fundamentals of static electric and magnetic fields.",
+            CO2: "Analyze and apply Gauss's law, Poisson's and Laplace's equations in electrostatics.",
+            CO3: "Evaluate magnetic fields using Ampere's and Biot-Savart's laws.",
+            CO4: "Analyze time-varying fields using Maxwell's equations.",
+            CO5: "Understand the propagation of electromagnetic waves in various media."
+        },
+        topics: {
+            presentation: [
+                "Applications of Gauss's Law",
+                "Boundary Conditions in Dielectrics",
+                "Biot-Savart's Law and its Applications",
+                "Maxwell's Equations in Integral and Differential Form",
+                "Displacement Current and its Significance",
+                "Poynting Vector and Power Flow",
+                "Electromagnetic Waves in Free Space",
+                "Skin Effect and Skin Depth in Conductors",
+                "Wave Propagation in Lossy Dielectrics",
+                "Polarization of Electromagnetic Waves"
+            ],
+            miniproject: [
+                "Electric Field Mapper Simulation",
+                "Magnetic Field Plotter using Python",
+                "Maxwell's Equations Visualizer",
+                "Poynting Vector Calculation App",
+                "Electromagnetic Wave Propagation Animation"
+            ]
+        }
+    },
+
+    "EC3401": {
+        name: "Networks and Security",
+        semester: 4,
+        objective: "To learn network models, datalink layer functions, routing in the Network Layer, transport layer protocols, and Network Security Mechanisms.",
+        units: {
+            1: { title: "Network Models and Datalink Layer", desc: "OSI, TCP/IP models, addressing, error detection and correction, Ethernet (802.3), Wireless LAN, flow and error control protocols." },
+            2: { title: "Network Layer Protocols", desc: "IPv4 Addressing, Network Layer Protocols (IP, ICMP, Mobile IP), Unicast/Multicast Routing, IPv6 Addresses and Datagram Format." },
+            3: { title: "Transport and Application Layers", desc: "UDP and TCP, Congestion Control and Avoidance (DEC bit, RED), QoS, Client-Server Programming, DNS, WWW, HTTP, and Electronic Mail." },
+            4: { title: "Network Security", desc: "OSI Security Architecture, attacks, security services, encryption (AES), Public Key Cryptosystems (RSA), Hash Functions (SHA), Digital Signature Algorithm." },
+            5: { title: "Hardware Security", desc: "Hardware security, hardware Trojans, Side-Channel Attacks, Physical Attacks and Countermeasures, Design for Security, Blockchain Technology." }
+        },
+        cos: {
+            CO1: "Explain the basic layers and their functions in computer networks.",
+            CO2: "Understand and apply network layer routing protocols and IP addressing.",
+            CO3: "Analyze transport layer protocols and congestion control mechanisms.",
+            CO4: "Describe and apply cryptographic algorithms and network security protocols.",
+            CO5: "Identify hardware vulnerabilities and understand countermeasures."
+        },
+        topics: {
+            presentation: [
+                "TCP vs UDP Protocols",
+                "Distance Vector vs Link State Routing",
+                "IPv4 vs IPv6 Addressing",
+                "Advanced Encryption Standard (AES) Architecture",
+                "RSA Public Key Cryptography",
+                "Network Congestion Control Mechanisms",
+                "Hardware Trojans and Countermeasures",
+                "Blockchain Technology Fundamentals",
+                "Secure Hash Algorithm (SHA) Process",
+                "Error Detection using CRC"
+            ],
+            miniproject: [
+                "Simple Networking Chat Client-Server",
+                "RSA Encryption/Decryption Tool",
+                "Network Packet Sniffer using Python",
+                "Distance Vector Routing Simulation",
+                "CRC Generator and Verifier"
+            ]
+        }
+    },
+
+    "EC3451": {
+        name: "Linear Integrated Circuits",
+        semester: 4,
+        objective: "To introduce the basic building blocks of linear integrated circuits, the linear and non-linear applications of operational amplifiers, theory of analog multipliers, PLL, ADC, and DAC.",
+        units: {
+            1: { title: "Basics of Operational Amplifiers", desc: "Current mirrors, basic information about op-amps, Ideal Operational Amplifier, internal circuit of IC 741, DC/AC characteristics, slew rate, open/closed-loop configurations." },
+            2: { title: "Applications of Operational Amplifiers", desc: "Sign changers, scale changers, V-I converters, adders, subtractors, instrumentation amplifiers, integrators, differentiators, comparators, Schmitt triggers, precision rectifiers, active filters." },
+            3: { title: "Analog Multiplier and PLL", desc: "Analog multipliers, Gilbert Multiplier cell, variable transconductance techniques, basic PLL, closed-loop analysis, VCO, monolithic PLL IC 565, applications in AM/FM detection." },
+            4: { title: "Analog to Digital and Digital to Analog Converters", desc: "D/A converter specifications, weighted resistor, R-2R Ladder, high-speed S/H circuits. A/D Converters: Flash, Successive Approximation, Dual Slope, Sigma-Delta converters." },
+            5: { title: "Waveform Generators and Special Function ICs", desc: "IC voltage regulators (LM78XX, LM79XX, LM317), switching regulators (SMPS), function generator ICs (ICL 8038), special function ICs." }
+        },
+        cos: {
+            CO1: "Understand the basic characteristics and internal structure of operational amplifiers.",
+            CO2: "Design linear and non-linear circuits using operational amplifiers.",
+            CO3: "Understand the operating principles of analog multipliers and PLLs.",
+            CO4: "Analyze different types of ADCs and DACs.",
+            CO5: "Acquire knowledge on waveform generators and special function ICs."
+        },
+        topics: {
+            presentation: [
+                "Slew Rate and Frequency Response of Op-Amps",
+                "Instrumentation Amplifier and its Applications",
+                "Active Filters (Low Pass and High Pass) using Op-Amp",
+                "Schmitt Trigger Configuration and Hysteresis",
+                "Phase Locked Loop (PLL) Working Principle",
+                "Successive Approximation ADC vs Flash ADC",
+                "R-2R Ladder Digital to Analog Converter",
+                "Sigma-Delta Analog to Digital Converter",
+                "Switch Mode Power Supply (SMPS) Basics",
+                "Voltage Controlled Oscillator (VCO)"
+            ],
+            miniproject: [
+                "Op-Amp based Audio Mixer",
+                "Op-Amp Integrator and Differentiator Demonstration",
+                "PLL based Frequency Multiplier",
+                "Simple 4-bit R-2R DAC Implementation",
+                "Adjustable Voltage Regulator using LM317"
+            ]
+        }
+    },
+
+    "EC3492": {
+        name: "Digital Signal Processing",
+        semester: 4,
+        objective: "To learn discrete Fourier transform and its applications, characteristics and design of digital IIR and FIR filters, finite word length effects, and multirate signal processing.",
+        units: {
+            1: { title: "Discrete Fourier Transform", desc: "Sampling theorem, FT and DTFT, DFT derivation, properties of DFT, linear filtering using DFT, Radix-2 DIT and DIF FFT algorithms." },
+            2: { title: "Infinite Impulse Response Filters", desc: "Characteristics of analog filters (Butterworth, Chebyshev), design of IIR filters utilizing impulse invariance and bilinear transformation methodologies, IIR filter structures." },
+            3: { title: "Finite Impulse Response Filters", desc: "Design of symmetric and anti-symmetric FIR filters, design of linear phase FIR filters utilizing Fourier series and windowing techniques, frequency sampling method, FIR structures." },
+            4: { title: "Finite Word Length Effects", desc: "Fixed and floating-point representations, ADC quantization, truncation/rounding, quantization noise, coefficient quantization error, overflow error, limit cycle oscillations." },
+            5: { title: "DSP Applications", desc: "Multirate signal processing, decimation, interpolation, sampling rate conversion, adaptive filters, DSP architecture principles for fixed and floating-point systems." }
+        },
+        cos: {
+            CO1: "Compute the Discrete Fourier Transform and Fast Fourier Transform of discrete-time signals.",
+            CO2: "Design infinite impulse response (IIR) filters for given specifications.",
+            CO3: "Design finite impulse response (FIR) filters and realize filter structures.",
+            CO4: "Analyze the finite word length effects in digital filters.",
+            CO5: "Understand multirate signal processing and basic DSP architectures."
+        },
+        topics: {
+            presentation: [
+                "Radix-2 DIT vs DIF Fast Fourier Transform",
+                "Bilinear Transformation in IIR Filter Design",
+                "Comparison of Butterworth and Chebyshev Filters",
+                "Windowing Techniques in FIR Filter Design",
+                "Limit Cycle Oscillations in IIR Filters",
+                "Quantization Noise in Digital Systems",
+                "Decimation and Interpolation Techniques",
+                "Adaptive Filtering Concepts",
+                "Linear vs Circular Convolution using DFT",
+                "DSP Processor Architecture Overview"
+            ],
+            miniproject: [
+                "FFT Calculation Implementation",
+                "FIR Filter Design utilizing Windowing in Python",
+                "IIR Filter Design and Frequency Response Plotting",
+                "Audio Signal Noise Filtering Demo",
+                "Signal Decimation/Interpolation Simulator"
+            ]
+        }
+    },
+
+    "EC3491": {
+        name: "Communication Systems",
+        semester: 4,
+        objective: "To introduce analog modulation schemes, impart knowledge in random processes, and facilitate the study of various digital communication systems.",
+        units: {
+            1: { title: "Amplitude Modulation", desc: "Review of signals/systems, Amplitude Modulation Systems (DSB, SSB, VSB), Angle Modulation (FM, PM), Hilbert Transform, Superheterodyne Receiver." },
+            2: { title: "Random Process & Sampling", desc: "Probability, random processes, Gaussian and white noise, Pre-emphasis and De-emphasis, low-pass sampling, aliasing, quantization, PCM, TDM and FDM." },
+            3: { title: "Digital Techniques", desc: "Pulse modulation, differential pulse code modulation, delta modulation, digital multiplexers, channel coding theorems, Linear Block codes, Convolutional codes." },
+            4: { title: "Digital Modulation Scheme", desc: "Geometric representation of signals, Coherent BPSK, BFSK, QPSK, QAM, Carrier Synchronization, Non-coherent modulation schemes." },
+            5: { title: "Demodulation Techniques", desc: "Detection Theory, optimum detection of signals in noise, baseband pulse transmission, inter-symbol interference, optimum demodulation over band-limited channels." }
+        },
+        cos: {
+            CO1: "Analyze various analog continuous wave modulation and demodulation techniques.",
+            CO2: "Understand the mathematical fundamentals of random processes and noise.",
+            CO3: "Evaluate the performance of various pulse modulation and channel coding techniques.",
+            CO4: "Analyze different digital modulation schemes and their geometrical representations.",
+            CO5: "Design optimum receivers for digital communication in the presence of noise."
+        },
+        topics: {
+            presentation: [
+                "Superheterodyne Receiver Architecture",
+                "Frequency Modulation vs Amplitude Modulation",
+                "Nyquist Sampling Theorem and Aliasing",
+                "Pulse Code Modulation (PCM) Technique",
+                "Delta Modulation and Slope Overload Error",
+                "Quadrature Amplitude Modulation (QAM)",
+                "Error Detection with Hamming Codes",
+                "Viterbi Decoding Algorithm",
+                "Inter-Symbol Interference (ISI) and Equalization",
+                "Matched Filter Receiver Concept"
+            ],
+            miniproject: [
+                "AM Modulation and Demodulation Simulation",
+                "Sampling Theorem Visualizer",
+                "Simple PCM Encoder/Decoder Simulator",
+                "BPSK Constellation Diagram Plotter",
+                "Hamming Code Error Correction Tool"
+            ]
+        }
+    },
+
+    /* ══════════════════════════════════════════════════════════════════
+     *  SEMESTER  6  —  BATCH 2027  (R2021)
+     * ══════════════════════════════════════════════════════════════════ */
+
+    "ET3491": {
+        name: "Embedded Systems and IoT Design",
+        semester: 6,
+        objective: "To learn the architecture and features of the 8051 microcontroller, study the design process of an embedded system, understand RTOS concepts, and design IoT-based applications.",
+        units: {
+            1: { title: "8051 Microcontroller", desc: "Architecture, addressing modes, instruction set, program and data memory, stacks, interrupts, timers/counters, serial ports, and programming." },
+            2: { title: "Embedded System Design Principles", desc: "Design process of an embedded system, hardware/software co-design, computational models, processor and memory organization." },
+            3: { title: "RTOS and Embedded Software", desc: "Processes and operating systems, real-time operating systems (RTOS), task assignment, scheduling, inter-process communication." },
+            4: { title: "IoT System Architecture and Protocols", desc: "IoT enabling technologies, IoT reference architectures, standard IoT protocols (MQTT, CoAP, HTTP), sensor networks." },
+            5: { title: "IoT Design and Case Studies", desc: "Basic building blocks of an IoT device (Raspberry Pi), Linux on Raspberry Pi, programming with Python, case studies in home automation, smart cities, and agriculture." }
+        },
+        cos: {
+            CO1: "Explain the architecture and instruction set of the 8051 microcontroller.",
+            CO2: "Develop the conceptual model of an embedded system.",
+            CO3: "List and apply the concepts of real-time operating systems.",
+            CO4: "Understand the architecture and protocols utilized in IoT.",
+            CO5: "Design an IoT-based system for various real-world applications."
+        },
+        topics: {
+            presentation: [
+                "8051 Microcontroller Architecture",
+                "Hardware/Software Partitioning in Embedded Systems",
+                "Task Scheduling Algorithms in RTOS",
+                "Inter-Process Communication Mechanisms",
+                "MQTT Protocol for IoT",
+                "Raspberry Pi Architecture for IoT node",
+                "Edge Computing in IoT",
+                "Sensors and Actuators Interfacing",
+                "Smart Home Automation using IoT",
+                "IoT Security Challenges"
+            ],
+            miniproject: [
+                "Home Automation using Raspberry Pi",
+                "8051 Embedded Clock Simulation",
+                "MQTT Sensor Data Publisher",
+                "Smart Weather Station Dashboard",
+                "Automated Plant Watering System using IoT"
+            ]
+        }
+    },
+
+    "CS3491": {
+        name: "Artificial Intelligence and Machine Learning",
+        semester: 6,
+        objective: "To equip students with knowledge and practical skills in Artificial Intelligence and Machine Learning, covering problem-solving, probabilistic reasoning, supervised/unsupervised learning, and neural networks.",
+        units: {
+            1: { title: "Problem Solving", desc: "AI applications, problem-solving agents. Uninformed and heuristic search algorithms, local search, optimization problems, adversarial search, constraint satisfaction problems (CSPs)." },
+            2: { title: "Probabilistic Reasoning", desc: "Acting under uncertainty, Bayesian inference, naive Bayes models. Probabilistic reasoning using Bayesian networks, exact/approximate inference, causal networks." },
+            3: { title: "Supervised Learning", desc: "Introduction to ML, linear regression models, gradient descent. Linear classification models: logistic regression, SVM, maximum margin classifier, Decision Trees, Random Forests." },
+            4: { title: "Ensemble Techniques and Unsupervised Learning", desc: "Combining multiple learners, voting, bagging, boosting, stacking. Unsupervised learning: K-means, KNN, Gaussian mixture models, Expectation Maximization." },
+            5: { title: "Neural Networks", desc: "Perceptrons, multilayer perceptrons, activation functions, gradient descent optimization, backpropagation, vanishing gradient, ReLU, hyperparameter tuning, batch normalization, dropout." }
+        },
+        cos: {
+            CO1: "Implement various search algorithms for artificial intelligence problem solving.",
+            CO2: "Apply probabilistic reasoning and Bayesian networks for decision making under uncertainty.",
+            CO3: "Develop supervised learning models such as regression, SVM, and decision trees.",
+            CO4: "Utilize ensemble learning and unsupervised learning techniques like clustering.",
+            CO5: "Design and train deep neural networks utilizing modern backpropagation techniques."
+        },
+        topics: {
+            presentation: [
+                "A* Search Algorithm and Heuristics",
+                "Constraint Satisfaction Problems",
+                "Bayesian Networks and Exact Inference",
+                "Support Vector Machines (SVM) Margin concept",
+                "Decision Trees vs Random Forests",
+                "K-Means Clustering Iteration Process",
+                "Ensemble Methods: Bagging vs Boosting",
+                "Backpropagation Algorithm Mathematics",
+                "Vanishing Gradient Problem and ReLU",
+                "Dropout and Regularization in Neural Networks"
+            ],
+            miniproject: [
+                "Pathfinding Visualizer (A* and BFS)",
+                "Spam Classifier utilizing Naive Bayes",
+                "House Price Prediction via Linear Regression",
+                "Customer Segmentation using K-Means",
+                "Handwritten Digit Recognition with Neural Network"
+            ]
+        }
     }
 };
 
