@@ -1059,6 +1059,7 @@ function buildRandomReviewerMap(N) {
 function renderSessions(container) {
     const teams = navState.teams;
     if (!teams || teams.length === 0) { navigateBackToTeams(); return; }
+    const deptCode = navState.dept, batchYear = navState.batch, N = teams.length;
     const cal = navState.calendarConfig || null;
     const todayStr = new Date().toISOString().slice(0, 10);
     const genAssign = (navState.assignConfig && navState.assignConfig.generatedAssignments) ? navState.assignConfig.generatedAssignments : null;
