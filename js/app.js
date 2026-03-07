@@ -1002,44 +1002,35 @@ function addMins(h, m, mins) {
 }
 
 function generateSessionCalendar(teams, config) {
-    const { startDate, endDate, sessionsPerDay, activeDays, revealMode, reviewerMap, boostDays } = config;
+    const { startDate, sessionsPerDay, revealMode, reviewerMap, startIdx, sessCount } = config;
     const N = teams.length;
-    const reviewers = reviewerMap ? reviewerMap.reviewers : teams.map((_, i) => (i + 1) % N);
-    const feedbacks = reviewerMap ? reviewerMap.feedbacks : teams.map((_, i) => (i + 2) % N);
-    const slots = DAY_SLOTS[sessionsPerDay] || DAY_SLOTS['p12_p34'];
-    const sessions = [], todayStr = new Date().toISOString().slice(0, 10);
-    let idx = 0, dayCount = 0;
-    const cur = new Date(startDate + 'T00:00:00'), endD = new Date(endDate + 'T00:00:00');
-    while (cur <= endD && idx < N) {
-        const dow = cur.getDay();
-        if (activeDays.includes(dow)) {
-            dayCount++;
-            const dateStr = cur.toISOString().slice(0, 10);
-            const isPast = dateStr < todayStr, isToday = dateStr === todayStr;
-            // On boost days, morning periods get 3 sessions instead of 2
-            const isBoosted = boostDays && boostDays.includes(dayCount);
-            for (let s = 0; s < slots.length && idx < N; s++) {
-                const pk = slots[s], pt = PERIOD_TYPES[pk];
-                const isMorning = (pk === 'morning1' || pk === 'morning2');
-                const sc = (isBoosted && isMorning) ? 3 : (pt.sessCount || 1);
-                const gap = 5;
-                for (let si = 0; si < sc && idx < N; si++) {
-                    const offsetMins = si * (pt.sessDur + gap);
-                    const sH = pt.startH, sM = pt.startM + offsetMins;
-                    sessions.push({
-                        sessNum: idx + 1, date: new Date(cur), dateStr,
-                        dayName: DAY_NAMES_SHORT[dow], dayFull: DAY_NAMES_FULL[dow],
-                        periodKey: pk, subIndex: si,
-                        startTime: addMins(sH, sM, 0),
-                        endTime: addMins(sH, sM, pt.sessDur),
-                        presenterIdx: idx, reviewerIdx: reviewers[idx], feedbackIdx: feedbacks[idx],
-                        revealed: revealMode === 'all' || isPast || isToday,
-                    });
-                    idx++;
-                }
-            }
-        }
-        cur.setDate(cur.getDate() + 1);
+    const reviewers = reviewerMap.reviewers;
+    const feedbacks = reviewerMap.feedbacks;
+    const pk = DAY_SLOTS[sessionsPerDay][0]; // we only have 1 period per selection now
+    const pt = PERIOD_TYPES[pk];
+    const sessions = [];
+
+    const cur = new Date(startDate + 'T00:00:00');
+    const dow = cur.getDay();
+    const dateStr = cur.toISOString().slice(0, 10);
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const isPast = dateStr < todayStr, isToday = dateStr === todayStr;
+    const gap = 5;
+
+    let idx = startIdx;
+    for (let si = 0; si < sessCount; si++) {
+        const offsetMins = si * (pt.sessDur + gap);
+        const sH = pt.startH, sM = pt.startM + offsetMins;
+        sessions.push({
+            sessNum: idx + 1, date: cur, dateStr,
+            dayName: DAY_NAMES_SHORT[dow], dayFull: DAY_NAMES_FULL[dow],
+            periodKey: pk, subIndex: si,
+            startTime: addMins(sH, sM, 0),
+            endTime: addMins(sH, sM, pt.sessDur),
+            presenterIdx: idx, reviewerIdx: reviewers[idx], feedbackIdx: feedbacks[idx],
+            revealed: revealMode === 'all' || isPast || isToday,
+        });
+        idx = (idx + 1) % N; // wrap around just in case
     }
     return sessions;
 }
@@ -1059,43 +1050,41 @@ function renderSessions(container) {
     const cal = navState.calendarConfig || null;
     const todayStr = new Date().toISOString().slice(0, 10);
     const genAssign = (navState.assignConfig && navState.assignConfig.generatedAssignments) ? navState.assignConfig.generatedAssignments : null;
-    const defEnd = new Date(); defEnd.setMonth(defEnd.getMonth() + 3);
-    const defEndStr = defEnd.toISOString().slice(0, 10);
-    const savedSpd = cal ? (cal.sessionsPerDay || 'p12_p34') : 'p12_p34';
-
-    // Auto-compute end date: Friday of the same week as start
-    function getFridayOfWeek(dateStr) {
-        const d = new Date(dateStr + 'T00:00:00');
-        const dow = d.getDay();
-        const daysToFri = (dow === 0) ? 5 : (dow === 6) ? 6 : (5 - dow);
-        d.setDate(d.getDate() + daysToFri);
-        return d.toISOString().slice(0, 10);
-    }
-    const autoEndStr = cal ? cal.endDate : getFridayOfWeek(todayStr);
+    const dateStr = cal ? cal.startDate : todayStr;
+    const savedSpd = cal ? (cal.sessionsPerDay || 'p12') : 'p12';
+    const savedStartIdx = cal ? (cal.startIdx || 0) : 0;
+    const autoSessCount = Math.min(N, 3); // Default to 3 sessions per day, or N if N < 3
+    const savedSessCount = cal ? (cal.sessCount || autoSessCount) : autoSessCount;
 
     /* ===== Config Panel ===== */
     const configPanel = `<div class="cal-config-panel">
-        <div class="cal-config-title">⚙️ Schedule Configuration</div>
+        <div class="cal-config-title">⚙️ Single-Day Schedule Allocation</div>
         <div class="cal-config-grid">
-            <div class="cal-field"><label>Start Date</label>
-                <input type="date" id="calStartDate" value="${cal ? cal.startDate : todayStr}"></div>
-            <div class="cal-field"><label>End Date (auto: Friday)</label>
-                <input type="date" id="calEndDate" value="${autoEndStr}" readonly style="opacity:.7;"></div>
+            <div class="cal-field"><label>Session Date</label>
+                <input type="date" id="calStartDate" value="${dateStr}"></div>
             <div class="cal-field"><label>Session Period</label>
                 <select id="calSessPerDay">
-                    <option value="p12" ${savedSpd === 'p12' ? 'selected' : ''}>Morning P1-2 only</option>
-                    <option value="p34" ${savedSpd === 'p34' ? 'selected' : ''}>Morning P3-4 only</option>
-                    <option value="p56" ${savedSpd === 'p56' ? 'selected' : ''}>Afternoon P5-6 only</option>
-                    <option value="p78" ${savedSpd === 'p78' ? 'selected' : ''}>Afternoon P7-8 only</option>
+                    <option value="p12" ${savedSpd === 'p12' ? 'selected' : ''}>Morning P1-2 (9:00 - 10:40)</option>
+                    <option value="p34" ${savedSpd === 'p34' ? 'selected' : ''}>Morning P3-4 (11:00 - 12:30)</option>
+                    <option value="p56" ${savedSpd === 'p56' ? 'selected' : ''}>Afternoon P5-6 (1:45 - 3:15)</option>
+                    <option value="p78" ${savedSpd === 'p78' ? 'selected' : ''}>Afternoon P7-8 (3:30 - 5:00)</option>
                 </select></div>
+            <div class="cal-field"><label>Start from Team</label>
+                <select id="calStartTeam">
+                    ${Array.from({ length: N }, (_, i) => `<option value="${i}" ${savedStartIdx === i ? 'selected' : ''}>Team ${i + 1}</option>`).join('')}
+                </select></div>
+            <div class="cal-field"><label>Number of Sessions</label>
+                <input type="number" id="calSessCount" value="${savedSessCount}" min="1" max="${N}"></div>
+        </div>
+        <div class="cal-config-grid" style="grid-template-columns: 1fr; margin-top: 10px;">
             <div class="cal-field"><label>Role Visibility</label>
                 <select id="calRevealMode">
                     <option value="presenter" ${!cal || cal.revealMode === 'presenter' ? 'selected' : ''}>Reviewer &amp; Feedback hidden until session day</option>
                     <option value="all" ${cal && cal.revealMode === 'all' ? 'selected' : ''}>Show all roles immediately</option>
                 </select></div>
         </div>
-        <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;">
-            <strong style="color:var(--text-secondary);">Schedule:</strong> Mon – Fri only (1 week) · Sat &amp; Sun are leave days · If needed, morning P1-2 gets a 3rd session to fit all teams
+        <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;margin-top:10px;">
+            <strong style="color:var(--accent-blue);">Tip:</strong> To schedule all ${N} teams, select a date and period, then generate. For the next day, pick the next starting team and a different period if needed.
         </div>
         <div class="cal-actions">
             <button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="applyCalendarConfig()">📅 Generate Schedule</button>
@@ -1109,8 +1098,8 @@ function renderSessions(container) {
 
     if (cal && cal.sessions && cal.sessions.length > 0) {
         const sessions = cal.sessions;
-        const spd = cal.sessionsPerDay || 2;
-        const slotKeys = DAY_SLOTS[spd] || DAY_SLOTS['p12_p34'];
+        const spd = cal.sessionsPerDay || 'p12'; // Changed default from 2 to 'p12'
+        const slotKeys = DAY_SLOTS[spd] || DAY_SLOTS['p12']; // Changed default from 'p12_p34' to 'p12'
 
         // Group by day
         const byDay = {};
@@ -1272,49 +1261,25 @@ function renderSessions(container) {
 
 function applyCalendarConfig() {
     const startDate = document.getElementById('calStartDate')?.value;
-    const spd = document.getElementById('calSessPerDay')?.value || 'p12_p34';
+    const spd = document.getElementById('calSessPerDay')?.value || 'p12';
+    const startIdx = parseInt(document.getElementById('calStartTeam')?.value || '0');
+    const sessCount = parseInt(document.getElementById('calSessCount')?.value || '3');
     const revealMode = document.getElementById('calRevealMode')?.value || 'presenter';
     if (!startDate) {
-        showToast('⚠️ Please set a valid start date.', 'error');
+        showToast('⚠️ Please set a valid date.', 'error');
         return;
     }
-    // Auto-compute end date: Friday of the same week
-    const sd = new Date(startDate + 'T00:00:00');
-    const dow = sd.getDay();
-    const daysToFri = (dow === 0) ? 5 : (dow === 6) ? 6 : (5 - dow);
-    const ed = new Date(sd);
-    ed.setDate(ed.getDate() + daysToFri);
-    const endDate = ed.toISOString().slice(0, 10);
-
     const teams = navState.teams;
     const N = teams.length;
     const reviewerMap = (navState.calendarConfig && navState.calendarConfig.reviewerMap)
         ? navState.calendarConfig.reviewerMap
         : buildRandomReviewerMap(N);
 
-    // Calculate if we need boost days (each morning block gets 3 sessions instead of 2)
-    const slots = DAY_SLOTS[spd] || DAY_SLOTS['p12_p34'];
-    const baseSessPerDay = slots.reduce((sum, pk) => sum + (PERIOD_TYPES[pk] ? PERIOD_TYPES[pk].sessCount : 1), 0);
-    const morningCount = slots.filter(pk => pk === 'morning1' || pk === 'morning2').length;
-    const baseTotal = baseSessPerDay * 5; // 5 working days in 1 week
-    let boostDays = [];
-    if (N > baseTotal && morningCount > 0) {
-        // Each boost day adds morningCount extra sessions (1 extra per morning block)
-        const extraPerBoost = morningCount;
-        const needed = N - baseTotal;
-        const numBoost = Math.min(Math.ceil(needed / extraPerBoost), 5);
-        for (let i = 1; i <= numBoost; i++) boostDays.push(i);
-    }
-
-    const config = { startDate, endDate, sessionsPerDay: spd, activeDays: [1, 2, 3, 4, 5], revealMode, reviewerMap, boostDays };
+    const config = { startDate, endDate: startDate, sessionsPerDay: spd, startIdx, sessCount, activeDays: [0, 1, 2, 3, 4, 5, 6], revealMode, reviewerMap };
     config.sessions = generateSessionCalendar(teams, config);
     navState.calendarConfig = config;
 
-    if (config.sessions.length < N) {
-        showToast(`⚠️ Only ${config.sessions.length}/${N} sessions fit in the week. Try adding afternoon periods.`, 'warning');
-    } else if (boostDays.length > 0) {
-        showToast(`ℹ️ ${boostDays.length} day(s) will have 3 morning sessions to fit all ${N} teams in one week.`, 'info');
-    }
+    showToast(`✅ Allocated ${sessCount} sessions for ${new Date(startDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} starting at Team ${startIdx + 1}.`, 'success');
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
