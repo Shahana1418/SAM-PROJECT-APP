@@ -1036,33 +1036,29 @@ function renderSessions(container) {
 
     /* ===== Config Panel ===== */
     const isWeekFull = completedDaysCount >= 5 || remainingTeams === 0;
-    const configPanel = `<div class="cal-config-panel">
-        <div class="cal-config-title">⚙️ Daily Schedule Allocator</div>
-        <div class="cal-config-grid">
-            <div class="cal-field"><label>Select Date</label>
-                <input type="date" id="calStartDate" value="${todayStr}" ${isWeekFull ? 'disabled' : ''}></div>
-            <div class="cal-field"><label>Select Period</label>
-                <select id="calSessPerDay" ${isWeekFull ? 'disabled' : ''}>
-                    <option value="p12">Morning P1-2 (9:00 - 10:40)</option>
-                    <option value="p34">Morning P3-4 (11:00 - 12:30)</option>
-                    <option value="p56">Afternoon P5-6 (1:45 - 3:15)</option>
-                    <option value="p78">Afternoon P7-8 (3:30 - 5:00)</option>
-            <div class="cal-field"><label>Select Period</label>
-                <select id="calSessPerDay" ${isWeekFull ? 'disabled' : ''}>
+    const configPanel = `<div class="rt-section" style="margin-bottom:1.5rem;">
+        <div class="rt-section-header">
+            <div class="rt-section-title">⚙️ Daily Schedule Allocator</div>
+        </div>
+        <div class="cal-config-grid" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+            <div class="cal-field" style="flex:1; min-width:200px;"><label style="display:block; font-size:.8rem; color:var(--text-muted); margin-bottom:5px; font-weight:600; text-transform:uppercase;">Select Date</label>
+                <input type="date" id="calStartDate" value="${todayStr}" ${isWeekFull ? 'disabled' : ''} style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit;"></div>
+            <div class="cal-field" style="flex:1; min-width:200px;"><label style="display:block; font-size:.8rem; color:var(--text-muted); margin-bottom:5px; font-weight:600; text-transform:uppercase;">Select Period</label>
+                <select id="calSessPerDay" ${isWeekFull ? 'disabled' : ''} style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; background: white;">
                     <option value="p12">Morning P1-2 (9:00 - 10:40)</option>
                     <option value="p34">Morning P3-4 (11:00 - 12:30)</option>
                     <option value="p56">Afternoon P5-6 (1:45 - 3:15)</option>
                     <option value="p78">Afternoon P7-8 (3:30 - 5:00)</option>
                 </select></div>
         </div>
-        <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;margin-top:10px;">
+        <div style="font-size:.8rem;color:var(--text-secondary);margin-bottom:15px; background: rgba(59, 130, 246, 0.05); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--accent-blue);">
             <strong style="color:var(--accent-blue);">Rule:</strong> Max 3 sessions per day. Finish all teams within 5 days!
         </div>
-        <div class="cal-actions">
+        <div class="cal-actions" style="display:flex; gap: 10px;">
             ${isWeekFull
-            ? `<span style="color:#059669;font-weight:700;">✅ Schedule Allocation Complete!</span>
-                   <button class="btn-primary" style="background:#ef4444;width:auto;padding:8px 16px;font-size:.8rem;" onclick="resetSchedule()">Reset Schedule</button>`
-            : `<button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="allocateSingleDay()">➕ Allocate Day</button>`}
+            ? `<span style="color:#059669;font-weight:700;display:flex;align-items:center;">✅ Schedule Allocation Complete!</span>
+                   <button class="btn-primary" style="background:#ef4444;width:auto;padding:8px 16px;font-size:.8rem;margin-left:auto;" onclick="resetSchedule()">Reset Schedule</button>`
+            : `<button class="btn-primary" style="width:auto;padding:10px 24px;" onclick="allocateSingleDay()">➕ Allocate Day</button>`}
             ${cal.reviewerMap ? '<button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--gradient-orange);" onclick="randomiseCalendarRoles()">🔀 Randomise Roles</button>' : ''}
         </div>
     </div>`;
@@ -1109,24 +1105,24 @@ function renderSessions(container) {
             }).join('');
 
             const dayActionArea = isCompleted
-                ? `<div style="margin-top: 12px; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
-                     <div style="color: #059669; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
+                ? `<div style="margin-top: 15px; padding: 12px; background: rgba(5, 150, 105, 0.05); border-radius: 8px; border: 1px solid rgba(5, 150, 105, 0.2);">
+                     <div style="color: #059669; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap:8px;">
                         <span>✅ Marked as Attended & Completed</span>
-                        <span style="font-size: 0.75rem; background: #059669; color: white; padding: 2px 6px; border-radius: 10px;">${dayObj.sessions.length} sessions</span>
+                        <span style="font-size: 0.75rem; background: #059669; color: white; padding: 2px 8px; border-radius: 12px; margin-left: auto;">${dayObj.sessions.length} sessions</span>
                      </div>
-                     <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 4px;">Teams presented: <strong>${presentingTeamsList.join(', ')}</strong></div>
+                     <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 6px;">Teams presented: <strong>${presentingTeamsList.join(', ')}</strong></div>
                    </div>`
                 : `<button class="btn-primary" style="margin-top: 15px; width: auto; padding: 8px 16px; font-size:.8rem; background: #0ea5e9;" onclick="markDayCompleted('${dayObj.dateStr}')">🚀 Submit (Mark Completed)</button>
                    <button class="btn-secondary" style="margin-top: 15px; width: auto; padding: 8px 16px; font-size:.8rem; margin-left: 8px;" onclick="cancelDayAllocation('${dayObj.dateStr}')">❌ Cancel</button>`;
 
-            return `<div class="dm-card ${isCompleted ? 'dm-past' : 'dm-today'}">
-                <div class="dm-header">
+            return `<div class="rt-section" style="margin-bottom: 1rem; border: 1px solid ${isCompleted ? 'rgba(5,150,105,0.3)' : 'var(--border-light)'}; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                <div class="dm-header" style="border-bottom: 1px solid var(--border-light); padding-bottom: 10px; margin-bottom: 10px;">
                     <div><span class="dm-dayname">${DAY_NAMES_FULL[fsDate.getDay()]}</span> <span class="dm-date">${dl}</span> 
                     <span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:6px;background:${pt.color}15;color:${pt.color};margin-left:6px;">${pLabel}</span>
                     </div>
                     ${isCompleted ? '<span class="dm-badge dm-badge-past" style="background:#059669;color:white;">Completed</span>' : '<span class="dm-badge dm-badge-today">Active</span>'}
                 </div>
-                <div class="dm-body">${sList}</div>
+                <div style="padding: 10px 0;">${sList}</div>
                 ${dayActionArea}
             </div>`;
         }).join('');
