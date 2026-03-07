@@ -31,36 +31,6 @@ const ATE_SUBJECTS = {
             "CO3": "Evaluate the properties of fuels and lubricants.",
             "CO4": "Select suitable fuel and lubricant testing equipment.",
             "CO5": "Analyse the behaviour of fuels and lubricants."
-        },
-        "topics": {
-            "presentation": [
-                "Petroleum Refinery Processes: Distillation, Cracking & Reforming",
-                "Properties of Petrol and Diesel: A Comparative Analysis",
-                "Alternative Fuels in Automotive Industry (CNG, LPG, Hydrogen)",
-                "Mechanisms of Lubrication: Hydrodynamic and EHD Lubrication",
-                "Stribeck Curve and Engine Friction Analysis",
-                "Types of Engine Oils and SAE/API Classification",
-                "Lubricant Additives and Their Functions",
-                "Octane Number and Knock in SI Engines",
-                "Cetane Number and Ignition Delay in CI Engines",
-                "Flash Point, Fire Point and Volatility of Fuels",
-                "Calorific Value Measurement Using Bomb Calorimeter",
-                "Fuel Testing Instruments: CFR Engine and Viscometer"
-            ],
-            "miniproject": [
-                "Comparative Analysis of Octane Ratings Using CFR Engine Data",
-                "Biodiesel Blend Preparation and Calorific Value Measurement",
-                "Flash Point Determination of Different Fuels (Lab Demo)",
-                "Viscosity Measurement of Engine Oils at Different Temperatures",
-                "Study of Grease vs. Oil Lubrication for Automotive Bearings",
-                "Simulation of Petrol vs. Diesel Engine Efficiency",
-                "Alternative Fuel Cost and Efficiency Comparison Chart",
-                "Lubricant Degradation Study Under Simulated Engine Conditions",
-                "Bomb Calorimeter Experiment: Fuel Calorific Value Testing",
-                "Cloud and Pour Point Testing of Diesel Samples",
-                "Stribeck Curve Plotting for Different Lubricant Grades",
-                "Fuel Adulteration Detection Using Simple Test Methods"
-            ]
         }
     },
     "AU3402": {
@@ -95,36 +65,6 @@ const ATE_SUBJECTS = {
             "CO3": "Acquire knowledge about different types of front axle and rear axles used in motor vehicles.",
             "CO4": "Examine the working principle of conventional and independent suspension systems.",
             "CO5": "Apply knowledge on working principles of brake and its subsystems."
-        },
-        "topics": {
-            "presentation": [
-                "Types of Automotive Chassis Frames: Ladder, Monocoque and Backbone",
-                "Steering Geometry: Camber, Caster, Toe-in and KPI Explained",
-                "Power Steering Systems: Hydraulic vs. Electric Power Steering",
-                "Universal Joints and Propeller Shaft: Working and Types",
-                "Differential and Limited Slip Differential: Principle and Function",
-                "Radial vs. Bias Ply Tyres: Construction and Performance Comparison",
-                "Independent Suspension Systems: MacPherson Strut and Double Wishbone",
-                "Leaf Spring and Coil Spring Suspension: Design and Application",
-                "Drum Brakes vs. Disc Brakes: Construction and Performance",
-                "Anti-lock Braking System (ABS) and Electronic Brakeforce Distribution (EBD)",
-                "Air Suspension Systems in Commercial and Luxury Vehicles",
-                "Tyre Rotation, Wheel Alignment and Balancing Procedures"
-            ],
-            "miniproject": [
-                "Steering Geometry Simulation Using CAD/GeoGebra",
-                "Scale Model of MacPherson Strut Suspension",
-                "Differential Assembly Study Using Toy/Scale Model",
-                "Tyre Pressure vs. Fuel Economy: Data Analysis Study",
-                "Hydraulic Brake Actuation Demonstration Setup",
-                "Wheel Alignment Measurement Using String Method (Practical)",
-                "Comparison of Braking Distance: ABS vs. Non-ABS (Simulation)",
-                "Leaf Spring Deflection Experiment Under Loading",
-                "DIY Rack and Pinion Steering Mechanism Model",
-                "Universal Joint Angle vs. Speed Fluctuation Study",
-                "Axle Load Distribution Analysis for a Given Vehicle",
-                "Suspension Geometry Analysis Using Free-Body Diagrams"
-            ]
         }
     },
     "AU3403": {
@@ -159,36 +99,6 @@ const ATE_SUBJECTS = {
             "CO3": "Describe the role of various aerodynamic forces and moments, measuring instruments in vehicle body design.",
             "CO4": "Identify the materials used in body building.",
             "CO5": "Select hand tools for body repairs and maintenance."
-        },
-        "topics": {
-            "presentation": [
-                "Integral vs. Non-Integral Body Construction in Modern Vehicles",
-                "Car Body Panels: Functions, Types and Manufacturing Processes",
-                "AIS Standards and Bus Body Construction Requirements",
-                "Bus Seating Layouts and Emergency Exit Regulations",
-                "Commercial Vehicle Body Types: Tipper, Tanker and Container",
-                "Aerodynamic Drag and Its Effect on Fuel Efficiency",
-                "Aerodynamic Aids: Air Dam, Spoiler, Diffuser and Side Skirts",
-                "Wind Tunnel Testing Methods for Vehicle Aerodynamics",
-                "Advanced Body Materials: HSLA Steel, Aluminium and CFRP",
-                "Vehicle Trim Components: Hinges, Latches and Glass Seals",
-                "Dent Repair and Panel Beating Techniques",
-                "Vehicle Painting Process: Primer, Base Coat and Clear Coat"
-            ],
-            "miniproject": [
-                "Clay Model of a Car Body with Aerodynamic Analysis",
-                "Fabrication of a Simple Bus Body Frame Scale Model",
-                "Wind Tunnel Experiment: Comparing Aerodynamic Shapes",
-                "Drag Coefficient Calculation for Different Vehicle Models",
-                "Study of CFRP vs. Steel in Light Vehicles: Weight Comparison",
-                "Vehicle Body Colour and Heat Absorption Study",
-                "Dent Removal Demo Using Heat Gun and Suction Cup",
-                "Spoiler Effect on Rear Down-Force: Simple Experiment",
-                "Door Hinge Mechanism and Anti-Intrusion Bar Design Study",
-                "Emergency Exit Mechanism Prototype for Bus",
-                "Tipper Truck Hydraulic Body Lifting Mechanism Model",
-                "Paint Thickness Measurement on Different Body Panels"
-            ]
         }
     },
     "AU3404": {
@@ -223,36 +133,6 @@ const ATE_SUBJECTS = {
             "CO3": "Describe the types and principle of hydrodynamic transmission.",
             "CO4": "Compare Hydrostatic and hydrodynamics drives.",
             "CO5": "Identify the differences among various automatic transmissions."
-        },
-        "topics": {
-            "presentation": [
-                "Types of Clutches: Single Plate, Multi-Plate and Diaphragm Spring Clutch",
-                "Sliding Mesh vs. Synchromesh Gearboxes: A Comparative Study",
-                "Planetary Gearbox: Principle, Gear Ratios and Applications",
-                "Four-Wheel Drive (4WD) and Transfer Case: Working and Types",
-                "Torque Converter: Principle, Components and Performance",
-                "Hydrodynamic vs. Mechanical Clutch: Differences and Applications",
-                "Continuously Variable Transmission (CVT): Working and Advantages",
-                "Dual Clutch Transmission (DCT): Fast Shifting Mechanism Explained",
-                "Automatic Transmission Controls: Torque Converter + Planetary Gearset",
-                "Electric Motor and Battery Management in EV Drivetrains",
-                "Regenerative Braking: Energy Recovery in Hybrid and EV Systems",
-                "Sustainability in Transmission: Lightweight Materials and Eco Lubricants"
-            ],
-            "miniproject": [
-                "Gear Ratio Calculation and Speed Chart for a 5-Speed Gearbox",
-                "Clutch Slippage vs. Wear Analysis (Simulation Study)",
-                "Torque Converter Performance Curve Plotting",
-                "Scale Model of Planetary Gearbox with Multiple Gear Ratios",
-                "CVT Belt and Pulley Demonstration Model",
-                "Energy Recovery Efficiency Study: Regenerative Braking",
-                "Hydrodynamic Coupling Fluid Velocity Analysis",
-                "Automatic Transmission Control Logic Flowchart Design",
-                "DCT Gear-Change Time Comparison vs. Manual Transmission",
-                "Battery State-of-Charge vs. Range Calculator (EV Project)",
-                "Lightweight Gearbox Material Comparison: Steel vs. Aluminium",
-                "Manual to Automatic Transmission Retrofit: Feasibility Study"
-            ]
         }
     },
     "ML3391": {
@@ -287,36 +167,6 @@ const ATE_SUBJECTS = {
             "CO3": "Solve problems based on the torsion principles involved in shafts and springs for various engineering applications.",
             "CO4": "Interpret the results of the deflection of beams.",
             "CO5": "Analyze the thin and thick shells and principal stresses in beam for various engineering applications."
-        },
-        "topics": {
-            "presentation": [
-                "Stress-Strain Relationship and Hooke's Law: Theory and Applications",
-                "Elastic Constants: Young's Modulus, Poisson's Ratio and Bulk Modulus",
-                "Compound Bars and Thermal Stresses in Composite Members",
-                "Shear Force and Bending Moment Diagram Construction",
-                "Theory of Simple Bending and Flexural Formula Derivation",
-                "Shear Stress Distribution in Rectangular and I-Sections",
-                "Torsion of Solid and Hollow Circular Shafts",
-                "Power Transmission in Shafts: Design for Torque and Angle of Twist",
-                "Deflection of Beams: Macaulay's Method with Examples",
-                "Moment Area and Conjugate Beam Methods for Deflection",
-                "Thin Cylinders: Hoop Stress and Longitudinal Stress Analysis",
-                "Principal Planes and Principal Stresses: Mohr's Circle Method"
-            ],
-            "miniproject": [
-                "Beam Deflection Measurement Setup Using Simple Loading Jig",
-                "Stress-Strain Curve Plotting for Steel Specimen (Tensile Test Data)",
-                "Compound Bar Thermal Stress Analysis Using FEM Simulation",
-                "Shear Force and BM Diagram for Complex Loading (MATLAB/Python)",
-                "Torsion Testing of Mild Steel Rod: Twist Angle vs. Torque Plot",
-                "Spring Stiffness Determination Using UTM Test Data",
-                "Mohr's Circle Plotting Program for Given Stress State",
-                "Beam Bending Simulation Using Abaqus/SolidWorks FEA",
-                "Thin Cylinder Pressure Test: Strain Gauge Measurement Study",
-                "Principal Stress Determination Using Photoelastic Coating",
-                "Deflection of Cantilever Beam: Experimental vs. Theoretical",
-                "Helical Spring Design Project for Automotive Suspension Application"
-            ]
         }
     },
     "AU3601": {
@@ -351,36 +201,6 @@ const ATE_SUBJECTS = {
             "CO3": "Design the control techniques for minimizing emissions.",
             "CO4": "Categorize the emission norms.",
             "CO5": "Identify suitable methods to reduce the noise emissions."
-        },
-        "topics": {
-            "presentation": [
-                "Sources of Automobile Pollution and Their Environmental Impact",
-                "Formation and Effects of Carbon Monoxide and Hydrocarbons in Vehicles",
-                "National and International Emission Standards (BS6, Euro Norms)",
-                "Pollutant Formation in Spark Ignition Engines",
-                "Working Principle and Applications of Catalytic Converters",
-                "Positive Crankcase Ventilation (PCV) and Charcoal Canister Systems",
-                "Types of Smoke in Diesel Engines (White, Blue, Black)",
-                "Exhaust Gas Recirculation (EGR) and Its Role in Emission Control",
-                "Diesel Particulate Filter (DPF) and Selective Catalytic Reduction (SCR)",
-                "Sources of Noise in Automobiles and Their Effects on Humans",
-                "Methods for Noise Reduction in Vehicles (Silencer, Insulation, Encapsulation)",
-                "Automobile Emission Testing Methods and Instruments (NDIR, FID, Smoke Meter)"
-            ],
-            "miniproject": [
-                "Comparative Study of BS6 and Euro VI Emission Standards",
-                "Prototype Catalytic Converter for CO Reduction in SI Engines",
-                "Charcoal Canister Model for Fuel Vapor Absorption",
-                "Effect of Ignition Timing on Emission Levels in SI Engines (Simulation)",
-                "EGR (Exhaust Gas Recirculation) Setup for NOx Reduction in CI Engines",
-                "Particulate Trap Prototype for Diesel Soot Capture",
-                "Fuel Quality vs. Smoke Formation: Diesel vs. Biodiesel Blends",
-                "Noise Level Measurement of Different Vehicles Using Sound Meter Apps",
-                "Silencer Design Experiment with Different Baffle Arrangements",
-                "Encapsulation Technique for Engine Noise Reduction (Demo Box)",
-                "Driving Cycle Emission Study: City vs. Highway Conditions",
-                "Emission Analyzer Comparison: NDIR vs. FID vs. Smoke Meter"
-            ]
         }
     },
     "MA25C02": {
@@ -415,42 +235,6 @@ const ATE_SUBJECTS = {
             "CO3": "Compute inner products, vector norms, and apply Gram-Schmidt process.",
             "CO4": "Perform QR decomposition and Singular Value Decomposition (SVD).",
             "CO5": "Solve least squares problems and apply linear algebra to structural networks."
-        },
-        "topics": {
-            "presentation": [
-                "Applications of Linear Transformations in 3D Automobile Modeling",
-                "Eigenvalues in Vehicle Structural Frequency Analysis",
-                "Singular Value Decomposition (SVD) in Engineering Data Compression",
-                "Least Squares Solutions for Automotive Sensor Calibration",
-                "Gram-Schmidt Orthogonalization Process Explained",
-                "Matrix Representation of Robotic Arm Kinematics in Automobile Assembly",
-                "Positive Definite Matrices in Vehicle Suspension Optimization",
-                "Vector Spaces and Span in CAD Software Algorithms",
-                "Understanding the Dimension Theorem and Null Space",
-                "QR Decomposition for Solving Systems of Linear Equations",
-                "Cayley-Hamilton Theorem Applications",
-                "Diagonalization of Matrices in Dynamic Systems",
-                "Cauchy-Schwarz Inequality in Inner Product Spaces",
-                "Role of Linear Independence in Engine Control Mapping",
-                "Matrix Computations in Autonomous Vehicle Path Planning"
-            ],
-            "miniproject": [
-                "Automobile Suspension Matrix Calculator using Python",
-                "SVD Image Compression Visualizer Tool",
-                "2D Kinematic Transformation Simulator",
-                "Eigenvalue Calculator for Simple Vehicle Vibration Models",
-                "Least Squares Regression Tool for Mileage Data",
-                "Robotic Arm Joint Angle Matrix Solver",
-                "QR Decomposition Step-by-Step App",
-                "Gram-Schmidt Process Visualization Software",
-                "Vehicle Center of Gravity Coordinate Matrix Program",
-                "Linear Equation Solver Array Interface",
-                "Subspace Basis Identifier Tool",
-                "Dashboard for Matrix Norm Computations",
-                "Interactive Matrix Diagonalization Tool",
-                "Automotive Sensor Data Least Squares Filter",
-                "Linear Algebra Visualization Game"
-            ]
         }
     },
     "ME25C02": {
@@ -485,42 +269,6 @@ const ATE_SUBJECTS = {
             "CO3": "Calculate the centroid, center of gravity and moment of inertia of basic and composite areas.",
             "CO4": "Analyze the effect of dry friction in various mechanical systems.",
             "CO5": "Solve complex static problems using the principle of virtual work."
-        },
-        "topics": {
-            "presentation": [
-                "Free Body Diagrams in Automotive Chassis Design",
-                "Belt Friction Principles in Engine Pulley Systems",
-                "Moment of Inertia and its Impact on Vehicle Roll Over",
-                "Equilibrium of Rigid Bodies in 3D Automobile Structures",
-                "Wedge Friction Applications in Braking Mechanisms",
-                "Theorems of Pappus-Guldinus for Complex Volume Generation",
-                "Polar Moment of Inertia in Automotive Drive Shafts",
-                "Calculations of Center of Gravity in Commercial Vehicles",
-                "Principle of Virtual Work in Linkage Analysis",
-                "Laws of Dry (Coulomb) Friction and Tire Grip",
-                "Analysis of Concurrent Forces in Suspension Mounts",
-                "Effect of Transmissibility on Load Bearing Components",
-                "Force-Couple Systems in Steering Geometry",
-                "Mass Moment of Inertia of a Flywheel",
-                "Calculation of Support Reactions in Vehicle Frames"
-            ],
-            "miniproject": [
-                "Center of Gravity Calculator for Car Configurations",
-                "Interactive Free Body Diagram Drawer Tool",
-                "Belt Drive Tension and Friction Calculator",
-                "Flywheel Mass Moment of Inertia Simulator",
-                "Vehicle Roll-Over Angle Estimator",
-                "Wedge Friction Multiplier Test Rig Model",
-                "Truss / Frame Joint Reaction Force Calculator",
-                "Static Equilibrium Simulator for 2D Objects",
-                "Parallel Axis Theorem Visualizer App",
-                "Centroid Locator for Composite Cross-Sections",
-                "Drive Shaft Polar Moment of Inertia Calculator",
-                "Virtual Work Linkage Displacement Calculator",
-                "Tire-Road Friction Coefficient Data Logger",
-                "Vector Addition and Resultant Force Graphic Tool",
-                "Steering Force-Couple Simulator"
-            ]
         }
     },
     "EE25C01": {
@@ -555,42 +303,6 @@ const ATE_SUBJECTS = {
             "CO3": "Understand the operation and applications of electrical machines like BLDC and Stepper motors.",
             "CO4": "Identify and utilize key electronic semiconductor devices.",
             "CO5": "Design simple digital electronic circuits and understand microcontroller architecture."
-        },
-        "topics": {
-            "presentation": [
-                "BLDC Motors in Modern Electric Vehicles",
-                "Working Principle of Automotive Alternators (Synchronous Generators)",
-                "Application of Stepper Motors in Automobile Instrumentation",
-                "Kirchhoff's Laws Applied to Vehicle Wiring Harness",
-                "Role of Fuses and Relays in Automotive Electrical Safety",
-                "Zener Diode Voltage Regulators in Car Charging Systems",
-                "Operational Amplifiers in Automotive Sensor Signal Conditioning",
-                "Microcontrollers (ECUs) in Engine Management Systems",
-                "Faraday’s Law of Induction in Ignition Coils",
-                "Characteristics of PN Junction Diodes in Automotive Rectifiers",
-                "Three-Phase AC vs DC Charging for EVs",
-                "Logic Gates in Vehicle Alarm Logic Circuits",
-                "BJT and FET Transistors as Electronic Switches",
-                "Measurement of RMS Values in Vehicle AC Circuits",
-                "Star and Delta Connections in EV Traction Motors"
-            ],
-            "miniproject": [
-                "Miniature BLDC Motor Speed Controller",
-                "Automotive Relay and Fuse Fusebox Simulator",
-                "Zener Diode 12V Voltage Regulator Circuit",
-                "Simple ECU Logic Simulator using Logic Gates",
-                "Arduino-based Stepper Motor Dashboard Needle Simulator",
-                "Car Battery Voltage Divider Measurement Circuit",
-                "Op-Amp Temperature Sensor Signal Amplifier",
-                "Vehicle Headlight Switching BJT Circuit",
-                "Alternator AC to DC Rectification Breadboard Model",
-                "Kirchhoff's Law DC Circuit Current Solver",
-                "Simple RC Delay Timer for Dome Lights",
-                "Digital Multiplexer for Multiple Sensor Inputs",
-                "Faraday Induction Flashlight Model",
-                "Logic Gate Seatbelt Warning Chime Simulator",
-                "Basic Microcontroller Traffic Light Controller"
-            ]
         }
     },
     "PH25C05": {
@@ -625,42 +337,6 @@ const ATE_SUBJECTS = {
             "CO3": "Evaluate thermal conductivity and apply laws of thermodynamics.",
             "CO4": "Analyze phase diagrams and heat treatment techniques for steels.",
             "CO5": "Understand the properties and applications of composites, metallic glasses, and LEDs."
-        },
-        "topics": {
-            "presentation": [
-                "Gyroscopic Effect on Two-Wheeler Stability",
-                "Moment of Inertia of Automotive Shafts and Gears",
-                "Thermal Conductivity in Engine Cylinder Walls",
-                "Iron-Carbon Equilibrium Diagram for Automotive Steels",
-                "Heat Treatment and Hardening of Gear Teeth",
-                "Fiber Reinforced Plastics (FRP) in Car Body Panels",
-                "Laws of Thermodynamics in Internal Combustion Engines",
-                "Characteristics of LEDs in Automotive Lighting",
-                "Metallic Glasses – Properties and Future Uses in Auto Parts",
-                "T-T-T Diagram in Steel Quenching Processes",
-                "Conduction through Compound Media in Exhaust Systems",
-                "Automotive Ceramics – Catalytic Converters and Spark Plugs",
-                "Transient Line Source Method for Thermal Conductivity",
-                "Role of Solid Solutions in Alloy Wheels",
-                "Dynamics of Solid Cylinders vs Hollow Cylinders in Drivetrains"
-            ],
-            "miniproject": [
-                "Gyroscopic Precession Demonstration Model",
-                "Interactive Iron-Carbon Phase Diagram Explorer",
-                "Thermal Conductivity Comparison of Heat Shield Materials",
-                "LED Voltage-Current Characteristic Grapher",
-                "Flywheel Moment of Inertia Calculator",
-                "Engine Heat Conduction Simulator (1D)",
-                "Virtual Steel Quenching and Hardness Estimator",
-                "Center of Mass Calculator for Asymmetrical Vehicle Parts",
-                "Composite Material Strength vs Weight Calculator",
-                "Thermodynamics First Law Piston-Cylinder Simulator",
-                "T-T-T Diagram Cooling Rate Plotter",
-                "Shaft Rotational Kinetic Energy App",
-                "Ceramics vs Metals Automotive Application Database",
-                "Heat Loss Estimator for Compound Engine Walls",
-                "Bicycle Wheel Gyroscope Stabilization Rig"
-            ]
         }
     },
     "CY25C03": {
@@ -695,42 +371,6 @@ const ATE_SUBJECTS = {
             "CO3": "Evaluate alternative fuels and calculate stoichiometric air-fuel ratios.",
             "CO4": "Understand the properties and mechanisms of composites and synthetic lubricants.",
             "CO5": "Assess combustion kinetics, knocking phenomena, and industrial adhesives."
-        },
-        "topics": {
-            "presentation": [
-                "Chemistry of Smart Coatings and Self-Cleaning Car Paint",
-                "Stoichiometric Air-Fuel Ratio Calculations in IC Engines",
-                "Knocking in Petrol Engines and Anti-Knocking Agents",
-                "Synthetic Lubricants vs Mineral Oils for Engines",
-                "Hydrogen Combustion – The Future of Automotive Fuels",
-                "Flue Gas Analysis to Determine Combustion Efficiency",
-                "Automotive Structural Adhesives for Chassis Bonding",
-                "Alternative Fuels – Benefits of CNG and LNG",
-                "Polymer Matrix Composites in Lightweight Vehicles",
-                "Mechanism of Lubrication in Engine Bearings",
-                "Sustainable Energy Materials in EV Battery Chemistry",
-                "Calorific Value of Different Automotive Fuels",
-                "Reaction Kinetics of Fuel Combustion",
-                "Hybrid Composites in High-Performance Auto Parts",
-                "Bond Strength Testing of Industrial Adhesives"
-            ],
-            "miniproject": [
-                "Stoichiometric Air-Fuel Ratio Calculator App",
-                "Fuel Calorific Value to Engine Output Converter",
-                "Smart Coating Hydrophobic Contact Angle Measurer",
-                "Flue Gas Composition Analyzer Software",
-                "Lubricant Viscosity Index Calculator",
-                "Hydrogen vs Petrol Combustion Energy Comparison Tool",
-                "Engine Knocking Threshold Predictor based on Octane",
-                "Automotive Adhesive Curing Time Estimator",
-                "Composite Material Weight Saving Calculator",
-                "Alternative Fuel Cost/Mileage Comparison Dashboard",
-                "Virtual Flame Ionization Detector for Emissions",
-                "Reaction Kinetics Cooling Curve Plotter",
-                "Lubricant Film Thickness Estimator for Bearings",
-                "Natural Gas vs Diesel Emission Footprint Calculator",
-                "Bond Strength vs Temperature Curve Generator"
-            ]
         }
     }
 };
