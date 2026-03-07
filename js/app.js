@@ -2328,7 +2328,7 @@ function generateAssignments() {
     /* ── For non-practicals: filter SYLLABUS_DATA by focusUnits AND complexity ── */
     if (!curatedList) {
         if (spec && spec.topics && spec.topics[cfg.assignType] && spec.topics[cfg.assignType].length > 0) {
-            // First Priority: explicitly curated topics in ATE_SUBJECTS matching the assignType
+            // First Priority: explicitly curated topics in SUBJECTS data matching the assignType
             curatedList = spec.topics[cfg.assignType];
         } else {
             // Second Priority: use generic SYLLABUS_DATA topics
