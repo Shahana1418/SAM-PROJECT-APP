@@ -1040,6 +1040,7 @@ function renderSessions(container) {
     const deptCode = navState.dept, batchYear = navState.batch, N = teams.length;
     const cal = navState.calendarConfig || null;
     const todayStr = new Date().toISOString().slice(0, 10);
+    const genAssign = (navState.assignConfig && navState.assignConfig.generatedAssignments) ? navState.assignConfig.generatedAssignments : null;
     const defEnd = new Date(); defEnd.setMonth(defEnd.getMonth() + 3);
     const defEndStr = defEnd.toISOString().slice(0, 10);
     const savedSpd = cal ? (cal.sessionsPerDay || 2) : 2;
@@ -1106,9 +1107,12 @@ function renderSessions(container) {
                 if (!s) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
                 const pt = PERIOD_TYPES[pk];
                 const p = `Team ${s.presenterIdx + 1}`, r = `Team ${s.reviewerIdx + 1}`, fb = `Team ${s.feedbackIdx + 1}`;
+                const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
+                const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
                 return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
                     <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')}</div>
                     <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
+                    ${presTopicHTML}
                     ${s.revealed
                         ? `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
                         : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles on day</span></div>`}
@@ -1147,6 +1151,8 @@ function renderSessions(container) {
             const dl2 = fs.date.toLocaleDateString('en-IN', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
             const sItems = daySess.map(s => {
                 const pt = PERIOD_TYPES[s.periodKey];
+                const dayTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
+                const dayTopicHTML = dayTopicObj ? `<div style="margin-top:4px;font-size:.78rem;color:var(--accent-blue);font-weight:600;padding-left:4px;">📝 Topic: ${dayTopicObj.title}</div>` : '';
                 return `<div class="sched-sess-item">
                     <div class="sched-sess-item-header" style="border-left:3px solid ${pt.color};">
                         <div class="sched-sess-item-num" style="background:${pt.color}18;color:${pt.color};">#${String(s.sessNum).padStart(2, '0')}</div>
@@ -1158,6 +1164,7 @@ function renderSessions(container) {
                         ? `<span class="sched-chip sched-reviewer">🔍 Team ${s.reviewerIdx + 1} — Reviewer</span><span class="sched-chip sched-feedback">💬 Team ${s.feedbackIdx + 1} — Feedback</span>`
                         : `<span class="sched-chip sched-locked">🔒 Reviewer &amp; Feedback revealed on ${s.dateStr}</span>`}
                     </div>
+                    ${dayTopicHTML}
                 </div>`;
             }).join('');
             return `<div class="sched-day-card ${isToday ? 'sched-day-today' : ''}" style="animation-delay:${di * .04}s">
