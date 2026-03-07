@@ -122,11 +122,11 @@ const SUBJECTS_DATA = {
         ],
 
         "MCE": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" }
+            { code: "MA25C02", name: "Linear Algebra" },
+            { code: "ME25C02", name: "Engineering Mechanics" },
+            { code: "EE25C01", name: "Basic Electrical and Electronics Engineering" },
+            { code: "PH25C05", name: "Applied Physics (ME) – II" },
+            { code: "CY25C03", name: "Applied Chemistry (ME) – II" }
         ],
 
         "CSE": [
@@ -147,43 +147,35 @@ const SUBJECTS_DATA = {
         ],
 
         "ECE": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" }
+            { code: "MA25C02", name: "Linear Algebra" },
+            { code: "EE25C01", name: "Basic Electrical and Electronics Engineering" },
+            { code: "EC25C01", name: "Electron Devices" },
+            { code: "EC25C02", name: "Circuits and Network Analysis" },
+            { code: "CS25C05", name: "Data Structures using C++" }
         ],
 
         "EEE": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" }
-        ],
-
-        "CVE": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" }
+            { code: "MA25C03", name: "Transforms and its Applications" },
+            { code: "GE25C01", name: "Basic Civil and Mechanical Engineering" },
+            { code: "PH25C04", name: "Applied Physics (EE) – II" },
+            { code: "ME25C01", name: "Engineering Drawing" },
+            { code: "CS25C04", name: "Data Structures and Algorithms" }
         ],
 
         "IMT": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" }
+            { code: "MA25C02", name: "Linear Algebra" },
+            { code: "PH25C03", name: "Applied Physics (CSIE) – II" },
+            { code: "IT25201", name: "Foundations of Data Science Using Python" },
+            { code: "IT25202", name: "Digital Principles and System Design" },
+            { code: "ME25C05", name: "Re-Engineering for Innovation" }
         ],
 
         "CDS": [
-            { code: "MA3251", name: "Statistics and Numerical Methods" },
-            { code: "PH3251", name: "Materials Science" },
-            { code: "BE3251", name: "Basic Electrical and Electronics Engineering" },
-            { code: "GE3251", name: "Engineering Graphics" },
-            { code: "GE3271", name: "Engineering Practices Laboratory" }
+            { code: "MA25C02", name: "Linear Algebra" },
+            { code: "EE25C01", name: "Basic Electrical and Electronics Engineering" },
+            { code: "CS25C06", name: "Digital Principles and Computer Organization" },
+            { code: "PH25C03", name: "Applied Physics (CSIE) – II" },
+            { code: "CS25C07", name: "Object Oriented Programming" }
         ]
     }
 };

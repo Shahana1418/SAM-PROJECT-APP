@@ -39,6 +39,37 @@ function showToast(message, type = 'info') {
 let appData = null;
 let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
 
+// Database Aggregation Helpers
+function getSubjectSpec(code) {
+    if (!code) return null;
+    const dbs = [
+        typeof ATE_SUBJECTS !== 'undefined' ? ATE_SUBJECTS : null,
+        typeof CSE_SUBJECTS !== 'undefined' ? CSE_SUBJECTS : null,
+        typeof CVE_SUBJECTS !== 'undefined' ? CVE_SUBJECTS : null,
+        typeof ECE_SUBJECTS !== 'undefined' ? ECE_SUBJECTS : null,
+        typeof EEE_SUBJECTS !== 'undefined' ? EEE_SUBJECTS : null,
+        typeof IMT_SUBJECTS !== 'undefined' ? IMT_SUBJECTS : null,
+        typeof MCE_SUBJECTS !== 'undefined' ? MCE_SUBJECTS : null,
+        typeof CDS_SUBJECTS !== 'undefined' ? CDS_SUBJECTS : null
+    ];
+    for (const db of dbs) {
+        if (db && db[code]) return db[code];
+    }
+    return null;
+}
+
+function getLabsGen(deptCode) {
+    if (deptCode === 'ATE' && typeof ATE_LABS !== 'undefined') return ATE_LABS;
+    if (deptCode === 'CSE' && typeof CSE_LABS !== 'undefined') return CSE_LABS;
+    if (deptCode === 'CVE' && typeof CVE_LABS !== 'undefined') return CVE_LABS;
+    if (deptCode === 'ECE' && typeof ECE_LABS !== 'undefined') return ECE_LABS;
+    if (deptCode === 'EEE' && typeof EEE_LABS !== 'undefined') return EEE_LABS;
+    if (deptCode === 'IMT' && typeof IMT_LABS !== 'undefined') return IMT_LABS;
+    if (deptCode === 'MCE' && typeof MCE_LABS !== 'undefined') return MCE_LABS;
+    if (deptCode === 'CDS' && typeof CDS_LABS !== 'undefined') return CDS_LABS;
+    return null;
+}
+
 // Single admin password for all roles: sam@admin
 const ADMIN_HASH = '460fed869984ad2465122a0841a35c62c493f5e92c07499fa9c0c57fe86cc146';
 const ROLE_PASSWORDS = {
@@ -1753,9 +1784,8 @@ function renderAssessments(container) {
         const batchInfo = getBatchAcademicInfo(batchYear);
         // Show Course Objective (not COs) after subject selection
         let objectiveHTML = '';
-        const _specLookup1 = (code) => (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[code]) || (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[code]) || null;
-        if (cfg.courseCode && _specLookup1(cfg.courseCode)) {
-            const spec = _specLookup1(cfg.courseCode);
+        if (cfg.courseCode && getSubjectSpec(cfg.courseCode)) {
+            const spec = getSubjectSpec(cfg.courseCode);
             if (spec.objective) {
                 objectiveHTML = `<div style="margin-top:1.2rem;background:linear-gradient(135deg,rgba(37,99,235,0.07),rgba(124,58,237,0.07));border:1px solid rgba(37,99,235,0.18);border-radius:12px;padding:16px 20px;">
                     <div style="font-size:.72rem;font-weight:800;color:var(--accent-blue);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">&#127919; Course Objective</div>
@@ -1848,12 +1878,20 @@ function renderAssessments(container) {
                 <button class="btn-primary"   style="width:auto;padding:10px 28px;" onclick="moveAssignStep(3)">Next &rarr;</button>
             </div>
         </div>`;
+        let topicStatsHTML = '';
+        if (cfg.courseCode && getSubjectSpec(cfg.courseCode)) {
+            const spec = getSubjectSpec(cfg.courseCode);
+            const totalUnits = Object.keys(spec.units || {}).length;
+            const presTopics = spec.topics?.presentation?.length || 0;
+            const miniprojTopics = spec.topics?.miniproject?.length || 0;
+
+            topicStatsHTML = `<div style="margin: 1.2rem 0; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; display: flex; gap: 24px;">`;
+        }
     }
 
     if (step === 3) {
-        const _specLookup3 = (code) => (typeof ATE_SUBJECTS !== 'undefined' && ATE_SUBJECTS[code]) || (typeof CSE_SUBJECTS !== 'undefined' && CSE_SUBJECTS[code]) || null;
-        if (cfg.courseCode && _specLookup3(cfg.courseCode)) {
-            const spec = _specLookup3(cfg.courseCode);
+        if (cfg.courseCode && getSubjectSpec(cfg.courseCode)) {
+            const spec = getSubjectSpec(cfg.courseCode);
             let needsUpdate = (cfg.customizedFor !== cfg.courseCode);
             if (!needsUpdate && spec.unit_descs && (!cfg.units || !cfg.units[1] || !cfg.units[1].desc)) {
                 needsUpdate = true;
@@ -2015,11 +2053,11 @@ function renderAssessments(container) {
         const units = cfg.units || {};
         const unitList = [1, 2, 3, 4, 5].map(u => (units[u] || {}).title || 'Unit ' + u).join(', ');
         // Build lab dropdown HTML for ATE practicals (shows AU3611 / AU3612 / All)
-        const showLabDropdown = ((deptCode === 'ATE' || deptCode === 'CSE') && (cfg.assignType === 'practicals' || savedType === 'practicals'));
-        const spec = ((typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null) || ((typeof CSE_SUBJECTS !== 'undefined' && cfg.courseCode) ? CSE_SUBJECTS[cfg.courseCode] : null);
-        const _labsSource = (deptCode === 'CSE' && typeof CSE_LABS !== 'undefined') ? CSE_LABS : (typeof ATE_LABS !== 'undefined' ? ATE_LABS : {});
-        const semLabs = (spec && spec.semester) ? (_labsSource[spec.semester] || []) : [];
-        const labDropdownHTML = showLabDropdown && semLabs.length > 0 ? `
+        const spec = getSubjectSpec(cfg.courseCode);
+        const _labsSource = getLabsGen(deptCode);
+        const semLabs = (spec && spec.semester && _labsSource) ? (_labsSource[spec.semester] || []) : [];
+        const showLabDropdown = (semLabs.length > 0 && (cfg.assignType === 'practicals' || savedType === 'practicals'));
+        const labDropdownHTML = showLabDropdown ? `
             <div class="wiz-field" id="lab-select-field">
                 <label>&#128203; Select Lab</label>
                 <select id="wiz-lab-select" style="font-weight:600;">
@@ -2240,12 +2278,12 @@ function generateAssignments() {
     const coKeys = Object.keys(cos);
     const useUnits = cfg.focusUnits && cfg.focusUnits.length ? cfg.focusUnits : [1, 2, 3, 4, 5];
 
-    /* ── Try curated topic list from ATE_SUBJECTS / CSE_SUBJECTS first ── */
-    const spec = ((typeof ATE_SUBJECTS !== 'undefined' && cfg.courseCode) ? ATE_SUBJECTS[cfg.courseCode] : null) || ((typeof CSE_SUBJECTS !== 'undefined' && cfg.courseCode) ? CSE_SUBJECTS[cfg.courseCode] : null);
+    /* ── Try curated topic list from respective SUBJECTS first ── */
+    const spec = getSubjectSpec(cfg.courseCode);
 
-    /* ── If Practicals type → pull experiments from ATE_LABS / CSE_LABS, filtered by selected lab ── */
+    /* ── If Practicals type → pull experiments from respective LABS, filtered by selected lab ── */
     let curatedList = null;
-    const _labsGen = (deptCode === 'CSE' && typeof CSE_LABS !== 'undefined') ? CSE_LABS : (typeof ATE_LABS !== 'undefined' ? ATE_LABS : null);
+    const _labsGen = getLabsGen(deptCode);
     if (cfg.assignType === 'practicals' && _labsGen && spec && spec.semester) {
         const semLabs = _labsGen[spec.semester];
         if (semLabs && semLabs.length > 0) {
