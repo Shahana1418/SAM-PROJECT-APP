@@ -1018,7 +1018,7 @@ function renderSessions(container) {
     const genAssign = (navState.assignConfig && navState.assignConfig.generatedAssignments) ? navState.assignConfig.generatedAssignments : null;
 
     // Load persisted schedule state
-    const lsKey = `sam_sched_${deptCode}_${batchYear}`;
+    const lsKey = `sam_sched_v2_${deptCode}_${batchYear}`;
     if (!navState.calendarConfig && localStorage.getItem(lsKey)) {
         try { Object.assign(cal, JSON.parse(localStorage.getItem(lsKey))); } catch (e) { }
     }
@@ -1199,7 +1199,7 @@ function markDayCompleted(dateStr) {
         day.submitted = true;
         day.sessions.forEach(s => s.revealed = true); // Reveal roles on submit
         // Persist to local storage
-        localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
+        localStorage.setItem(`sam_sched_v2_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
         showToast(`✅ Marked day ${dateStr} as Attended!`, 'success');
         render();
     }
@@ -1208,14 +1208,14 @@ function markDayCompleted(dateStr) {
 function cancelDayAllocation(dateStr) {
     if (!navState.calendarConfig || !navState.calendarConfig.days) return;
     navState.calendarConfig.days = navState.calendarConfig.days.filter(d => d.dateStr !== dateStr);
-    localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
+    localStorage.setItem(`sam_sched_v2_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
     showToast(`Cancelled allocation for ${dateStr}.`, 'info');
     render();
 }
 
 function resetSchedule() {
     if (confirm("Are you sure you want to reset the entire Schedule Progress? This cannot be undone.")) {
-        localStorage.removeItem(`sam_sched_${navState.dept}_${navState.batch}`);
+        localStorage.removeItem(`sam_sched_v2_${navState.dept}_${navState.batch}`);
         navState.calendarConfig = { days: [], reviewerMap: null };
         render();
     }
@@ -1290,7 +1290,7 @@ function allocateSingleDay() {
 
     navState.calendarConfig = cal;
     // Persist to local storage
-    localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(cal));
+    localStorage.setItem(`sam_sched_v2_${navState.dept}_${navState.batch}`, JSON.stringify(cal));
 
     showToast(`✅ Allocated ${sessionsToAllocate} sessions for ${startDate}.`, 'success');
     render();
@@ -1310,7 +1310,7 @@ function randomiseCalendarRoles() {
             });
         }
     });
-    localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
+    localStorage.setItem(`sam_sched_v2_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
     showToast('🔀 Roles randomised for all upcoming sessions!', 'success');
     render();
 }
