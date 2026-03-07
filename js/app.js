@@ -1246,7 +1246,7 @@ function renderSessions(container) {
                 <div class="rt-section-title">📋 Day-wise Session Details</div>
                 <span style="font-size:.8rem;color:var(--text-muted);">${uniqueDays.length} working days</span>
             </div>
-            <div class="sched-day-cards">${dCards}</div>
+            <div class="sched-day-cards">${cardBlocks}</div>
         </div>`;
     }
 
