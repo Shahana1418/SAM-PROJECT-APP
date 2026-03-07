@@ -1047,11 +1047,12 @@ function renderSessions(container) {
                     <option value="p34">Morning P3-4 (11:00 - 12:30)</option>
                     <option value="p56">Afternoon P5-6 (1:45 - 3:15)</option>
                     <option value="p78">Afternoon P7-8 (3:30 - 5:00)</option>
-                </select></div>
-            <div class="cal-field"><label>Role Visibility</label>
-                <select id="calRevealMode" ${isWeekFull ? 'disabled' : ''}>
-                    <option value="presenter">Reviewer &amp; Feedback hidden until submitted</option>
-                    <option value="all">Show all roles immediately</option>
+            <div class="cal-field"><label>Select Period</label>
+                <select id="calSessPerDay" ${isWeekFull ? 'disabled' : ''}>
+                    <option value="p12">Morning P1-2 (9:00 - 10:40)</option>
+                    <option value="p34">Morning P3-4 (11:00 - 12:30)</option>
+                    <option value="p56">Afternoon P5-6 (1:45 - 3:15)</option>
+                    <option value="p78">Afternoon P7-8 (3:30 - 5:00)</option>
                 </select></div>
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;margin-top:10px;">
@@ -1067,16 +1068,17 @@ function renderSessions(container) {
     </div>`;
 
     /* ===== Schedule Display ===== */
-    let scheduleHTML = '', dayCardsHTML = '';
+    let dayCardsHTML = '';
+
+    const summaryHTML = `<div class="cal-sched-wrap" style="margin-bottom:1rem;">
+        <div class="cal-sched-hdr" style="justify-content: space-between; border-bottom: 2px solid var(--border-light); padding-bottom:12px;">
+            <div style="font-size:1.05rem;font-weight:700;color:var(--text-main);">Overall Progress Summary</div>
+            <div style="font-size:.85rem; padding: 4px 10px; border-radius: 12px; background: var(--bg-hover); color: var(--text-secondary); font-weight: 600;">Completed: <span style="color:var(--accent-blue);">${presentedTeams.length}</span> / ${N} teams · Balance: <span style="color:#ef4444;">${remainingTeams}</span> teams</div>
+        </div>
+        <div style="font-size:.8rem;color:var(--text-muted);margin-top:8px;font-weight:600;">Days Allocated: ${(cal.days || []).length} / 5 </div>
+    </div>`;
 
     if (cal.days && cal.days.length > 0) {
-        scheduleHTML = `<div class="cal-sched-wrap" style="margin-bottom:1rem;">
-            <div class="cal-sched-hdr" style="justify-content: space-between; border-bottom: 2px solid var(--border-light); padding-bottom:12px;">
-                <div style="font-size:1.05rem;font-weight:700;color:var(--text-main);">Summary</div>
-                <div style="font-size:.85rem; padding: 4px 10px; border-radius: 12px; background: var(--bg-hover); color: var(--text-secondary); font-weight: 600;">Overall Progress: <span style="color:var(--accent-blue);">${presentedTeams.length}</span> / ${N} teams completed · Balance: <span style="color:red;">${remainingTeams}</span> teams</div>
-            </div>
-            <div style="font-size:.8rem;color:var(--text-muted);margin-top:8px;">Days Allocated: ${cal.days.length} / 5 </div>
-        </div>`;
 
         // Active/Completed Day Cards (Show newest first so they see the current day at the top)
         const dCards = [...cal.days].reverse().map((dayObj) => {
@@ -1140,16 +1142,23 @@ function renderSessions(container) {
     /* ===== Round-Robin Reference ===== */
     const sessionColors = ['blue', 'green', 'purple', 'orange', 'cyan'];
     let rrRows = '';
-    for (let s = 0; s < N; s++) {
-        const pt = s, rt = (s + 1) % N, ft = (s + 2) % N, c = sessionColors[s % sessionColors.length];
-        const aud = Array.from({ length: N }, (_, i) => i).filter(i => i !== pt && i !== rt && i !== ft);
-        rrRows += `<tr class="rt-row">
-            <td><span class="rt-sess-badge rt-badge-${c}">${String(s + 1).padStart(2, '0')}</span></td>
-            <td><span class="rt-team-chip rt-presenter">🎤 Team ${pt + 1}</span></td>
-            <td><span class="rt-team-chip rt-reviewer">🔍 Team ${rt + 1}</span></td>
-            <td><span class="rt-team-chip rt-feedback">💬 Team ${ft + 1}</span></td>
-            <td class="rt-aud-cell">${aud.map(n => `<span class="rt-aud-chip">T${n + 1}</span>`).join('') || '<span style="color:var(--text-muted);font-size:.75rem">—</span>'}</td>
-        </tr>`;
+
+    if (presentedTeams.length > 0) {
+        for (let s = 0; s < N; s++) {
+            if (!presentedTeams.includes(s)) continue; // Only show completed sessions
+
+            const pt = s, rt = (s + 1) % N, ft = (s + 2) % N, c = sessionColors[s % sessionColors.length];
+            const aud = Array.from({ length: N }, (_, i) => i).filter(i => i !== pt && i !== rt && i !== ft);
+            rrRows += `<tr class="rt-row">
+                <td><span class="rt-sess-badge rt-badge-${c}"># ${String(presentedTeams.indexOf(s) + 1).padStart(2, '0')}</span></td>
+                <td><span class="rt-team-chip rt-presenter">🎤 Team ${pt + 1}</span></td>
+                <td><span class="rt-team-chip rt-reviewer">🔍 Team ${rt + 1}</span></td>
+                <td><span class="rt-team-chip rt-feedback">💬 Team ${ft + 1}</span></td>
+                <td class="rt-aud-cell">${aud.map(n => `<span class="rt-aud-chip">T${n + 1}</span>`).join('') || '<span style="color:var(--text-muted);font-size:.75rem">—</span>'}</td>
+            </tr>`;
+        }
+    } else {
+        rrRows = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-muted);font-style:italic;">No completed sessions yet. Details will appear here after a day is marked as Attended and Completed.</td></tr>`;
     }
 
     container.innerHTML = `
@@ -1166,7 +1175,7 @@ function renderSessions(container) {
         <p class="page-subtitle">${getDeptShortName(deptCode)} · ${batchYear} Batch · ${N} teams · Mon–Fri only</p>
     </div>
     ${configPanel}
-    ${scheduleHTML}
+    ${summaryHTML}
     ${dayCardsHTML}
     <div class="rt-section" style="margin-bottom:1.5rem;">
         <div class="rt-section-header">
@@ -1219,7 +1228,6 @@ function resetSchedule() {
 function allocateSingleDay() {
     const startDate = document.getElementById('calStartDate')?.value;
     const spd = document.getElementById('calSessPerDay')?.value || 'p12';
-    const revealMode = document.getElementById('calRevealMode')?.value || 'presenter';
     if (!startDate) { showToast('⚠️ Please select a date.', 'error'); return; }
 
     const cal = navState.calendarConfig || { days: [] };
@@ -1266,7 +1274,7 @@ function allocateSingleDay() {
             periodKey: pk, subIndex: si,
             startTime: addMins(sH, sM, 0), endTime: addMins(sH, sM, pt.sessDur),
             presenterIdx: startIdx, reviewerIdx: cal.reviewerMap.reviewers[startIdx], feedbackIdx: cal.reviewerMap.feedbacks[startIdx],
-            revealed: revealMode === 'all'
+            revealed: false
         });
         startIdx++;
     }
