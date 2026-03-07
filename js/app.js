@@ -1001,53 +1001,6 @@ function addMins(h, m, mins) {
     return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
 }
 
-function generateSessionCalendar(teams, config) {
-    const { startDate, endDate, sessionsPerDay, activeDays, revealMode, reviewerMap, boostDays } = config;
-    const N = teams.length;
-    const reviewers = reviewerMap.reviewers;
-    const feedbacks = reviewerMap.feedbacks;
-    const slots = DAY_SLOTS[sessionsPerDay] || DAY_SLOTS['p12'];
-    const sessions = [];
-    const todayStr = new Date().toISOString().slice(0, 10);
-    let idx = 0, dayCount = 0;
-
-    const cur = new Date(startDate + 'T00:00:00');
-    const endD = new Date(endDate + 'T00:00:00');
-
-    while (cur <= endD && idx < N) {
-        const dow = cur.getDay();
-        if (activeDays.includes(dow)) {
-            dayCount++;
-            const dateStr = cur.toISOString().slice(0, 10);
-            const isPast = dateStr < todayStr, isToday = dateStr === todayStr;
-            const isBoosted = boostDays && boostDays.includes(dayCount);
-
-            for (let s = 0; s < slots.length && idx < N; s++) {
-                const pk = slots[s], pt = PERIOD_TYPES[pk];
-                // Boost adds 1 session per period if needed to fit all in a week
-                const sc = isBoosted ? (pt.sessCount + 1) : (pt.sessCount || 1);
-                const gap = 5;
-                for (let si = 0; si < sc && idx < N; si++) {
-                    const offsetMins = si * (pt.sessDur + gap);
-                    const sH = pt.startH, sM = pt.startM + offsetMins;
-                    sessions.push({
-                        sessNum: idx + 1, date: new Date(cur), dateStr,
-                        dayName: DAY_NAMES_SHORT[dow], dayFull: DAY_NAMES_FULL[dow],
-                        periodKey: pk, subIndex: si,
-                        startTime: addMins(sH, sM, 0),
-                        endTime: addMins(sH, sM, pt.sessDur),
-                        presenterIdx: idx, reviewerIdx: reviewers[idx], feedbackIdx: feedbacks[idx],
-                        revealed: revealMode === 'all' || isPast || isToday || (config.completedDays && config.completedDays.includes(dateStr)),
-                    });
-                    idx++;
-                }
-            }
-        }
-        cur.setDate(cur.getDate() + 1);
-    }
-    return sessions;
-}
-
 function buildRandomReviewerMap(N) {
     const rev = Array.from({ length: N }, (_, i) => (i + 1) % N);
     const fb = Array.from({ length: N }, (_, i) => (i + 2) % N);
@@ -1060,151 +1013,84 @@ function renderSessions(container) {
     const teams = navState.teams;
     if (!teams || teams.length === 0) { navigateBackToTeams(); return; }
     const deptCode = navState.dept, batchYear = navState.batch, N = teams.length;
-    const cal = navState.calendarConfig || null;
+    const cal = navState.calendarConfig || { days: [] };
     const todayStr = new Date().toISOString().slice(0, 10);
     const genAssign = (navState.assignConfig && navState.assignConfig.generatedAssignments) ? navState.assignConfig.generatedAssignments : null;
-    const savedSpd = cal ? (cal.sessionsPerDay || 'p12') : 'p12';
 
-    // Auto-compute end date: Friday of the same week as start
-    function getFridayOfWeek(dateStr) {
-        const d = new Date(dateStr + 'T00:00:00');
-        const dow = d.getDay();
-        const daysToFri = (dow === 0) ? 5 : (dow === 6) ? 6 : (5 - dow);
-        d.setDate(d.getDate() + daysToFri);
-        return d.toISOString().slice(0, 10);
+    // Load persisted schedule state
+    const lsKey = `sam_sched_${deptCode}_${batchYear}`;
+    if (!navState.calendarConfig && localStorage.getItem(lsKey)) {
+        try { Object.assign(cal, JSON.parse(localStorage.getItem(lsKey))); } catch (e) { }
     }
-    const autoEndStr = cal ? cal.endDate : getFridayOfWeek(todayStr);
+    navState.calendarConfig = cal;
+
+    const savedSpd = 'p12';
+
+    // Calculate progress
+    const completedDaysCount = (cal.days || []).filter(d => d.submitted).length;
+    let presentedTeams = [];
+    (cal.days || []).forEach(d => { if (d.submitted) presentedTeams.push(...d.sessions.map(s => s.presenterIdx)); });
+    const remainingTeams = N - presentedTeams.length;
+    const daysLeft = Math.max(1, 5 - completedDaysCount);
+    const requiredDaily = Math.min(3, Math.ceil(remainingTeams / daysLeft)); // Max 3 sessions
 
     /* ===== Config Panel ===== */
+    const isWeekFull = completedDaysCount >= 5 || remainingTeams === 0;
     const configPanel = `<div class="cal-config-panel">
-        <div class="cal-config-title">⚙️ Full-Week Schedule Configuration</div>
+        <div class="cal-config-title">⚙️ Daily Schedule Allocator</div>
         <div class="cal-config-grid">
-            <div class="cal-field"><label>Start Date</label>
-                <input type="date" id="calStartDate" value="${cal ? cal.startDate : todayStr}"></div>
-            <div class="cal-field"><label>End Date (auto: Friday)</label>
-                <input type="date" id="calEndDate" value="${autoEndStr}"></div>
-            <div class="cal-field"><label>Session Period</label>
-                <select id="calSessPerDay">
-                    <option value="p12" ${savedSpd === 'p12' ? 'selected' : ''}>Morning P1-2 (9:00 - 10:40)</option>
-                    <option value="p34" ${savedSpd === 'p34' ? 'selected' : ''}>Morning P3-4 (11:00 - 12:30)</option>
-                    <option value="p56" ${savedSpd === 'p56' ? 'selected' : ''}>Afternoon P5-6 (1:45 - 3:15)</option>
-                    <option value="p78" ${savedSpd === 'p78' ? 'selected' : ''}>Afternoon P7-8 (3:30 - 5:00)</option>
+            <div class="cal-field"><label>Select Date</label>
+                <input type="date" id="calStartDate" value="${todayStr}" ${isWeekFull ? 'disabled' : ''}></div>
+            <div class="cal-field"><label>Select Period</label>
+                <select id="calSessPerDay" ${isWeekFull ? 'disabled' : ''}>
+                    <option value="p12">Morning P1-2 (9:00 - 10:40)</option>
+                    <option value="p34">Morning P3-4 (11:00 - 12:30)</option>
+                    <option value="p56">Afternoon P5-6 (1:45 - 3:15)</option>
+                    <option value="p78">Afternoon P7-8 (3:30 - 5:00)</option>
                 </select></div>
             <div class="cal-field"><label>Role Visibility</label>
-                <select id="calRevealMode">
-                    <option value="presenter" ${!cal || cal.revealMode === 'presenter' ? 'selected' : ''}>Reviewer &amp; Feedback hidden until session day</option>
-                    <option value="all" ${cal && cal.revealMode === 'all' ? 'selected' : ''}>Show all roles immediately</option>
+                <select id="calRevealMode" ${isWeekFull ? 'disabled' : ''}>
+                    <option value="presenter">Reviewer &amp; Feedback hidden until submitted</option>
+                    <option value="all">Show all roles immediately</option>
                 </select></div>
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;margin-top:10px;">
-            <strong style="color:var(--accent-blue);">Tip:</strong> The system automatically calculates exactly how many sessions are needed each day to finish all ${N} teams within 1 week for your chosen period!
+            <strong style="color:var(--accent-blue);">Rule:</strong> Max 3 sessions per day. Finish all teams within 5 days!
         </div>
         <div class="cal-actions">
-            <button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="applyCalendarConfig()">📅 Generate full Week Schedule</button>
-            ${cal ? '<button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--gradient-orange);" onclick="randomiseCalendarRoles()">🔀 Randomise Roles</button>' : ''}
-            <span style="font-size:.8rem;color:var(--text-muted);">${N} teams · ${N} sessions needed</span>
+            ${isWeekFull
+            ? `<span style="color:#059669;font-weight:700;">✅ Schedule Allocation Complete!</span>
+                   <button class="btn-primary" style="background:#ef4444;width:auto;padding:8px 16px;font-size:.8rem;" onclick="resetSchedule()">Reset Schedule</button>`
+            : `<button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="allocateSingleDay()">➕ Allocate Day</button>`}
+            ${cal.reviewerMap ? '<button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--gradient-orange);" onclick="randomiseCalendarRoles()">🔀 Randomise Roles</button>' : ''}
         </div>
     </div>`;
 
-    /* ===== Schedule Table & Day Cards ===== */
+    /* ===== Schedule Display ===== */
     let scheduleHTML = '', dayCardsHTML = '';
 
-    if (cal && cal.sessions && cal.sessions.length > 0) {
-        const sessions = cal.sessions;
-        const spd = cal.sessionsPerDay || 'p12'; // Changed default from 2 to 'p12'
-        const slotKeys = DAY_SLOTS[spd] || DAY_SLOTS['p12']; // Changed default from 'p12_p34' to 'p12'
-
-        // Group by day
-        const byDay = {};
-        sessions.forEach(s => { if (!byDay[s.dateStr]) byDay[s.dateStr] = []; byDay[s.dateStr].push(s); });
-        const uniqueDays = [...new Map(sessions.map(s => [s.dateStr, s])).values()];
-
-        // Header columns
-        const hdrCells = slotKeys.map(pk => {
-            const pt = PERIOD_TYPES[pk];
-            return `<th class="sched-col-header" style="border-left:3px solid ${pt.color}40;">
-                <div style="color:${pt.color};font-weight:800;font-size:.76rem;">${pt.shortLabel}</div>
-                <div style="font-size:.68rem;color:var(--text-muted);">${pt.label}</div>
-                <div style="font-size:.65rem;color:var(--text-muted);">${String(pt.startH).padStart(2, '0')}:${String(pt.startM).padStart(2, '0')} – ${addMins(pt.startH, pt.startM, pt.durMins)}</div>
-            </th>`;
-        }).join('');
-
-        // Table rows
-        const tRows = uniqueDays.map(fs => {
-            const daySess = byDay[fs.dateStr];
-            const isToday = fs.dateStr === todayStr, isPast = fs.dateStr < todayStr;
-            const dl = fs.date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-            const cells = slotKeys.map(pk => {
-                const slotSessions = daySess.filter(x => x.periodKey === pk);
-                if (slotSessions.length === 0) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
-                const pt = PERIOD_TYPES[pk];
-                const innerHTML = slotSessions.map(s => {
-                    const p = `Team ${s.presenterIdx + 1}`, r = `Team ${s.reviewerIdx + 1}`, fb = `Team ${s.feedbackIdx + 1}`;
-                    const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
-                    const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:2px;font-size:.68rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
-                    return `<div style="padding:4px 0;${slotSessions.length > 1 ? 'border-bottom:1px dashed var(--border-light);' : ''}">
-                        <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')} <span style="font-size:.62rem;color:var(--text-muted);">${s.startTime}–${s.endTime}</span></div>
-                        <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
-                        ${presTopicHTML}
-                        ${s.revealed
-                            ? `<div class="sched-role-row" style="margin-top:2px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
-                            : `<div class="sched-role-row" style="margin-top:2px;"><span class="sched-chip sched-locked">🔒 Roles on day</span></div>`}
-                    </div>`;
-                }).join('');
-                return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">${innerHTML}</td>`;
-            }).join('');
-            return `<tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}">
-                <td class="sched-date-cell">
-                    <div class="sched-date-day">${fs.dayFull.slice(0, 3).toUpperCase()}</div>
-                    <div class="sched-date-num ${isToday ? 'sched-date-today' : ''}">${dl}</div>
-                    ${isToday ? '<div class="sched-today-badge">TODAY</div>' : ''}
-                    ${isPast ? '<div class="sched-past-badge">DONE</div>' : ''}
-                </td>${cells}</tr>`;
-        }).join('');
-
-        const legend = slotKeys.map(k => `<span style="font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:10px;background:${PERIOD_TYPES[k].color}18;color:${PERIOD_TYPES[k].color};">${PERIOD_TYPES[k].shortLabel} ${PERIOD_TYPES[k].label}</span>`).join('');
-
-        let completedCount = 0;
-        let completedTeams = [];
-        if (cal.completedDays) {
-            sessions.forEach(s => {
-                if (cal.completedDays.includes(s.dateStr)) {
-                    completedCount++;
-                    completedTeams.push(s.presenterIdx + 1);
-                }
-            });
-        }
-
-        const statusOk = sessions.length >= N
-            ? `<div class="sched-status-ok">✅ All ${N} sessions generated successfully across ${uniqueDays.length} working days (Mon–Fri).</div>`
-            : `<div class="sched-status-warn">⚠️ Required a boost to fit all teams in 1 week. Generated ${sessions.length} sessions.</div>`;
-
-        scheduleHTML = `<div class="cal-sched-wrap">
-            <div class="cal-sched-hdr" style="justify-content: space-between;">
-                <div style="font-size:1.05rem;font-weight:700;color:var(--text-main);">Weekly Schedule Plan</div>
-                <div style="font-size:.85rem; padding: 4px 10px; border-radius: 12px; background: var(--bg-hover); color: var(--text-secondary); font-weight: 600;">Overall Progress: <span style="color:var(--accent-blue);">${completedCount}</span> / ${N} teams completed · Balance: <span style="color:red;">${N - completedCount}</span> teams</div>
+    if (cal.days && cal.days.length > 0) {
+        scheduleHTML = `<div class="cal-sched-wrap" style="margin-bottom:1rem;">
+            <div class="cal-sched-hdr" style="justify-content: space-between; border-bottom: 2px solid var(--border-light); padding-bottom:12px;">
+                <div style="font-size:1.05rem;font-weight:700;color:var(--text-main);">Summary</div>
+                <div style="font-size:.85rem; padding: 4px 10px; border-radius: 12px; background: var(--bg-hover); color: var(--text-secondary); font-weight: 600;">Overall Progress: <span style="color:var(--accent-blue);">${presentedTeams.length}</span> / ${N} teams completed · Balance: <span style="color:red;">${remainingTeams}</span> teams</div>
             </div>
-            <div class="rt-table-wrap">
-                <table class="sched-table">
-                    <thead><tr><th style="width:70px;">Date</th>${hdrCells}</tr></thead>
-                    <tbody>${tRows}</tbody>
-                </table>
-            </div>
-            ${statusOk}
+            <div style="font-size:.8rem;color:var(--text-muted);margin-top:8px;">Days Allocated: ${cal.days.length} / 5 </div>
         </div>`;
 
-        // Day Cards
-        const cardBlocks = uniqueDays.map((fs, di) => {
-            const daySess = byDay[fs.dateStr];
-            const isToday = fs.dateStr === todayStr, isPast = fs.dateStr < todayStr;
-            const isCompleted = cal.completedDays && cal.completedDays.includes(fs.dateStr);
-            const dl = fs.date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        // Active/Completed Day Cards (Show newest first so they see the current day at the top)
+        const dCards = [...cal.days].reverse().map((dayObj) => {
+            const fsDate = new Date(dayObj.dateStr);
+            const isCompleted = dayObj.submitted;
+            const dl = fsDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
-            let presentingTeams = [];
+            const pt = PERIOD_TYPES[dayObj.periodKey];
+            const pLabel = pt ? pt.shortLabel : dayObj.periodKey;
 
-            const sList = daySess.map(s => {
-                presentingTeams.push(s.presenterIdx + 1);
-                const pt = PERIOD_TYPES[s.periodKey];
+            let presentingTeamsList = [];
+
+            const sList = dayObj.sessions.map(s => {
+                presentingTeamsList.push(`Team ${s.presenterIdx + 1}`);
                 const p = `Team ${s.presenterIdx + 1}`, r = `Team ${s.reviewerIdx + 1}`, fb = `Team ${s.feedbackIdx + 1}`;
                 const dayTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
                 const dayTopicHTML = dayTopicObj ? `<div style="margin-top:4px;font-size:.78rem;color:var(--accent-blue);font-weight:600;padding-left:4px;">📝 Topic: ${dayTopicObj.title}</div>` : '';
@@ -1214,7 +1100,7 @@ function renderSessions(container) {
                         <div class="dm-role"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
                         ${s.revealed
                         ? `<div class="dm-role" style="margin-top:3px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span> <span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
-                        : `<div class="dm-role" style="margin-top:3px;"><span class="sched-chip sched-locked">Roles revealed on day</span></div>`}
+                        : `<div class="dm-role" style="margin-top:3px;"><span class="sched-chip sched-locked">Roles revealed on submission</span></div>`}
                         ${dayTopicHTML}
                     </div>
                 </div>`;
@@ -1223,18 +1109,20 @@ function renderSessions(container) {
             const dayActionArea = isCompleted
                 ? `<div style="margin-top: 12px; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
                      <div style="color: #059669; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
-                        <span>✅ Session Completed</span>
-                        <span style="font-size: 0.75rem; background: #059669; color: white; padding: 2px 6px; border-radius: 10px;">${daySess.length} teams done</span>
+                        <span>✅ Marked as Attended & Completed</span>
+                        <span style="font-size: 0.75rem; background: #059669; color: white; padding: 2px 6px; border-radius: 10px;">${dayObj.sessions.length} sessions</span>
                      </div>
-                     <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 4px;">Teams presented: <strong>${presentingTeams.join(', ')}</strong></div>
+                     <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 4px;">Teams presented: <strong>${presentingTeamsList.join(', ')}</strong></div>
                    </div>`
-                : `<button class="btn-primary" style="margin-top: 15px; width: 100%; padding: 10px; background: var(--gradient-blue);" onclick="markDayCompleted('${fs.dateStr}')">🚀 Submit Day (Mark Completed)</button>`;
+                : `<button class="btn-primary" style="margin-top: 15px; width: auto; padding: 8px 16px; font-size:.8rem; background: #0ea5e9;" onclick="markDayCompleted('${dayObj.dateStr}')">🚀 Submit (Mark Completed)</button>
+                   <button class="btn-secondary" style="margin-top: 15px; width: auto; padding: 8px 16px; font-size:.8rem; margin-left: 8px;" onclick="cancelDayAllocation('${dayObj.dateStr}')">❌ Cancel</button>`;
 
-            return `<div class="dm-card ${isToday ? 'dm-today' : ''} ${isPast || isCompleted ? 'dm-past' : ''}">
+            return `<div class="dm-card ${isCompleted ? 'dm-past' : 'dm-today'}">
                 <div class="dm-header">
-                    <div><span class="dm-dayname">${fs.dayFull}</span> <span class="dm-date">${dl}</span></div>
-                    ${isToday ? '<span class="dm-badge dm-badge-today">Today</span>' : ''}
-                    ${isCompleted ? '<span class="dm-badge dm-badge-past" style="background:#059669;color:white;">Completed</span>' : ''}
+                    <div><span class="dm-dayname">${DAY_NAMES_FULL[fsDate.getDay()]}</span> <span class="dm-date">${dl}</span> 
+                    <span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:6px;background:${pt.color}15;color:${pt.color};margin-left:6px;">${pLabel}</span>
+                    </div>
+                    ${isCompleted ? '<span class="dm-badge dm-badge-past" style="background:#059669;color:white;">Completed</span>' : '<span class="dm-badge dm-badge-today">Active</span>'}
                 </div>
                 <div class="dm-body">${sList}</div>
                 ${dayActionArea}
@@ -1243,10 +1131,9 @@ function renderSessions(container) {
 
         dayCardsHTML = `<div class="rt-section" style="margin-bottom:1.5rem;">
             <div class="rt-section-header">
-                <div class="rt-section-title">📋 Day-wise Session Details</div>
-                <span style="font-size:.8rem;color:var(--text-muted);">${uniqueDays.length} working days</span>
+                <div class="rt-section-title">📅 Allocated Days</div>
             </div>
-            <div class="sched-day-cards">${cardBlocks}</div>
+            <div class="sched-day-cards">${dCards}</div>
         </div>`;
     }
 
@@ -1301,82 +1188,120 @@ function renderSessions(container) {
 }
 
 function markDayCompleted(dateStr) {
-    if (!navState.calendarConfig) return;
-    if (!navState.calendarConfig.completedDays) {
-        navState.calendarConfig.completedDays = [];
+    if (!navState.calendarConfig || !navState.calendarConfig.days) return;
+    const day = navState.calendarConfig.days.find(d => d.dateStr === dateStr);
+    if (day) {
+        day.submitted = true;
+        day.sessions.forEach(s => s.revealed = true); // Reveal roles on submit
+        // Persist to local storage
+        localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
+        showToast(`✅ Marked day ${dateStr} as Attended!`, 'success');
+        render();
     }
-    if (!navState.calendarConfig.completedDays.includes(dateStr)) {
-        navState.calendarConfig.completedDays.push(dateStr);
-    }
+}
 
-    // Auto-reveal roles for this day if they were hidden
-    if (navState.calendarConfig.sessions) {
-        navState.calendarConfig.sessions.forEach(s => {
-            if (s.dateStr === dateStr) s.revealed = true;
-        });
-    }
-
-    showToast(`✅ Marked day ${new Date(dateStr).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })} as Completed! Roles revealed automatically.`, 'success');
+function cancelDayAllocation(dateStr) {
+    if (!navState.calendarConfig || !navState.calendarConfig.days) return;
+    navState.calendarConfig.days = navState.calendarConfig.days.filter(d => d.dateStr !== dateStr);
+    localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
+    showToast(`Cancelled allocation for ${dateStr}.`, 'info');
     render();
 }
 
-function applyCalendarConfig() {
+function resetSchedule() {
+    if (confirm("Are you sure you want to reset the entire Schedule Progress? This cannot be undone.")) {
+        localStorage.removeItem(`sam_sched_${navState.dept}_${navState.batch}`);
+        navState.calendarConfig = { days: [], reviewerMap: null };
+        render();
+    }
+}
+
+function allocateSingleDay() {
     const startDate = document.getElementById('calStartDate')?.value;
     const spd = document.getElementById('calSessPerDay')?.value || 'p12';
     const revealMode = document.getElementById('calRevealMode')?.value || 'presenter';
-    if (!startDate) {
-        showToast('⚠️ Please set a valid start date.', 'error');
+    if (!startDate) { showToast('⚠️ Please select a date.', 'error'); return; }
+
+    const cal = navState.calendarConfig || { days: [] };
+    if (cal.days.find(d => d.dateStr === startDate)) {
+        showToast('⚠️ This date is already allocated. Please choose another date or cancel it first.', 'warning');
         return;
     }
-    // Auto-compute end date: Friday of the same week
-    const sd = new Date(startDate + 'T00:00:00');
-    const dow = sd.getDay();
-    const daysToFri = (dow === 0) ? 5 : (dow === 6) ? 6 : (5 - dow);
-    const ed = new Date(sd);
-    ed.setDate(ed.getDate() + daysToFri);
-    const endDate = ed.toISOString().slice(0, 10);
 
-    const teams = navState.teams;
-    const N = teams.length;
-    const reviewerMap = (navState.calendarConfig && navState.calendarConfig.reviewerMap)
-        ? navState.calendarConfig.reviewerMap
-        : buildRandomReviewerMap(N);
+    const N = navState.teams.length;
+    if (!cal.reviewerMap) cal.reviewerMap = buildRandomReviewerMap(N);
 
-    // Calculate if we need boost days (each block gets N/5 sessions)
-    const slots = DAY_SLOTS[spd] || DAY_SLOTS['p12'];
-    const baseSessPerDay = slots.reduce((sum, pk) => sum + (PERIOD_TYPES[pk] ? PERIOD_TYPES[pk].sessCount : 1), 0);
-    const targetDaily = Math.ceil(N / 5); // To finish in 5 days
+    // Calculate how many teams have already gone
+    let presentedCount = 0;
+    cal.days.forEach(d => { presentedCount += d.sessions.length; });
 
-    let boostDays = [];
-    if (targetDaily > baseSessPerDay) {
-        // Boost is needed. Since we only assign 1 period per day now (slots.length is 1)
-        // We boost every day!
-        for (let i = 1; i <= 5; i++) boostDays.push(i);
-        // Overwrite the period's sessCount temporarily for this configuration
-        PERIOD_TYPES[slots[0]].sessCount = targetDaily;
+    if (presentedCount >= N) {
+        showToast('✅ All teams have been allocated.', 'info');
+        return;
     }
 
-    // Preserve previously completed days if generating over the same date range
-    const completedDays = (navState.calendarConfig && navState.calendarConfig.completedDays) ? navState.calendarConfig.completedDays : [];
+    const completedDaysCount = cal.days.filter(d => d.submitted).length;
+    const remainingTeams = N - presentedCount;
+    const daysLeft = Math.max(1, 5 - completedDaysCount);
+    let targetDaily = Math.ceil(remainingTeams / daysLeft);
+    if (targetDaily > 3) targetDaily = 3; // Rule: Must not exceed 3!
 
-    const config = { startDate, endDate, sessionsPerDay: spd, activeDays: [1, 2, 3, 4, 5], revealMode, reviewerMap, boostDays, completedDays };
-    // Wait, PERIOD_TYPES change is global, so generateSessionCalendar will pick it up automatically
-    config.sessions = generateSessionCalendar(teams, config);
+    const sessionsToAllocate = Math.min(targetDaily, remainingTeams);
 
-    // Reset back the global state just to be clean, though next time generate is called it will be overridden anyway
-    PERIOD_TYPES[slots[0]].sessCount = 2; // Default is 2 in our app
+    const pk = DAY_SLOTS[spd][0];
+    const pt = PERIOD_TYPES[pk];
+    const cur = new Date(startDate + 'T00:00:00');
+    const dow = cur.getDay();
+    const gap = 5;
 
-    navState.calendarConfig = config;
+    let newSessions = [];
+    let startIdx = presentedCount;
 
-    showToast(`✅ Generated 1-week schedule. Daily sessions automatically adjusted to ${targetDaily} to fit all ${N} teams.`, 'success');
+    for (let si = 0; si < sessionsToAllocate; si++) {
+        const offsetMins = si * (pt.sessDur + gap);
+        const sH = pt.startH, sM = pt.startM + offsetMins;
+        newSessions.push({
+            sessNum: startIdx + 1, dateStr: startDate,
+            dayName: DAY_NAMES_SHORT[dow], dayFull: DAY_NAMES_FULL[dow],
+            periodKey: pk, subIndex: si,
+            startTime: addMins(sH, sM, 0), endTime: addMins(sH, sM, pt.sessDur),
+            presenterIdx: startIdx, reviewerIdx: cal.reviewerMap.reviewers[startIdx], feedbackIdx: cal.reviewerMap.feedbacks[startIdx],
+            revealed: revealMode === 'all'
+        });
+        startIdx++;
+    }
+
+    cal.days.push({
+        dateStr: startDate,
+        periodKey: pk,
+        submitted: false,
+        sessions: newSessions
+    });
+
+    navState.calendarConfig = cal;
+    // Persist to local storage
+    localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(cal));
+
+    showToast(`✅ Allocated ${sessionsToAllocate} sessions for ${startDate}.`, 'success');
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function randomiseCalendarRoles() {
-    if (!navState.calendarConfig) return;
-    navState.calendarConfig.reviewerMap = buildRandomReviewerMap(navState.teams.length);
-    navState.calendarConfig.sessions = generateSessionCalendar(navState.teams, navState.calendarConfig);
+    if (!navState.calendarConfig || !navState.calendarConfig.days) return;
+    const N = navState.teams.length;
+    navState.calendarConfig.reviewerMap = buildRandomReviewerMap(N);
+    // Apply new roles ONLY to unsubmitted days
+    navState.calendarConfig.days.forEach(day => {
+        if (!day.submitted) {
+            day.sessions.forEach(s => {
+                s.reviewerIdx = navState.calendarConfig.reviewerMap.reviewers[s.presenterIdx];
+                s.feedbackIdx = navState.calendarConfig.reviewerMap.feedbacks[s.presenterIdx];
+            });
+        }
+    });
+    localStorage.setItem(`sam_sched_${navState.dept}_${navState.batch}`, JSON.stringify(navState.calendarConfig));
+    showToast('🔀 Roles randomised for all upcoming sessions!', 'success');
     render();
 }
 
