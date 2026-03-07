@@ -994,7 +994,7 @@ function addMins(h, m, mins) {
 }
 
 function generateSessionCalendar(teams, config) {
-    const { startDate, endDate, sessionsPerDay, activeDays, revealMode, reviewerMap } = config;
+    const { startDate, endDate, sessionsPerDay, activeDays, reviewerMap } = config;
     const N = teams.length;
     const reviewers = reviewerMap ? reviewerMap.reviewers : teams.map((_, i) => (i + 1) % N);
     const feedbacks = reviewerMap ? reviewerMap.feedbacks : teams.map((_, i) => (i + 2) % N);
@@ -1016,7 +1016,7 @@ function generateSessionCalendar(teams, config) {
                     startTime: String(pt.startH).padStart(2, '0') + ':' + String(pt.startM).padStart(2, '0'),
                     endTime: addMins(pt.startH, pt.startM, pt.durMins),
                     presenterIdx: idx, reviewerIdx: reviewers[idx], feedbackIdx: feedbacks[idx],
-                    revealed: revealMode === 'all' || isPast || isToday,
+                    revealed: true,
                 });
                 idx++;
             }
@@ -1057,11 +1057,6 @@ function renderSessions(container) {
                 <select id="calSessPerDay">
                     <option value="2" ${savedSpd === 2 ? 'selected' : ''}>2 sessions / day (P1-2 &amp; P3-4 Morning)</option>
                     <option value="3" ${savedSpd === 3 ? 'selected' : ''}>3 sessions / day (+ P5-6 Afternoon)</option>
-                </select></div>
-            <div class="cal-field"><label>Role Visibility</label>
-                <select id="calRevealMode">
-                    <option value="presenter" ${!cal || cal.revealMode === 'presenter' ? 'selected' : ''}>Reviewer &amp; Feedback hidden until session day</option>
-                    <option value="all" ${cal && cal.revealMode === 'all' ? 'selected' : ''}>Show all roles immediately</option>
                 </select></div>
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;">
@@ -1241,7 +1236,6 @@ function applyCalendarConfig() {
     const startDate = document.getElementById('calStartDate')?.value;
     const endDate = document.getElementById('calEndDate')?.value;
     const spd = parseInt(document.getElementById('calSessPerDay')?.value || '2');
-    const revealMode = document.getElementById('calRevealMode')?.value || 'presenter';
     if (!startDate || !endDate || endDate < startDate) {
         showToast('⚠️ Please set a valid start and end date.', 'error');
         return;
@@ -1250,7 +1244,7 @@ function applyCalendarConfig() {
     const reviewerMap = (navState.calendarConfig && navState.calendarConfig.reviewerMap)
         ? navState.calendarConfig.reviewerMap
         : buildRandomReviewerMap(teams.length);
-    const config = { startDate, endDate, sessionsPerDay: spd, activeDays: [1, 2, 3, 4, 5], revealMode, reviewerMap };
+    const config = { startDate, endDate, sessionsPerDay: spd, activeDays: [1, 2, 3, 4, 5], reviewerMap };
     config.sessions = generateSessionCalendar(teams, config);
     navState.calendarConfig = config;
     render();
