@@ -2247,67 +2247,79 @@ function toggleAssignCard(i) {
     if (expand) expand.style.transform = isOpen ? 'rotate(180deg)' : '';
 }
 
-function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx, courseName = '') {
+function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx, courseName = '', spec = null) {
     const { assignType } = config;
     const typeLabel = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce', practicals: 'Practicals' }[assignType] || 'Team Presentation';
+
+    // Extract highly specific unique details from the subject's Anna University syllabus mapping
+    const courseObj = (spec && spec.objective) ? spec.objective : `Understand in-depth engineering concepts from ${courseName}.`;
+    const targetCOText = (spec && spec.cos && spec.cos[coKey]) ? spec.cos[coKey] : `Achieve the targeted course learning outcome for ${coKey}.`;
+
     const descMap = {
-        presentation: `Prepare and deliver a 12–15 minute structured presentation on <strong>"${unitTitle}"</strong> from <strong>${courseName}</strong>. Cover Anna University important questions, key formulae, diagrams, and real-world examples. Use minimum 10 slides with clear visuals.`,
-        assignment: `Write a detailed analytical report on <strong>"${unitTitle}"</strong> from <strong>${courseName}</strong>. Include derivations, solved problems from previous Anna University question papers, diagrams and a summary. Minimum 1500 words.`,
-        miniproject: `Design, build or simulate a mini project on <strong>"${unitTitle}"</strong> relevant to <strong>${courseName}</strong>. Demonstrate a working outcome (prototype, simulation or data analysis), prepare a project report and present findings to the team.`,
-        practicals: `Perform laboratory experiments related to <strong>"${unitTitle}"</strong> in <strong>${courseName}</strong>. Record observations, analyse results, answer viva questions and submit a complete observation book entry.`,
+        presentation: `Prepare a highly tailored 12–15 minute technical presentation focusing entirely on <strong>"${unitTitle}"</strong>. As part of the <strong>${courseName}</strong> curriculum, your presentation must explore how this specific topic applies to real-world scenarios. Reference Anna University important questions directly related to this topic, include highly relevant diagrams, and clearly demonstrate how this fulfills the targeted course outcome: <em>"${targetCOText}"</em>.`,
+        assignment: `Write a highly detailed individual analytical report exclusively covering <strong>"${unitTitle}"</strong>. This assignment directly supports the <strong>${courseName}</strong> syllabus. You must include derivations, solved Anna University examination problems specific to this topic, necessary diagrams, and a summary explaining how your work achieves the outcome: <em>"${targetCOText}"</em>. Minimum 1500 words.`,
+        miniproject: `Design, build or simulate a working mini project explicitly based on <strong>"${unitTitle}"</strong> from the <strong>${courseName}</strong> course. Demonstrate a working outcome (prototype, simulation or data analysis) that physically validates the course outcome: <em>"${targetCOText}"</em>. Prepare a comprehensive project report and present findings to the team.`,
+        practicals: `Perform laboratory experiments strictly related to <strong>"${unitTitle}"</strong> in the <strong>${courseName}</strong> laboratory. Record detailed observations, analyse results, answer Viva-Voce questions proving you have practically achieved <em>"${targetCOText}"</em>, and submit a complete observation book entry.`,
     };
+
     const objectiveMap = {
-        presentation: `To understand and communicate key concepts of "${unitTitle}" from ${courseName}, with emphasis on Anna University syllabus topics and exam-relevant questions.`,
-        assignment: `To analyse and solve Anna University examination problems related to "${unitTitle}" from ${courseName}, developing problem-solving and technical writing skills.`,
-        miniproject: `To apply theoretical knowledge of "${unitTitle}" from ${courseName} in a practical, hands-on mini project that demonstrates engineering principles.`,
-        practicals: `To verify theoretical concepts of "${unitTitle}" through hands-on experiments in ${courseName} laboratory, building observation and analytical skills.`,
+        presentation: `<strong>Course Alignment:</strong> To master the specific theoretical/practical concepts of "${unitTitle}". This directly supports the primary course objective: <em>"${courseObj}"</em> and specifically targets the course outcome: <strong>"${targetCOText}"</strong>.`,
+        assignment: `<strong>Course Alignment:</strong> To analyse and solve Anna University examination problems accurately for "${unitTitle}". This directly addresses the specific course outcome: <strong>"${targetCOText}"</strong> and supports the overall goal to <em>"${courseObj}"</em>.`,
+        miniproject: `<strong>Course Alignment:</strong> To apply theoretical knowledge of "${unitTitle}" in a practical engineering mini project. This demonstrates core principles to achieve the outcome: <strong>"${targetCOText}"</strong> in alignment with <em>"${courseObj}"</em>.`,
+        practicals: `<strong>Course Alignment:</strong> To verify concepts of "${unitTitle}" through strict hands-on experiments, ensuring the practical achievement of outcome: <strong>"${targetCOText}"</strong>.`,
     };
+
     const deliverableMap = {
         presentation: [
-            'PowerPoint/PDF slide deck (minimum 10 slides).',
-            'Live 12–15 min presentation to the team with Q&A.',
-            'Reference list citing syllabus textbooks and important question resources.'
+            `10-15 slide presentation deck specifically answering the topic: <strong>"${unitTitle}"</strong>.`,
+            `Detailed breakdown in your slides explaining exactly how you achieved ${coKey} (<em>"${targetCOText}"</em>).`,
+            `Live 12–15 minute presentation focused strictly on this syllabus portion with Q&A.`,
+            `Reference list mapping your slides to the ${courseName} standard Anna University textbooks.`
         ],
         assignment: [
-            'Typed report (minimum 1500 words) with derivations and step-by-step solutions.',
-            'Solutions to at least 3 previous Anna University important questions.',
-            'Diagrams, graphs or flowcharts as applicable.'
+            `Typed report (minimum 1500 words) strictly focused on <strong>"${unitTitle}"</strong>.`,
+            `Step-by-step solutions to at least 3 previous Anna University important questions for this explicit topic.`,
+            `Clear explanation of how the report fulfills ${coKey} (<em>"${targetCOText}"</em>).`,
+            `Diagrams, graphs or flowcharts where mathematically/conceptually applicable.`
         ],
         miniproject: [
-            'Working prototype, simulation output or experimental data.',
-            'Project report: Abstract, Introduction, Design/Method, Results, Conclusion.',
-            'Live demonstration and Q&A with evaluating team.'
+            `Working prototype, simulation output or experimental data proving <strong>"${unitTitle}"</strong> concepts.`,
+            `Project report containing: Abstract, Introduction, Design/Method, Results, Conclusion.`,
+            `Live demonstration proving the achievement of ${coKey} (<em>"${targetCOText}"</em>) through the project output.`,
+            `Live explanation and Q&A with the evaluating team.`
         ],
         practicals: [
-            'Completed observation book entry with aim, apparatus, procedure, result.',
-            'Graphs and calculations as required by the experiment.',
-            'Viva responses covering theory behind the experiment.'
+            `Completed observation book entry with aim, apparatus, procedure, result for <strong>"${unitTitle}"</strong>.`,
+            `Graphs and calculations as exactly required by this specific experiment scope.`,
+            `Clear physical demonstration of achieving ${coKey} (<em>"${targetCOText}"</em>) during the lab execution.`,
+            `Viva-Voce responses covering the core physics/engineering theory behind the experiment.`
         ],
     };
+
     const criteriaMap = {
         presentation: [
-            'Coverage of Anna University syllabus topics (30%)',
-            'Clarity of slides and visual aids (20%)',
-            'Delivery, confidence and time management (25%)',
-            'Handling of Q&A from reviewers (25%)'
+            `Accurate coverage and technical depth of "${unitTitle}" (30%)`,
+            `Demonstrated achievement of the specific course outcome: ${coKey} (20%)`,
+            `Clarity of slides, specific diagrams, and visual aids (25%)`,
+            `Delivery, confidence and answering specific Q&A (25%)`
         ],
         assignment: [
-            'Correctness of problem solutions and derivations (35%)',
-            'Writing clarity and report structure (25%)',
-            'Diagrams, tables and examples (20%)',
-            'Adherence to syllabus scope and references (20%)'
+            `Correctness of problem solutions and derivations specific to "${unitTitle}" (35%)`,
+            `Direct fulfillment of the target course outcome ${coKey} (20%)`,
+            `Writing clarity, report structure, and relevant diagrams (25%)`,
+            `Adherence to the specific syllabus scope and references (20%)`
         ],
         miniproject: [
-            'Working functionality and completeness (40%)',
-            'Innovation and alignment with course theory (20%)',
-            'Project report quality and documentation (20%)',
-            'Demonstration and explanation to reviewing team (20%)'
+            `Working functionality validating "${unitTitle}" concepts (40%)`,
+            `Demonstration of achieving course outcome ${coKey} (20%)`,
+            `Project report quality and structured documentation (20%)`,
+            `Demonstration and precise explanation to reviewing team (20%)`
         ],
         practicals: [
-            'Successful execution of the experiment (40%)',
-            'Knowledge of underlying concepts (viva) (30%)',
-            'Observation book quality and calculations (20%)',
-            'Debugging/troubleshooting skills shown (10%)'
+            `Successful and accurate execution of the "${unitTitle}" experiment (40%)`,
+            `Demonstrated practical achievement of course outcome ${coKey} (30%)`,
+            `Observation book quality, accuracy and calculations (20%)`,
+            `Debugging and troubleshooting skills shown during the lab (10%)`
         ],
     };
     const complexityCycle = ['Easy', 'Medium', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Hard', 'Easy'];
@@ -2459,7 +2471,7 @@ function generateAssignments() {
     const generated = [];
     for (let i = 0; i < numTeams; i++) {
         const topic = pool[i % pool.length];
-        generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i, cfg.courseName));
+        generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i, cfg.courseName, spec));
     }
     cfg.generatedAssignments = generated;
     navState.assignStep = 4;
