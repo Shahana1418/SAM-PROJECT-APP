@@ -975,20 +975,21 @@ function renderTeams(container) {
 
 // ===== Level 5: Session Schedule =====
 
-// Period time slots (Periods 3-4 are still morning in Indian college schedules)
+// Period time slots
 const PERIOD_TYPES = {
     morning1: { label: 'Morning (Periods 1-2)', shortLabel: 'P1-2', startH: 9, startM: 0, durMins: 100, sessCount: 2, sessDur: 30, color: '#2563eb' },
     morning2: { label: 'Morning (Periods 3-4)', shortLabel: 'P3-4', startH: 11, startM: 0, durMins: 90, sessCount: 2, sessDur: 30, color: '#0891b2' },
-    afternoon: { label: 'Afternoon (Periods 5-6)', shortLabel: 'P5-6', startH: 13, startM: 45, durMins: 90, sessCount: 2, sessDur: 30, color: '#7c3aed' },
+    afternoon1: { label: 'Afternoon (Periods 5-6)', shortLabel: 'P5-6', startH: 13, startM: 45, durMins: 90, sessCount: 2, sessDur: 30, color: '#7c3aed' },
+    afternoon2: { label: 'Afternoon (Periods 7-8)', shortLabel: 'P7-8', startH: 15, startM: 30, durMins: 90, sessCount: 2, sessDur: 30, color: '#d97706' },
 };
 const DAY_SLOTS = {
-    'p12': ['morning1'],                       // P1-2 only
-    'p34': ['morning2'],                       // P3-4 only
-    'p12_p34': ['morning1', 'morning2'],           // P1-2 + P3-4
-    'p12_p34_p56': ['morning1', 'morning2', 'afternoon'], // P1-2 + P3-4 + P5-6
-    // Legacy numeric keys
+    'p12': ['morning1'],
+    'p34': ['morning2'],
+    'p56': ['afternoon1'],
+    'p78': ['afternoon2'],
+    // Legacy
     2: ['morning1', 'morning2'],
-    3: ['morning1', 'morning2', 'afternoon'],
+    'p12_p34': ['morning1', 'morning2'],
 };
 const DAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_NAMES_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -1084,8 +1085,8 @@ function renderSessions(container) {
                 <select id="calSessPerDay">
                     <option value="p12" ${savedSpd === 'p12' ? 'selected' : ''}>Morning P1-2 only</option>
                     <option value="p34" ${savedSpd === 'p34' ? 'selected' : ''}>Morning P3-4 only</option>
-                    <option value="p12_p34" ${savedSpd === 'p12_p34' ? 'selected' : ''}>Morning P1-2 + P3-4</option>
-                    <option value="p12_p34_p56" ${savedSpd === 'p12_p34_p56' ? 'selected' : ''}>Morning P1-2 + P3-4 + Afternoon P5-6</option>
+                    <option value="p56" ${savedSpd === 'p56' ? 'selected' : ''}>Afternoon P5-6 only</option>
+                    <option value="p78" ${savedSpd === 'p78' ? 'selected' : ''}>Afternoon P7-8 only</option>
                 </select></div>
             <div class="cal-field"><label>Role Visibility</label>
                 <select id="calRevealMode">
