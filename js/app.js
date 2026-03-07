@@ -975,27 +975,13 @@ function renderTeams(container) {
 
 // ===== Level 5: Session Schedule =====
 
-// Period time slots — sessCount = default sessions per block, sessDur = minutes per session
+// Period time slots (Periods 3-4 are still morning in Indian college schedules)
 const PERIOD_TYPES = {
     morning1: { label: 'Morning (Periods 1-2)', shortLabel: 'P1-2', startH: 9, startM: 0, durMins: 100, sessCount: 2, sessDur: 30, color: '#2563eb' },
     morning2: { label: 'Morning (Periods 3-4)', shortLabel: 'P3-4', startH: 11, startM: 0, durMins: 90, sessCount: 2, sessDur: 30, color: '#0891b2' },
-    afternoon1: { label: 'Afternoon (Periods 5-6)', shortLabel: 'P5-6', startH: 13, startM: 45, durMins: 90, sessCount: 2, sessDur: 30, color: '#7c3aed' },
-    afternoon2: { label: 'Afternoon (Periods 7-8)', shortLabel: 'P7-8', startH: 15, startM: 30, durMins: 90, sessCount: 2, sessDur: 30, color: '#d97706' },
-    lab: { label: 'Lab (Periods 5-6-7)', shortLabel: 'LAB', startH: 13, startM: 45, durMins: 150, sessCount: 3, sessDur: 30, color: '#059669' },
+    afternoon: { label: 'Afternoon (Periods 5-6)', shortLabel: 'P5-6', startH: 13, startM: 45, durMins: 90, sessCount: 2, sessDur: 30, color: '#7c3aed' },
 };
-// Slot combinations selectable via dropdown
-const DAY_SLOTS = {
-    'morning': ['morning1', 'morning2'],                             // 4 sessions/day
-    'morning_p56': ['morning1', 'morning2', 'afternoon1'],               // 6 sessions/day
-    'morning_p78': ['morning1', 'morning2', 'afternoon2'],               // 6 sessions/day
-    'full': ['morning1', 'morning2', 'afternoon1', 'afternoon2'], // 8 sessions/day
-    'lab': ['lab'],                                               // 3 sessions/day
-    'morning_lab': ['morning1', 'morning2', 'lab'],                       // 7 sessions/day
-    // Legacy
-    2: ['morning1', 'morning2'],
-    3: ['morning1', 'morning2', 'afternoon1'],
-    'p12_p34': ['morning1', 'morning2'],
-};
+const DAY_SLOTS = { 2: ['morning1', 'morning2'], 3: ['morning1', 'morning2', 'afternoon'] };
 const DAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_NAMES_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -1011,7 +997,7 @@ function generateSessionCalendar(teams, config) {
     const N = teams.length;
     const reviewers = reviewerMap ? reviewerMap.reviewers : teams.map((_, i) => (i + 1) % N);
     const feedbacks = reviewerMap ? reviewerMap.feedbacks : teams.map((_, i) => (i + 2) % N);
-    const slots = DAY_SLOTS[sessionsPerDay] || DAY_SLOTS['morning'];
+    const slots = DAY_SLOTS[sessionsPerDay] || DAY_SLOTS[2];
     const sessions = [], todayStr = new Date().toISOString().slice(0, 10);
     let idx = 0, dayCount = 0;
     const cur = new Date(startDate + 'T00:00:00'), endD = new Date(endDate + 'T00:00:00');
@@ -1066,13 +1052,12 @@ function renderSessions(container) {
     const genAssign = (navState.assignConfig && navState.assignConfig.generatedAssignments) ? navState.assignConfig.generatedAssignments : null;
     const defEnd = new Date(); defEnd.setMonth(defEnd.getMonth() + 3);
     const defEndStr = defEnd.toISOString().slice(0, 10);
-    const savedSpd = cal ? (cal.sessionsPerDay || 'morning') : 'morning';
-    const isLabAssign = navState.assignConfig && navState.assignConfig.assignType === 'practicals';
+    const savedSpd = cal ? (cal.sessionsPerDay || 2) : 2;
 
     // Auto-compute end date: Friday of the same week as start
     function getFridayOfWeek(dateStr) {
         const d = new Date(dateStr + 'T00:00:00');
-        const dow = d.getDay(); // 0=Sun..6=Sat
+        const dow = d.getDay();
         const daysToFri = (dow === 0) ? 5 : (dow === 6) ? 6 : (5 - dow);
         d.setDate(d.getDate() + daysToFri);
         return d.toISOString().slice(0, 10);
@@ -1083,18 +1068,14 @@ function renderSessions(container) {
     const configPanel = `<div class="cal-config-panel">
         <div class="cal-config-title">⚙️ Schedule Configuration</div>
         <div class="cal-config-grid">
-            <div class="cal-field"><label>Start Date (Monday)</label>
+            <div class="cal-field"><label>Start Date</label>
                 <input type="date" id="calStartDate" value="${cal ? cal.startDate : todayStr}"></div>
             <div class="cal-field"><label>End Date (auto: Friday)</label>
                 <input type="date" id="calEndDate" value="${autoEndStr}" readonly style="opacity:.7;"></div>
-            <div class="cal-field"><label>Session Time Slot</label>
+            <div class="cal-field"><label>Sessions per Day</label>
                 <select id="calSessPerDay">
-                    <option value="morning" ${savedSpd === 'morning' ? 'selected' : ''}>Morning P1-2 + P3-4 (4 sessions/day)</option>
-                    <option value="morning_p56" ${savedSpd === 'morning_p56' ? 'selected' : ''}>Morning + P5-6 Afternoon (6 sessions/day)</option>
-                    <option value="morning_p78" ${savedSpd === 'morning_p78' ? 'selected' : ''}>Morning + P7-8 Afternoon (6 sessions/day)</option>
-                    <option value="full" ${savedSpd === 'full' ? 'selected' : ''}>Full Day P1-8 (8 sessions/day)</option>
-                    ${isLabAssign ? `<option value="lab" ${savedSpd === 'lab' ? 'selected' : ''}>Lab Period only (3 sessions/day)</option>` : ''}
-                    ${isLabAssign ? `<option value="morning_lab" ${savedSpd === 'morning_lab' ? 'selected' : ''}>Morning + Lab (7 sessions/day)</option>` : ''}
+                    <option value="2" ${savedSpd == 2 ? 'selected' : ''}>2 sessions / day (P1-2 &amp; P3-4 Morning)</option>
+                    <option value="3" ${savedSpd == 3 ? 'selected' : ''}>3 sessions / day (+ P5-6 Afternoon)</option>
                 </select></div>
             <div class="cal-field"><label>Role Visibility</label>
                 <select id="calRevealMode">
@@ -1103,7 +1084,7 @@ function renderSessions(container) {
                 </select></div>
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;">
-            <strong style="color:var(--text-secondary);">Schedule:</strong> Mon – Fri only (1 week) · Sat &amp; Sun are leave days · If needed, 2 days get 3 morning sessions to fit all teams
+            <strong style="color:var(--text-secondary);">Schedule:</strong> Mon – Fri only (1 week) · Sat &amp; Sun are leave days · If needed, morning P1-2 gets a 3rd session to fit all teams
         </div>
         <div class="cal-actions">
             <button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="applyCalendarConfig()">📅 Generate Schedule</button>
@@ -1118,7 +1099,7 @@ function renderSessions(container) {
     if (cal && cal.sessions && cal.sessions.length > 0) {
         const sessions = cal.sessions;
         const spd = cal.sessionsPerDay || 2;
-        const slotKeys = DAY_SLOTS[spd] || DAY_SLOTS['morning'];
+        const slotKeys = DAY_SLOTS[spd] || DAY_SLOTS[2];
 
         // Group by day
         const byDay = {};
@@ -1280,7 +1261,7 @@ function renderSessions(container) {
 
 function applyCalendarConfig() {
     const startDate = document.getElementById('calStartDate')?.value;
-    const spd = document.getElementById('calSessPerDay')?.value || 'morning';
+    const spd = parseInt(document.getElementById('calSessPerDay')?.value || '2');
     const revealMode = document.getElementById('calRevealMode')?.value || 'presenter';
     if (!startDate) {
         showToast('⚠️ Please set a valid start date.', 'error');
@@ -1300,17 +1281,15 @@ function applyCalendarConfig() {
         ? navState.calendarConfig.reviewerMap
         : buildRandomReviewerMap(N);
 
-    // Calculate if we need boost days (morning periods get 3 sessions instead of 2)
-    const slots = DAY_SLOTS[spd] || DAY_SLOTS['morning'];
+    // Calculate if we need boost days (morning P1-2 gets 3 sessions instead of 2)
+    const slots = DAY_SLOTS[spd] || DAY_SLOTS[2];
     const baseSessPerDay = slots.reduce((sum, pk) => sum + (PERIOD_TYPES[pk] ? PERIOD_TYPES[pk].sessCount : 1), 0);
-    const morningSlots = slots.filter(pk => pk === 'morning1' || pk === 'morning2').length;
-    const baseTotal = baseSessPerDay * 5; // 5 working days
+    const baseTotal = baseSessPerDay * 5; // 5 working days in 1 week
     let boostDays = [];
-    if (N > baseTotal && morningSlots > 0) {
-        // Each boost day adds morningSlots extra sessions (2 extra morning sessions per boost day)
-        const extraPerBoostDay = morningSlots; // each morning block gets +1
+    if (N > baseTotal) {
+        // Each boost day adds 1 extra session to morning1 (P1-2)
         const needed = N - baseTotal;
-        const numBoost = Math.min(Math.ceil(needed / extraPerBoostDay), 5);
+        const numBoost = Math.min(needed, 5);
         for (let i = 1; i <= numBoost; i++) boostDays.push(i);
     }
 
