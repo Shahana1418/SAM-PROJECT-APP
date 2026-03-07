@@ -1042,7 +1042,7 @@ function renderSessions(container) {
         </div>
         <div class="cal-config-grid" style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
             <div class="cal-field" style="flex:1; min-width:200px;"><label style="display:block; font-size:.8rem; color:var(--text-muted); margin-bottom:5px; font-weight:600; text-transform:uppercase;">Select Date</label>
-                <input type="date" id="calStartDate" value="${todayStr}" ${isWeekFull ? 'disabled' : ''} style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit;"></div>
+                <input type="date" id="calStartDate" value="${todayStr}" max="${todayStr}" ${isWeekFull ? 'disabled' : ''} style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit;"></div>
             <div class="cal-field" style="flex:1; min-width:200px;"><label style="display:block; font-size:.8rem; color:var(--text-muted); margin-bottom:5px; font-weight:600; text-transform:uppercase;">Select Period</label>
                 <select id="calSessPerDay" ${isWeekFull ? 'disabled' : ''} style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; background: white;">
                     <option value="p12">Morning P1-2 (9:00 - 10:40)</option>
@@ -1225,6 +1225,12 @@ function allocateSingleDay() {
     const startDate = document.getElementById('calStartDate')?.value;
     const spd = document.getElementById('calSessPerDay')?.value || 'p12';
     if (!startDate) { showToast('⚠️ Please select a date.', 'error'); return; }
+
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (startDate > todayStr) {
+        showToast('⚠️ Future dates are strictly blocked. You can only allocate the current or past days.', 'error');
+        return;
+    }
 
     const cal = navState.calendarConfig || { days: [] };
     if (cal.days.find(d => d.dateStr === startDate)) {
