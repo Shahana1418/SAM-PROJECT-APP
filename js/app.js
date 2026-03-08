@@ -988,13 +988,17 @@ function renderTeams(container) {
         const card = document.createElement('div');
         card.className = 'team-card';
         card.innerHTML = `
-        <div class="team-card-header" style="background: var(--gradient-${color})">
-                <span class="team-card-title" style="color:#fff">Team ${i + 1}</span>
-                <span class="team-sess-id">Session ${sessNum}</span>
-                <span class="badge" style="background:rgba(255,255,255,0.2);color:#fff">${team.members.length} members</span>
-            </div>
+        <div class="team-card-top-accent" style="background: var(--gradient-${color})"></div>
+        <div class="team-card-header">
+            <span class="team-card-title">Team ${i + 1}</span>
+            <span class="team-sess-id" style="color:var(--accent-${color}); background:var(--bg-${color}, rgba(0,0,0,0.05));">Session ${sessNum}</span>
+        </div>
         <div class="team-card-role-row">
-            <span class="team-gender-ratio" style="margin-left:auto;">♂${maleCount} ♀${femaleCount}</span>
+            <span class="team-member-count">${team.members.length} Members</span>
+            <div class="team-gender-ratio">
+                <span class="male">♂ ${maleCount}</span>
+                <span class="female">♀ ${femaleCount}</span>
+            </div>
         </div>
             ${team.members.map(m => {
             const moveDropdown = navState.editMode ? `
