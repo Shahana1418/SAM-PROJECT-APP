@@ -2075,16 +2075,23 @@ function renderAssessments(container) {
             };
             const cards = cfg.generatedAssignments.map((a, i) =>
                 '<div class="assign-card" style="animation-delay:' + (i * .03) + 's">' +
-                '<div class="assign-card-header">' +
+                '<div class="assign-card-header" onclick="toggleAssignCard(' + i + ')">' +
                 '<div class="assign-team-badge">T' + (i + 1) + '</div>' +
                 '<div class="assign-card-info">' +
-                '<div class="assign-topic-title" style="font-weight:600; color:var(--text-dark);">' + a.title + '</div>' +
-                '<div class="assign-meta-row" style="margin-top:8px;">' +
+                '<div class="assign-topic-title">' + a.title + '</div>' +
+                '<div class="assign-meta-row">' +
                 '<span class="assign-pill" style="background:rgba(37,99,235,.1);color:var(--accent-blue);">' + a.unit + '</span>' +
                 '<span class="assign-pill" style="' + (cColors[a.complexity] || cColors.Medium) + '">' + a.complexity + '</span>' +
                 '<span class="assign-pill" style="background:rgba(124,58,237,.1);color:#7c3aed;">' + a.type + '</span>' +
                 '<span style="font-size:.72rem;color:var(--text-muted);">' + a.co + ' &middot; ' + a.duration + '</span>' +
                 '</div></div>' +
+                '<div class="assign-card-expand" id="assign-expand-' + i + '">&darr;</div>' +
+                '</div>' +
+                '<div class="assign-card-body" id="assign-body-' + i + '">' +
+                '<h4>Learning Objective</h4><p>' + a.objective + '</p>' +
+                '<h4>Assignment Description</h4><p>' + a.description + '</p>' +
+                '<h4>Deliverables</h4><ul>' + a.deliverables.map(d => '<li>' + d + '</li>').join('') + '</ul>' +
+                '<h4>Evaluation Criteria</h4><ol>' + a.criteria.map(c => '<li>' + c + '</li>').join('') + '</ol>' +
                 '</div></div>'
             ).join('');
             resultHTML = '<div class="rt-section" style="margin-top:1.5rem;">' +
@@ -2222,7 +2229,84 @@ function toggleAssignCard(i) {
     if (expand) expand.style.transform = isOpen ? 'rotate(180deg)' : '';
 }
 
-/* generateEnrichedAssignment removed to simplify assignments */
+function generateEnrichedAssignment(unitNum, unitTitle, unitDesc, config, coKey, teamIdx, courseName = '') {
+    const { assignType } = config;
+    const typeLabel = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce', practicals: 'Practicals' }[assignType] || 'Team Presentation';
+    const descMap = {
+        presentation: `Prepare and deliver a 12–15 minute structured presentation on <strong>"${unitTitle}"</strong> from <strong>${courseName}</strong>. Cover Anna University important questions, key formulae, diagrams, and real-world examples. Use minimum 10 slides with clear visuals.`,
+        assignment: `Write a detailed analytical report on <strong>"${unitTitle}"</strong> from <strong>${courseName}</strong>. Include derivations, solved problems from previous Anna University question papers, diagrams and a summary. Minimum 1500 words.`,
+        miniproject: `Design, build or simulate a mini project on <strong>"${unitTitle}"</strong> relevant to <strong>${courseName}</strong>. Demonstrate a working outcome (prototype, simulation or data analysis), prepare a project report and present findings to the team.`,
+        practicals: `Perform laboratory experiments related to <strong>"${unitTitle}"</strong> in <strong>${courseName}</strong>. Record observations, analyse results, answer viva questions and submit a complete observation book entry.`,
+    };
+    const objectiveMap = {
+        presentation: `To understand and communicate key concepts of "${unitTitle}" from ${courseName}, with emphasis on Anna University syllabus topics and exam-relevant questions.`,
+        assignment: `To analyse and solve Anna University examination problems related to "${unitTitle}" from ${courseName}, developing problem-solving and technical writing skills.`,
+        miniproject: `To apply theoretical knowledge of "${unitTitle}" from ${courseName} in a practical, hands-on mini project that demonstrates engineering principles.`,
+        practicals: `To verify theoretical concepts of "${unitTitle}" through hands-on experiments in ${courseName} laboratory, building observation and analytical skills.`,
+    };
+    const deliverableMap = {
+        presentation: [
+            'PowerPoint/PDF slide deck (minimum 10 slides).',
+            'Live 12–15 min presentation to the team with Q&A.',
+            'Reference list citing syllabus textbooks and important question resources.'
+        ],
+        assignment: [
+            'Typed report (minimum 1500 words) with derivations and step-by-step solutions.',
+            'Solutions to at least 3 previous Anna University important questions.',
+            'Diagrams, graphs or flowcharts as applicable.'
+        ],
+        miniproject: [
+            'Working prototype, simulation output or experimental data.',
+            'Project report: Abstract, Introduction, Design/Method, Results, Conclusion.',
+            'Live demonstration and Q&A with evaluating team.'
+        ],
+        practicals: [
+            'Completed observation book entry with aim, apparatus, procedure, result.',
+            'Graphs and calculations as required by the experiment.',
+            'Viva responses covering theory behind the experiment.'
+        ],
+    };
+    const criteriaMap = {
+        presentation: [
+            'Coverage of Anna University syllabus topics (30%)',
+            'Clarity of slides and visual aids (20%)',
+            'Delivery, confidence and time management (25%)',
+            'Handling of Q&A from reviewers (25%)'
+        ],
+        assignment: [
+            'Correctness of problem solutions and derivations (35%)',
+            'Writing clarity and report structure (25%)',
+            'Diagrams, tables and examples (20%)',
+            'Adherence to syllabus scope and references (20%)'
+        ],
+        miniproject: [
+            'Working functionality and completeness (40%)',
+            'Innovation and alignment with course theory (20%)',
+            'Project report quality and documentation (20%)',
+            'Demonstration and explanation to reviewing team (20%)'
+        ],
+        practicals: [
+            'Successful execution of the experiment (40%)',
+            'Knowledge of underlying concepts (viva) (30%)',
+            'Observation book quality and calculations (20%)',
+            'Debugging/troubleshooting skills shown (10%)'
+        ],
+    };
+    const complexityCycle = ['Easy', 'Medium', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Hard', 'Easy'];
+    const usedComplexity = config.complexity === 'mixed'
+        ? complexityCycle[teamIdx % complexityCycle.length]
+        : config.complexity;
+    return {
+        assessId: 'ASSIGN_' + String(teamIdx + 1).padStart(3, '0'),
+        unit: 'Unit ' + unitNum, unitTitle, title: unitTitle,
+        co: coKey, complexity: usedComplexity, duration: config.duration, type: typeLabel,
+        objective: objectiveMap[assignType] || objectiveMap.presentation,
+        description: descMap[assignType] || descMap.presentation,
+        deliverables: deliverableMap[assignType] || deliverableMap.presentation,
+        criteria: criteriaMap[assignType] || criteriaMap.presentation,
+    };
+}
+
 function generateAssignments() {
     if (!navState.assignConfig) navState.assignConfig = {};
     const cfg = navState.assignConfig;
@@ -2354,27 +2438,10 @@ function generateAssignments() {
         if (pool.length === 0) useUnits.forEach(u => pool.push({ unitNum: u, title: (units[u] || {}).title || 'Unit ' + u, co: coKeys[(u - 1) % coKeys.length] || 'CO1' }));
     }
 
-    const typeMap = { presentation: 'Team Presentation', assignment: 'Individual Assignment', miniproject: 'Mini Project', viva: 'Viva Voce', practicals: 'Practicals' };
-    const typeLabel = typeMap[cfg.assignType] || 'Team Presentation';
-
     const generated = [];
-    const complexityCycle = ['Easy', 'Medium', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Easy', 'Hard', 'Medium', 'Hard', 'Easy'];
-
     for (let i = 0; i < numTeams; i++) {
         const topic = pool[i % pool.length];
-        const usedComplexity = cfg.complexity === 'mixed'
-            ? complexityCycle[i % complexityCycle.length]
-            : cfg.complexity;
-
-        generated.push({
-            assessId: 'ASSIGN_' + String(i + 1).padStart(3, '0'),
-            unit: 'Unit ' + topic.unitNum,
-            title: topic.title,
-            co: topic.co,
-            complexity: usedComplexity,
-            duration: cfg.duration,
-            type: typeLabel
-        });
+        generated.push(generateEnrichedAssignment(topic.unitNum, topic.title, (units[topic.unitNum] || {}).desc || '', cfg, topic.co, i, cfg.courseName));
     }
     cfg.generatedAssignments = generated;
     navState.assignStep = 4;
@@ -2390,7 +2457,7 @@ function exportAssignmentsCSV() {
     if (!cfg || !cfg.generatedAssignments) return;
     const items = cfg.generatedAssignments;
     if (items.length === 0) return;
-    const header = "Team,Topic Title,Unit,Complexity,Type,CO,Duration";
+    const header = "Team,Topic Title,Unit,Complexity,Type,CO,Duration,Objective";
     const rows = items.map((a, i) => {
         const team = `Team ${i + 1}`;
         const t = `"${(a.title || '').replace(/"/g, '""')}"`;
@@ -2399,7 +2466,8 @@ function exportAssignmentsCSV() {
         const typ = `"${(a.type || '').replace(/"/g, '""')}"`;
         const co = `"${(a.co || '').replace(/"/g, '""')}"`;
         const dur = `"${(a.duration || '').replace(/"/g, '""')}"`;
-        return `${team},${t},${u},${c},${typ},${co},${dur}`;
+        const obj = `"${(a.objective || '').replace(/"/g, '""')}"`;
+        return `${team},${t},${u},${c},${typ},${co},${dur},${obj}`;
     });
     const csvContent = [header, ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
