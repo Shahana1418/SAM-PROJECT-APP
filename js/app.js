@@ -100,7 +100,7 @@ const TEAM_NAMES = {
 
 function getTeamName(deptCode, teamIndex) {
     const names = TEAM_NAMES[deptCode];
-    if (names && teamIndex < names.length) return names[teamIndex];
+    if (names && teamIndex < names.length) return 'T-' + (teamIndex + 1) + ' | ' + names[teamIndex];
     return 'Team ' + (teamIndex + 1);
 }
 
@@ -2532,7 +2532,7 @@ function exportAssignmentsCSV() {
     const deptCode = navState.dept, batchYear = navState.batch;
     let csv = 'Assignment ID,Team,Course Code,Course Name,Topic Title,Unit,Complexity,Course Outcome,Duration,Type,Objective\n';
     assignments.forEach((a, i) => {
-        csv += [a.assessId, getTeamName(navState.dept, i), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
+        csv += [a.assessId, 'Team ' + (i + 1), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
     });
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
