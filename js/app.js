@@ -70,6 +70,40 @@ function getLabsGen(deptCode) {
     return null;
 }
 
+/* ── Department-themed team names ── */
+const TEAM_NAMES = {
+    ATE: ['Turbo Chargers', 'Piston Kings', 'Gear Heads', 'Axle Force', 'Torque Titans',
+        'Clutch Masters', 'Rev Riders', 'Crank Crew', 'Fuel Blaze', 'Drift Dynamos',
+        'Valve Strikers', 'Engine Eagles', 'Boost Brigade', 'Nitro Knights', 'Cam Warriors'],
+    CSE: ['Code Titans', 'Binary Bulls', 'Cyber Wolves', 'Data Dragons', 'Logic Legends',
+        'Algo Aces', 'Kernel Kings', 'Byte Blasters', 'Stack Strikers', 'Cloud Crusaders',
+        'Debug Devils', 'Pixel Panthers', 'Script Sharks', 'Hash Hawks', 'Neural Ninjas'],
+    CVE: ['Concrete Kings', 'Steel Pillars', 'Bridge Builders', 'Geo Titans', 'Truss Masters',
+        'Arch Angels', 'Site Spartans', 'Foundation Force', 'Beam Blazers', 'Survey Stars',
+        'Drain Dynamos', 'Mortar Mavericks', 'Level Leaders', 'Plumb Pros', 'Gravel Guards'],
+    ECE: ['Signal Snipers', 'Circuit Sharks', 'Wave Riders', 'Chip Champions', 'Frequency Force',
+        'Antenna Aces', 'Pulse Pirates', 'Diode Dragons', 'Amplifier Army', 'Radar Rangers',
+        'Oscillator Owls', 'Bandwidth Bulls', 'Transistor Titans', 'Modem Mavericks', 'Relay Rockets'],
+    EEE: ['Volt Vipers', 'Watt Warriors', 'Spark Strikers', 'Current Crushers', 'Power Panthers',
+        'Ohm Owls', 'Dynamo Devils', 'Fuse Fighters', 'Grid Guardians', 'Transformer Titans',
+        'Coil Commanders', 'Amp Avengers', 'Switch Sharks', 'Breaker Bulls', 'Motor Mavericks'],
+    IMT: ['Info Titans', 'Tech Troopers', 'Data Drifters', 'Net Ninjas', 'System Sharks',
+        'Cloud Cobras', 'Query Kings', 'Server Strikers', 'Link Lions', 'Matrix Masters',
+        'Firewall Force', 'Protocol Panthers', 'Cache Crushers', 'Router Rockets', 'Domain Dragons'],
+    MCE: ['Mech Mavericks', 'Robo Rangers', 'Thermo Titans', 'Fluid Force', 'Weld Warriors',
+        'Lathe Lions', 'CAD Crusaders', 'Forge Falcons', 'Turbine Tigers', 'Grind Gladiators',
+        'Piston Pros', 'Drill Demons', 'Press Panthers', 'Alloy Aces', 'Shaft Sharks'],
+    CDS: ['Data Wizards', 'Stat Strikers', 'Model Masters', 'Insight Ions', 'Cluster Kings',
+        'Tensor Titans', 'Feature Force', 'Pipeline Panthers', 'Epoch Eagles', 'Vector Vipers',
+        'Gradient Gurus', 'Matrix Mavericks', 'Neuron Knights', 'Bias Busters', 'Spark Scholars'],
+};
+
+function getTeamName(deptCode, teamIndex) {
+    const names = TEAM_NAMES[deptCode];
+    if (names && teamIndex < names.length) return names[teamIndex];
+    return 'Team ' + (teamIndex + 1);
+}
+
 // Single admin password for all roles: sam@admin
 const ADMIN_HASH = '460fed869984ad2465122a0841a35c62c493f5e92c07499fa9c0c57fe86cc146';
 // Faculty password: sam@faculty
@@ -990,7 +1024,7 @@ function renderTeams(container) {
         card.innerHTML = `
         <div class="team-card-top-accent" style="background: var(--gradient-${color})"></div>
         <div class="team-card-header">
-            <span class="team-card-title">Team ${i + 1}</span>
+            <span class="team-card-title">${getTeamName(deptCode, i)}</span>
             <span class="team-sess-id" style="color:var(--accent-${color}); background:var(--bg-${color}, rgba(0,0,0,0.05));">Session ${sessNum}</span>
         </div>
         <div class="team-card-role-row">
@@ -1003,8 +1037,8 @@ function renderTeams(container) {
             ${team.members.map(m => {
             const moveDropdown = navState.editMode ? `
                     <select class="move-select" onchange="moveStudent('${m.id}', ${i}, parseInt(this.value))">
-                        <option value="${i}">Team ${i + 1}</option>
-                        ${teams.map((_, ti) => ti !== i ? `<option value="${ti}">→ Team ${ti + 1}</option>` : '').join('')}
+                        <option value="${i}">${getTeamName(deptCode, i)}</option>
+                        ${teams.map((_, ti) => ti !== i ? `<option value="${ti}">→ ${getTeamName(deptCode, ti)}</option>` : '').join('')}
                     </select>
                 ` : '';
             return `
@@ -1183,7 +1217,7 @@ function renderSessions(container) {
             const cells = Array.from({ length: SESSIONS_PER_SLOT }, (_, si) => {
                 const s = daySess.find(x => x.slotIndex === si);
                 if (!s) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
-                const p = `Team ${s.presenterIdx + 1}`, r = `Team ${s.reviewerIdx + 1}`, fb = `Team ${s.feedbackIdx + 1}`;
+                const p = getTeamName(deptCode, s.presenterIdx), r = getTeamName(deptCode, s.reviewerIdx), fb = getTeamName(deptCode, s.feedbackIdx);
                 const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
                 const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
                 return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
@@ -1236,9 +1270,9 @@ function renderSessions(container) {
                         <div style="font-size:.82rem;font-weight:700;color:var(--text-primary);">${pt.label} &nbsp;·&nbsp; ${s.startTime} – ${s.endTime}</div>
                     </div>
                     <div class="sched-roles-inline">
-                        <span class="sched-chip sched-presenter">🎤 Team ${s.presenterIdx + 1} — Presenter</span>
+                        <span class="sched-chip sched-presenter">🎤 ${getTeamName(deptCode, s.presenterIdx)} — Presenter</span>
                         ${s.revealed
-                        ? `<span class="sched-chip sched-reviewer">🔍 Team ${s.reviewerIdx + 1} — Reviewer</span><span class="sched-chip sched-feedback">💬 Team ${s.feedbackIdx + 1} — Feedback</span>`
+                        ? `<span class="sched-chip sched-reviewer">🔍 ${getTeamName(deptCode, s.reviewerIdx)} — Reviewer</span><span class="sched-chip sched-feedback">💬 ${getTeamName(deptCode, s.feedbackIdx)} — Feedback</span>`
                         : `<span class="sched-chip sched-locked">🔒 Reviewer &amp; Feedback revealed on ${dateStr}</span>`}
                     </div>
                     ${dayTopicHTML}
@@ -1274,9 +1308,9 @@ function renderSessions(container) {
             orderRows += `<tr class="rt-row">
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s.sessNum).padStart(2, '0')}</span></td>
                 <td>${s.dateStr} (${s.dayName})</td>
-                <td><span class="rt-team-chip rt-presenter">🎤 Team ${p + 1}</span></td>
-                <td>${s.revealed ? `<span class="rt-team-chip rt-reviewer">🔍 Team ${r + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
-                <td>${s.revealed ? `<span class="rt-team-chip rt-feedback">💬 Team ${fb + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
+                <td><span class="rt-team-chip rt-presenter">🎤 ${getTeamName(deptCode, p)}</span></td>
+                <td>${s.revealed ? `<span class="rt-team-chip rt-reviewer">🔍 ${getTeamName(deptCode, r)}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
+                <td>${s.revealed ? `<span class="rt-team-chip rt-feedback">💬 ${getTeamName(deptCode, fb)}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
             </tr>`;
         });
     } else {
@@ -1285,7 +1319,7 @@ function renderSessions(container) {
             orderRows += `<tr class="rt-row">
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s + 1).padStart(2, '0')}</span></td>
                 <td>—</td>
-                <td><span class="rt-team-chip rt-presenter">🎤 Team ${s + 1}</span></td>
+                <td><span class="rt-team-chip rt-presenter">🎤 ${getTeamName(deptCode, s)}</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
             </tr>`;
@@ -1518,7 +1552,7 @@ function exportCSV() {
     let csv = 'Team,Student ID,Name,Gender,Email\n';
     teams.forEach((team, i) => {
         team.members.forEach(m => {
-            csv += `Team ${i + 1},${m.id}, "${m.name}", ${m.gender},${m.email || ''} \n`;
+            csv += `${getTeamName(navState.dept, i)},${m.id}, "${m.name}", ${m.gender},${m.email || ''} \n`;
         });
     });
 
@@ -2498,7 +2532,7 @@ function exportAssignmentsCSV() {
     const deptCode = navState.dept, batchYear = navState.batch;
     let csv = 'Assignment ID,Team,Course Code,Course Name,Topic Title,Unit,Complexity,Course Outcome,Duration,Type,Objective\n';
     assignments.forEach((a, i) => {
-        csv += [a.assessId, 'Team ' + (i + 1), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
+        csv += [a.assessId, getTeamName(navState.dept, i), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
     });
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
