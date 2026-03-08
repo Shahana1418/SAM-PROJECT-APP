@@ -826,7 +826,7 @@ function renderTeams(container) {
         <button class="btn-primary" style="${editBtnStyle}" onclick="toggleEditMode()">
             ${editBtnLabel}
         </button>
-        <button class="btn-primary" style="width:auto;padding:10px 20px" onclick="exportCSV()">
+        <button class="btn-secondary" style="width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick="exportCSV()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
                 <polyline points="7 10 12 15 17 10"/>
@@ -907,21 +907,14 @@ function renderTeams(container) {
                     </svg>
                     Team Rosters
                 </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap">${adminBtns}</div>
-            </div>
-            <div class="teams-container" id="teams-container"></div>
-        </div>
-
-        <!-- Assignment Generation CTA Banner -->
-        <div class="assess-cta-banner" onclick="navigateToAssessments()">
-            <div class="cta-left">
-                <div class="cta-icon">📋</div>
-                <div class="cta-text">
-                    <div class="cta-title">View Assignment Generation</div>
-                    <div class="cta-sub">Proceed to auto-assign a unique syllabus topic unit-wise to each team</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                    ${adminBtns}
+                    <button class="btn-primary" style="background:var(--gradient-purple);width:auto;padding:10px 20px;" onclick="navigateToAssessments()">
+                        📋 View Assignment Generation
+                    </button>
                 </div>
             </div>
-            <div class="cta-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="teams-container" id="teams-container"></div>
         </div>
     `;
 
@@ -2045,25 +2038,12 @@ function renderAssessments(container) {
             resultHTML = '<div class="rt-section" style="margin-top:1.5rem;">' +
                 '<div class="rt-section-header">' +
                 '<div class="rt-section-title">Generated Assignments (' + cfg.generatedAssignments.length + ')</div>' +
-                '<div style="display:flex;gap:8px;">' +
+                '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' +
+                '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;background:var(--gradient-purple);" onclick="navigateToSessions()">🗓️ Proceed to Session Schedule</button>' +
                 '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;" onclick="generateAssignments()">Regenerate</button>' +
-                '<button class="btn-primary" style="width:auto;padding:8px 18px;font-size:.82rem;background:var(--gradient-green);" onclick="exportAssignmentsCSV()">Export CSV</button>' +
+                '<button class="btn-secondary" style="width:auto;padding:8px 18px;font-size:.82rem;" onclick="exportAssignmentsCSV()">Export CSV</button>' +
                 '</div></div>' +
-                '<div class="assign-result-grid">' + cards + '</div></div>' +
-                '<div class="session-cta-banner" style="margin-top: 1.5rem;" onclick="navigateToSessions()">' +
-                '<div class="cta-left">' +
-                '<div class="cta-icon">🗓️</div>' +
-                '<div class="cta-text">' +
-                '<div class="cta-title">Proceed to Session Schedule</div>' +
-                '<div class="cta-sub">Organize your generated assignments into a round-robin presentation schedule</div>' +
-                '</div>' +
-                '</div>' +
-                '<div class="cta-arrow">' +
-                '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
-                '<polyline points="9 18 15 12 9 6"/>' +
-                '</svg>' +
-                '</div>' +
-                '</div>';
+                '<div class="assign-result-grid">' + cards + '</div></div>';
         }
 
         const units = cfg.units || {};
