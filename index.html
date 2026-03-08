@@ -81,17 +81,29 @@
         <!-- Dynamic content rendered by JS -->
     </main>
 
-    <!-- Admin Admin Login Faculty Login Modal -->
+    <!-- Admin & Faculty Login Modal -->
     <div class="modal-overlay" id="admin-modal" style="display:none">
         <div class="modal-card modal-card-auth" style="max-width: 420px; padding: 36px">
             <div class="modal-header-login"
-                style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
-                <h3 style="margin:0;">Admin Admin Login Faculty Login</h3>
-                <p style="color:var(--text-light); font-size:0.88rem; margin:0;">Enter Admin or Faculty password to continue
-                </p>
+                style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; margin-bottom:20px;">
+                <h3 style="margin:0;" id="login-modal-title">Faculty Login</h3>
+                <p style="color:var(--text-light); font-size:0.88rem; margin:0;" id="login-modal-subtitle">Enter Faculty
+                    password to continue</p>
             </div>
 
-            <div style="margin-top: 24px;">
+            <div class="role-tabs"
+                style="display:flex; gap:10px; margin-bottom:24px; background:var(--bg-content); padding:6px; border-radius:12px;">
+                <button type="button" id="tab-faculty" class="role-tab active" onclick="selectLoginRole('Faculty')"
+                    style="flex:1; padding:10px; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:all 0.2s; background:var(--card-bg); color:var(--accent-blue); box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                    Faculty
+                </button>
+                <button type="button" id="tab-admin" class="role-tab" onclick="selectLoginRole('Admin')"
+                    style="flex:1; padding:10px; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:all 0.2s; background:transparent; color:var(--text-muted);">
+                    Admin
+                </button>
+            </div>
+
+            <div>
                 <div class="pw-wrapper">
                     <input type="password" id="admin-password" class="modal-input login-input" placeholder="Password"
                         onkeypress="if(event.key==='Enter')attemptLogin()">

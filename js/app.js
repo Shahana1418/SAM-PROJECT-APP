@@ -160,6 +160,32 @@ async function sha256(message) {
 
 // ===== Role-based Admin Auth =====
 let loginState = { role: null, dept: null };
+let selectedLoginRole = 'Faculty';
+
+function selectLoginRole(role) {
+    selectedLoginRole = role;
+    document.getElementById('login-modal-title').textContent = role + ' Login';
+    document.getElementById('login-modal-subtitle').textContent = 'Enter ' + role + ' password to continue';
+
+    const tabFaculty = document.getElementById('tab-faculty');
+    const tabAdmin = document.getElementById('tab-admin');
+    const activeStyle = 'flex:1; padding:10px; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:all 0.2s; background:var(--card-bg); color:var(--accent-blue); box-shadow:0 2px 8px rgba(0,0,0,0.05);';
+    const inactiveStyle = 'flex:1; padding:10px; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:all 0.2s; background:transparent; color:var(--text-muted);';
+
+    if (role === 'Faculty') {
+        tabFaculty.className = 'role-tab active';
+        tabFaculty.style.cssText = activeStyle;
+        tabAdmin.className = 'role-tab';
+        tabAdmin.style.cssText = inactiveStyle;
+    } else {
+        tabAdmin.className = 'role-tab active';
+        tabAdmin.style.cssText = activeStyle;
+        tabFaculty.className = 'role-tab';
+        tabFaculty.style.cssText = inactiveStyle;
+    }
+
+    document.getElementById('login-error').style.display = 'none';
+}
 
 function toggleAdminLogin() {
     if (currentUser) {
@@ -169,6 +195,7 @@ function toggleAdminLogin() {
         render();
         return;
     }
+    selectLoginRole('Faculty'); // Reset to default upon opening
     document.getElementById('admin-modal').style.display = 'flex';
     document.getElementById('admin-password').value = '';
     document.getElementById('login-error').style.display = 'none';
@@ -178,27 +205,32 @@ async function attemptLogin() {
     const pw = document.getElementById('admin-password').value;
     const hash = await sha256(pw);
 
-    if (hash === ADMIN_HASH) {
+    let roleMatched = false;
+
+    if (selectedLoginRole === 'Admin' && hash === ADMIN_HASH) {
         currentUser = {
             role: 'Admin',
             dept: null,       // admin sees all departments
             canGenerate: true, // admin can generate teams
             canLock: false
         };
-        updateUserBadge();
-        closeAdminLogin();
-        navigateTo('college');
-    } else if (hash === FACULTY_HASH) {
+        roleMatched = true;
+    } else if (selectedLoginRole === 'Faculty' && hash === FACULTY_HASH) {
         currentUser = {
             role: 'Faculty',
             dept: null,
             canGenerate: true,
             canLock: true
         };
+        roleMatched = true;
+    }
+
+    if (roleMatched) {
         updateUserBadge();
         closeAdminLogin();
         navigateTo('college');
     } else {
+        document.getElementById('login-error').textContent = 'Incorrect password for ' + selectedLoginRole + '. Please try again.';
         document.getElementById('login-error').style.display = 'block';
     }
 }
