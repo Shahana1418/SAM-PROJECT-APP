@@ -72,6 +72,8 @@ function getLabsGen(deptCode) {
 
 // Single admin password for all roles: sam@admin
 const ADMIN_HASH = '460fed869984ad2465122a0841a35c62c493f5e92c07499fa9c0c57fe86cc146';
+// Faculty password: sam@faculty
+const FACULTY_HASH = '5c7673add8b18969b0cd28dbf21371babfa912efe212234d0dc8e69ef323762d';
 const ROLE_PASSWORDS = {
     'principal': ADMIN_HASH,
     'alumni': ADMIN_HASH,
@@ -180,7 +182,18 @@ async function attemptLogin() {
         currentUser = {
             role: 'Admin',
             dept: null,       // admin sees all departments
-            canGenerate: true // admin can generate teams
+            canGenerate: true, // admin can generate teams
+            canLock: false
+        };
+        updateUserBadge();
+        closeAdminLogin();
+        navigateTo('college');
+    } else if (hash === FACULTY_HASH) {
+        currentUser = {
+            role: 'Faculty',
+            dept: null,
+            canGenerate: true,
+            canLock: true
         };
         updateUserBadge();
         closeAdminLogin();
@@ -218,7 +231,7 @@ function updateUserBadge() {
     const btn = document.getElementById('admin-toggle');
 
     if (currentUser) {
-        badge.innerHTML = `<span>🔑</span> Admin`;
+        badge.innerHTML = `<span>🔑</span> ${currentUser.role}`;
         badge.style.display = 'inline-flex';
         btnText.textContent = 'Logout';
         btn.classList.add('admin-active');
@@ -648,7 +661,7 @@ function renderBatch(container) {
     const females = students.filter(s => s.gender === 'F').length;
     const batchInfo = getBatchAcademicInfo(batchYear);
 
-    const adminActions = (currentUser && currentUser.canGenerate) ? `
+    const adminActions = (!batchData.isLocked && currentUser && currentUser.canGenerate) ? `
             <div class="admin-actions">
             <h3 class="section-title">⚡ Admin: Generate Teams</h3>
             <div class="team-controls">
@@ -677,7 +690,14 @@ function renderBatch(container) {
                 </button>
             </div>
         </div>
-            ` : '';
+            ` : (batchData.isLocked ? `
+            <div class="admin-actions" style="background:var(--card-bg); border-color:#d97706; padding: 1.5rem; text-align: center;">
+                <h3 class="section-title" style="margin-bottom:0.5rem; color:#d97706;">🔒 Teams are Locked by Faculty</h3>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Team generation and editing have been disabled for this batch.</p>
+                <button class="btn-primary" style="width:auto; margin:0 auto; padding:10px 20px; background:var(--gradient-purple);" onclick="navigateTo('teams', '${deptCode}', ${batchYear})">
+                    📋 View Teams
+                </button>
+            </div>` : '');
 
     container.innerHTML = `
             <div class="page-header">
@@ -822,10 +842,30 @@ function renderTeams(container) {
         ? 'background:var(--gradient-green);width:auto;padding:10px 20px'
         : 'background:var(--gradient-orange);width:auto;padding:10px 20px';
 
-    const adminBtns = (currentUser && currentUser.canGenerate) ? `
-        <button class="btn-primary" style="${editBtnStyle}" onclick="toggleEditMode()">
-            ${editBtnLabel}
-        </button>
+    const batchData = appData.batches.find(b => b.year === batchYear);
+    const isLocked = batchData ? batchData.isLocked : false;
+
+    let adminBtns = '';
+
+    if (currentUser) {
+        if (currentUser.canLock) {
+            adminBtns += `
+                <button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--card-bg);border:1px solid #d97706;color:#d97706;" onclick="toggleLockTeams('${deptCode}', ${batchYear})">
+                    ${isLocked ? '🔓 Unlock Teams' : '🔒 Lock Teams'}
+                </button>
+            `;
+        }
+
+        if (currentUser.canGenerate && !isLocked) {
+            adminBtns += `
+                <button class="btn-primary" style="${editBtnStyle}" onclick="toggleEditMode()">
+                    ${editBtnLabel}
+                </button>
+            `;
+        }
+    }
+
+    adminBtns += `
         <button class="btn-secondary" style="width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick="exportCSV()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
@@ -834,7 +874,7 @@ function renderTeams(container) {
             </svg>
             Export CSV
         </button>
-    ` : '';
+    `;
 
     container.innerHTML = `
         <div class="page-header">
@@ -2394,23 +2434,53 @@ function generateAssignments() {
 }
 
 function exportAssignmentsCSV() {
-    const cfg = navState.assignConfig || {};
-    const assignments = cfg.generatedAssignments;
-    if (!assignments || !assignments.length) { showToast('⚠️ Please generate assignments first.', 'warning'); return; }
-    const deptCode = navState.dept, batchYear = navState.batch;
-    let csv = 'Assignment ID,Team,Course Code,Course Name,Topic Title,Unit,Complexity,Course Outcome,Duration,Type,Objective\n';
-    assignments.forEach((a, i) => {
-        csv += [a.assessId, 'Team ' + (i + 1), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
+    const cfg = navState.assignConfig;
+    if (!cfg || !cfg.generatedAssignments) return;
+    const items = cfg.generatedAssignments;
+    if (items.length === 0) return;
+    const header = "Team,Topic Title,Unit,Complexity,Type,CO,Duration,Objective";
+    const rows = items.map((a, i) => {
+        const team = `Team ${i + 1}`;
+        const t = `"${(a.title || '').replace(/"/g, '""')}"`;
+        const u = `"${(a.unit || '').replace(/"/g, '""')}"`;
+        const c = `"${(a.complexity || '').replace(/"/g, '""')}"`;
+        const typ = `"${(a.type || '').replace(/"/g, '""')}"`;
+        const co = `"${(a.co || '').replace(/"/g, '""')}"`;
+        const dur = `"${(a.duration || '').replace(/"/g, '""')}"`;
+        const obj = `"${(a.objective || '').replace(/"/g, '""')}"`;
+        return `${team},${t},${u},${c},${typ},${co},${dur},${obj}`;
     });
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const csvContent = [header, ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'assignments_' + deptCode + '_' + batchYear + '_' + (cfg.courseCode || 'course') + '.csv'; a.click();
-    URL.revokeObjectURL(url);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `sam_assignments_${navState.dept}_${navState.batch}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
+// ===== Team Locking =====
+function toggleLockTeams(deptCode, batchYear) {
+    if (!currentUser || !currentUser.canLock) return;
+    const batchData = appData.batches.find(b => b.year === batchYear);
+    if (!batchData) return;
 
+    batchData.isLocked = !batchData.isLocked;
 
+    // Check if we are in Edit Mode and it's being locked
+    if (batchData.isLocked && navState.editMode) {
+        navState.editMode = false;
+    }
+
+    render();
+    if (batchData.isLocked) {
+        showToast('🔒 Teams have been locked.', 'success');
+    } else {
+        showToast('🔓 Teams have been unlocked.', 'info');
+    }
+}
 
 
 function openSyllabusPdf(path) {
