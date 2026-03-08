@@ -734,3 +734,115 @@ const ATE_SUBJECTS = {
         }
     }
 };
+
+/* ══════════════════════════════════════════════════════════════════
+ *  SEMESTER LABS — used when user selects "Practicals" type
+ *  Key = semester number, value = array of lab entries
+ * ══════════════════════════════════════════════════════════════════ */
+const ATE_LABS = {
+    /* Semester 2 Labs (Batch 2029) */
+    2: [
+        {
+            code: "GE3271", name: "Engineering Practices Laboratory", experiments: [
+                "Study and practice of basic carpentry joints",
+                "Study and practice of sheet metal operations – Tray making",
+                "Study and practice of fitting operations – V-fit and Dovetail fit",
+                "Study and practice of plumbing joints and pipe connections",
+                "Study and practice of welding – Arc welding butt and lap joints",
+                "Study and practice of basic machining – Turning and facing",
+                "Wiring practice – Staircase wiring and godown wiring",
+                "Soldering practice – Simple electronic circuit assembly",
+                "Study of power tools and measurement instruments",
+                "Foundry practice – Moulding and casting of simple shapes",
+                "Smithy practice – Forging operations",
+                "Study and use of basic hand tools and their applications"
+            ]
+        },
+        {
+            code: "BE3271", name: "Basic Electrical and Electronics Engineering Laboratory", experiments: [
+                "Verification of KVL and KCL in DC circuits",
+                "Measurement of power and power factor in single phase AC circuit",
+                "Performance test on single phase transformer (load test)",
+                "Speed control of DC shunt motor",
+                "Study of characteristics of PN junction and Zener diode",
+                "Characteristics of BJT in CE configuration",
+                "Op-Amp circuits – Inverting and Non-inverting amplifier",
+                "Half adder and Full adder circuit using logic gates",
+                "Characteristics of MOSFET",
+                "Measurement of three phase power using two wattmeter method",
+                "Study of flip-flops – SR, JK, D and T",
+                "Frequency response of series RLC circuit"
+            ]
+        }
+    ],
+    /* Semester 4 Labs (Batch 2028) */
+    4: [
+        {
+            code: "AU3411", name: "Automotive Chassis Laboratory", experiments: [
+                "Study of chassis layout and frame types in automobile",
+                "Study and demonstration of steering mechanisms and geometry",
+                "Study of different types of front axles and stub axles",
+                "Study of propeller shaft, universal joints and CV joints",
+                "Study of differential mechanism and final drive types",
+                "Study of full-floating, semi-floating and three-quarter floating axles",
+                "Study of leaf spring, coil spring and torsion bar suspension",
+                "Study of independent suspension and shock absorbers",
+                "Study and demonstration of drum brake components",
+                "Study and demonstration of disc brake components",
+                "Study of hydraulic and pneumatic braking circuits",
+                "Study of anti-lock braking system (ABS) components"
+            ]
+        },
+        {
+            code: "AU3412", name: "Fuels and Lubricants Laboratory", experiments: [
+                "Determination of flash point and fire point of fuel samples",
+                "Determination of kinematic viscosity using Redwood viscometer",
+                "Determination of calorific value using Bomb calorimeter",
+                "Determination of cloud point and pour point of diesel",
+                "Determination of carbon residue using Conradson apparatus",
+                "Determination of aniline point of fuel samples",
+                "Determination of cetane number / diesel index",
+                "Determination of penetration and softening point of grease",
+                "Drop point test and consistency test on grease samples",
+                "Copper strip corrosion test on fuel samples",
+                "Distillation test on petrol and diesel samples",
+                "Study of ASTM standards for fuel and lubricant testing"
+            ]
+        }
+    ],
+    /* Semester 6 Labs (Batch 2027) */
+    6: [
+        {
+            code: "AU3611", name: "Engine Testing Laboratory", experiments: [
+                "Performance test on single cylinder four stroke diesel engine",
+                "Performance test on single cylinder four stroke petrol engine",
+                "Heat balance test on single cylinder diesel engine",
+                "Morse test on multi-cylinder petrol engine",
+                "Determination of volumetric efficiency of air compressor",
+                "Emission testing of petrol engine using exhaust gas analyser",
+                "Emission testing of diesel engine using smoke meter",
+                "Valve timing diagram verification of IC engine",
+                "Port timing diagram verification of two stroke engine",
+                "Retardation test on IC engine",
+                "Study of fuel injection system in diesel engine",
+                "Study of ignition system in petrol engine"
+            ]
+        },
+        {
+            code: "AU3612", name: "Computer Aided Vehicle Design Laboratory", experiments: [
+                "3D modelling of automotive components using CAD software",
+                "Assembly of engine components in CAD environment",
+                "Stress analysis of connecting rod using FEA",
+                "Stress analysis of piston using FEA",
+                "Design and drafting of gearbox components",
+                "Design and analysis of brake drum/disc using FEA",
+                "Simulation of suspension system behaviour",
+                "Design of chassis frame and structural analysis",
+                "Aerodynamic simulation of vehicle body using CFD",
+                "Generation of manufacturing drawings with GD&T",
+                "Motion analysis of crank-slider mechanism",
+                "Parametric modelling of steering components"
+            ]
+        }
+    ]
+};

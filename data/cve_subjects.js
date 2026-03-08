@@ -803,3 +803,130 @@ const CVE_SUBJECTS = {
         }
     }
 };
+
+/* ══════════════════════════════════════════════════════════════════
+ *  CVE_LABS — Lab experiments per semester
+ * ══════════════════════════════════════════════════════════════════ */
+const CVE_LABS = {
+    /* Semester 2 Labs (Batch 2029 - R2025) */
+    2: [
+        {
+            code: "GE3271", name: "Engineering Practices Laboratory", experiments: [
+                "Study and practice of basic carpentry joints",
+                "Study and practice of sheet metal operations – Tray making",
+                "Study and practice of fitting operations – V-fit and Dovetail fit",
+                "Study and practice of plumbing joints and pipe connections",
+                "Study and practice of welding – Arc welding butt and lap joints",
+                "Study and practice of basic machining – Turning and facing",
+                "Wiring practice – Staircase wiring and godown wiring",
+                "Soldering practice – Simple electronic circuit assembly",
+                "Study of power tools and measurement instruments",
+                "Foundry practice – Moulding and casting of simple shapes",
+                "Smithy practice – Forging operations",
+                "Study and use of basic hand tools and their applications"
+            ]
+        },
+        {
+            code: "ME25C02", name: "Engineering Mechanics Laboratory", experiments: [
+                "Verification of parallelogram law of forces",
+                "Verification of triangle law and polygon law of forces",
+                "Determination of reactions in simply supported beam",
+                "Verification of principle of moments (Varignon's theorem)",
+                "Determination of centroid of irregular lamina",
+                "Determination of moment of inertia using oscillation method",
+                "Verification of belt friction formula on flat and V-belt",
+                "Coefficient of friction determination on inclined plane",
+                "Simple and compound pendulum experiments",
+                "Jib crane force analysis experiment",
+                "Equilibrium of concurrent forces experiment",
+                "Determination of modulus of rigidity using torsion test"
+            ]
+        }
+    ],
+    /* Semester 4 Labs (Batch 2028 - R2021) */
+    4: [
+        {
+            code: "CE3401", name: "Applied Hydraulics Laboratory", experiments: [
+                "Determination of coefficient of discharge using venturimeter",
+                "Determination of coefficient of discharge of orifice",
+                "Verification of Bernoulli's theorem",
+                "Determination of Manning's roughness coefficient in open channel",
+                "Measurement of velocity using current meter and pitot tube",
+                "Determination of critical depth and specific energy in open channel",
+                "Study of hydraulic jump and energy dissipation",
+                "Performance test on centrifugal pump",
+                "Performance test on reciprocating pump",
+                "Performance test on Pelton wheel turbine",
+                "Performance test on Francis turbine",
+                "Calibration of rectangular and triangular notch"
+            ]
+        },
+        {
+            code: "CE3403", name: "Concrete Technology Laboratory", experiments: [
+                "Tests on cement – Consistency, Initial and Final setting time",
+                "Tests on cement – Fineness and Compressive strength",
+                "Sieve analysis of fine and coarse aggregates",
+                "Specific gravity and water absorption of aggregates",
+                "Slump cone test and Compaction factor test for workability",
+                "Mix design of concrete as per IS 10262",
+                "Casting and testing of concrete cubes for compressive strength",
+                "Flexural strength test on concrete beam specimens",
+                "Non-destructive testing – Rebound hammer test on concrete",
+                "Non-destructive testing – Ultrasonic pulse velocity test",
+                "Split tensile strength test on cylindrical specimens",
+                "Tests on bricks – Compressive strength and water absorption"
+            ]
+        },
+        {
+            code: "CE3404", name: "Soil Mechanics Laboratory", experiments: [
+                "Determination of water content by oven drying method",
+                "Determination of specific gravity of soil using pycnometer",
+                "Grain size analysis – Sieve analysis and hydrometer analysis",
+                "Determination of liquid limit and plastic limit (Atterberg limits)",
+                "Standard Proctor compaction test – MDD and OMC",
+                "Determination of coefficient of permeability – Constant head test",
+                "Determination of coefficient of permeability – Falling head test",
+                "Unconfined compression test on cohesive soil",
+                "Direct shear test on soil sample",
+                "Consolidation test using one-dimensional consolidometer",
+                "Field density test using core cutter method",
+                "CBR test on soil sample for pavement design"
+            ]
+        }
+    ],
+    /* Semester 6 Labs (Batch 2027 - R2021) */
+    6: [
+        {
+            code: "CE3601", name: "Steel Structures Design Laboratory", experiments: [
+                "Design of bolted lap joint for given load",
+                "Design of fillet welded connection",
+                "Design of tension member with bolted connections",
+                "Design of compression member – built-up column with lacings",
+                "Design of laterally supported steel beam",
+                "Design of laterally unsupported steel beam",
+                "Design of column base plate – slab base",
+                "Wind load calculation on roof truss (IS 875 Part 3)",
+                "Design of purlin for industrial building",
+                "Design of gantry girder for overhead crane",
+                "Plastic analysis – Collapse load of fixed beam",
+                "Plastic analysis – Collapse load of portal frame"
+            ]
+        },
+        {
+            code: "CE3602", name: "Structural Analysis Laboratory", experiments: [
+                "Drawing influence line diagrams for simply supported beam",
+                "Determination of maximum BM under moving loads using ILD",
+                "Verification of Muller-Breslau's principle for propped cantilever",
+                "Analysis of three-hinged parabolic arch",
+                "Analysis of two-hinged arch for horizontal thrust",
+                "Determination of cable tension in suspension bridge model",
+                "Approximate analysis of portal frame using Portal method",
+                "Approximate analysis of multi-story frame using Cantilever method",
+                "Space truss analysis using method of tension coefficients",
+                "ILD for continuous beam using three moment equation",
+                "Temperature stress analysis in fixed arch",
+                "Model testing of a simple truss for deflection"
+            ]
+        }
+    ]
+};

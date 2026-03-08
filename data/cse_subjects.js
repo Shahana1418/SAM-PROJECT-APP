@@ -834,3 +834,130 @@ const CSE_SUBJECTS = {
         }
     }
 };
+
+/* ══════════════════════════════════════════════════════════════════
+ *  CSE_LABS — Lab experiments per semester
+ * ══════════════════════════════════════════════════════════════════ */
+const CSE_LABS = {
+    /* Semester 2 Labs (Batch 2029 - R2025) */
+    2: [
+        {
+            code: "CS25C07", name: "Object Oriented Programming Laboratory", experiments: [
+                "Program to demonstrate classes, objects, constructors and destructors",
+                "Program to implement function overloading and default arguments",
+                "Program to implement operator overloading (unary and binary)",
+                "Program to implement single, multilevel and multiple inheritance",
+                "Program to implement virtual functions and runtime polymorphism",
+                "Program to implement abstract classes and pure virtual functions",
+                "Program to implement friend functions and friend classes",
+                "Program to implement function templates and class templates",
+                "Program to implement exception handling (try, catch, throw)",
+                "Program to implement file handling – sequential read/write operations",
+                "Program to implement this pointer and dynamic memory allocation",
+                "Program to implement string operations using operator overloading"
+            ]
+        },
+        {
+            code: "CS25C06", name: "Digital Principles and Computer Organization Laboratory", experiments: [
+                "Verification of Boolean theorems using logic gates",
+                "Implementation of half adder and full adder circuits",
+                "Implementation of multiplexer and demultiplexer",
+                "Simulation of Booth's multiplication algorithm",
+                "Design of 4-bit ALU for arithmetic and logic operations",
+                "Implementation of flip-flops – SR, JK, D and T",
+                "Design of synchronous and asynchronous counters",
+                "Simulation of instruction execution cycle (Fetch-Decode-Execute)",
+                "Cache memory mapping simulation – Direct and Set-Associative",
+                "Pipeline hazard detection and resolution simulation",
+                "Design of simple RISC processor datapath",
+                "K-Map simplification and circuit implementation"
+            ]
+        }
+    ],
+    /* Semester 4 Labs (Batch 2028 - R2021) */
+    4: [
+        {
+            code: "CS3401", name: "Algorithms Laboratory", experiments: [
+                "Implementation of Linear Search, Binary Search, and Interpolation Search",
+                "Implementation of Insertion Sort, Heap Sort, and Merge Sort",
+                "Implementation of Quick Sort with partition analysis",
+                "Implementation of BFS and DFS graph traversal",
+                "Implementation of Dijkstra's shortest path algorithm",
+                "Implementation of Kruskal's and Prim's MST algorithms",
+                "Implementation of Matrix Chain Multiplication using Dynamic Programming",
+                "Implementation of N-Queens problem using Backtracking",
+                "Implementation of 0/1 Knapsack using Branch and Bound",
+                "Implementation of Huffman coding for data compression",
+                "Implementation of KMP pattern matching algorithm",
+                "Implementation of Floyd-Warshall All-Pairs Shortest Path"
+            ]
+        },
+        {
+            code: "CS3492", name: "Database Management Systems Laboratory", experiments: [
+                "Creation of database, tables with constraints using DDL commands",
+                "Insertion, updation, deletion using DML commands",
+                "Simple and nested queries using SELECT with WHERE clause",
+                "Aggregate functions, GROUP BY, HAVING, and ORDER BY",
+                "Implementation of Joins – Inner, Outer, Cross, Self Join",
+                "Implementation of Views, Indexes and Sequences",
+                "PL/SQL programs using cursors and exception handling",
+                "Implementation of Triggers for automated actions",
+                "Implementation of stored procedures and functions",
+                "Database design using ER model and normalization (1NF to BCNF)",
+                "Transaction management – COMMIT, ROLLBACK, SAVEPOINT",
+                "Implementation of database connectivity using embedded SQL"
+            ]
+        },
+        {
+            code: "CS3451", name: "Operating Systems Laboratory", experiments: [
+                "Implementation of FCFS, SJF, Priority, and Round Robin CPU scheduling",
+                "Implementation of Producer-Consumer problem using semaphores",
+                "Implementation of Dining Philosophers problem",
+                "Implementation of Banker's Algorithm for deadlock avoidance",
+                "Implementation of page replacement algorithms – FIFO, LRU, Optimal",
+                "Implementation of memory allocation strategies – First Fit, Best Fit, Worst Fit",
+                "Implementation of disk scheduling algorithms – FCFS, SSTF, SCAN",
+                "Implementation of file allocation strategies – Sequential, Indexed, Linked",
+                "Simple shell program implementation in C",
+                "Inter-Process Communication using shared memory and pipes",
+                "Implementation of Reader-Writer problem using mutex",
+                "Thread creation and synchronization using pthreads"
+            ]
+        }
+    ],
+    /* Semester 6 Labs (Batch 2027 - R2021) */
+    6: [
+        {
+            code: "CCS356", name: "Object Oriented Software Engineering Laboratory", experiments: [
+                "Identification of use cases and drawing Use Case diagrams",
+                "Drawing Class diagrams for a given problem domain",
+                "Drawing Sequence diagrams for system interactions",
+                "Drawing Activity diagrams for workflow modelling",
+                "Designing software using MVC architectural pattern",
+                "Implementation of Observer and Strategy design patterns",
+                "Unit testing using test frameworks – writing test cases",
+                "Black Box testing – Equivalence partitioning and Boundary value analysis",
+                "White Box testing – Basis path testing and code coverage",
+                "Setting up CI/CD pipeline using GitHub Actions",
+                "Agile project planning with user stories and sprint backlog",
+                "System testing and validation testing of a web application"
+            ]
+        },
+        {
+            code: "CS3691", name: "Embedded Systems and IoT Laboratory", experiments: [
+                "Programming 8051 microcontroller – LED blinking and port operations",
+                "Timer and interrupt programming on 8051 microcontroller",
+                "Interfacing LCD display and keypad with Arduino",
+                "Interfacing temperature sensor (DHT11/LM35) with Arduino",
+                "Interfacing ultrasonic sensor for distance measurement",
+                "Serial communication between Arduino and PC",
+                "IoT data logging – Sending sensor data to ThingSpeak cloud",
+                "Bluetooth communication using HC-05 module with Arduino",
+                "GPIO programming on Raspberry Pi with Python",
+                "Home automation prototype – Control devices via WiFi/Bluetooth",
+                "Smart agriculture – Soil moisture monitoring with alert system",
+                "IoT dashboard creation for real-time sensor data visualization"
+            ]
+        }
+    ]
+};
