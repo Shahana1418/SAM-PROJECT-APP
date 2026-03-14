@@ -36,6 +36,7 @@ function showToast(message, type = 'info') {
 }
 
 // ===== Global State =====
+const API_BASE = 'http://localhost:8080';
 let appData = null;
 let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
 
@@ -164,24 +165,38 @@ function getBatchAcademicInfo(batchYear) {
 // ===== Initialization =====
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
-    render();
 });
 
 // ===== Data Loading =====
-function loadData() {
+async function loadData() {
+    // Try fetching from Rust backend first
+    try {
+        const resp = await fetch(API_BASE + '/api/data');
+        if (resp.ok) {
+            appData = await resp.json();
+            console.log('✅ Data loaded from Rust backend (' + appData.batches.reduce((s, b) => s + b.students.length, 0) + ' students)');
+        } else {
+            throw new Error('Backend returned ' + resp.status);
+        }
+    } catch (err) {
+        console.warn('⚠️ Backend unreachable, using static data:', err.message);
+        if (typeof STUDENT_DATA !== 'undefined') {
+            appData = STUDENT_DATA;
+        } else {
+            appData = { college: 'GCE Erode', batches: [] };
+        }
+    }
+
+    // Hide splash screen
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) {
             splash.style.opacity = '0';
             setTimeout(() => splash.remove(), 500);
         }
-    }, 600);
+    }, 300);
 
-    if (typeof STUDENT_DATA !== 'undefined') {
-        appData = STUDENT_DATA;
-    } else {
-        appData = { college: 'GCE Erode', batches: [] };
-    }
+    render();
 }
 
 // ===== SHA-256 hash =====

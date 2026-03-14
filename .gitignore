@@ -1,0 +1,11 @@
+# Rust build artifacts
+sam-backend/target/
+sam-backend/sam.db
+
+# Node modules
+node_modules/
+
+# Temp/debug files
+*.log
+test.log
+tunnel_url.txt
