@@ -36,6 +36,7 @@ function showToast(message, type = 'info') {
 }
 
 // ===== Global State =====
+const API_BASE = 'http://localhost:8080';
 let appData = null;
 let currentUser = null; // null or { role: string, dept: string|null, canGenerate: boolean }
 
@@ -68,6 +69,40 @@ function getLabsGen(deptCode) {
     if (deptCode === 'MCE' && typeof MCE_LABS !== 'undefined') return MCE_LABS;
     if (deptCode === 'CDS' && typeof CDS_LABS !== 'undefined') return CDS_LABS;
     return null;
+}
+
+/* ── Department-themed team names ── */
+const TEAM_NAMES = {
+    ATE: ['Turbo Chargers', 'Piston Kings', 'Gear Heads', 'Axle Force', 'Torque Titans',
+        'Clutch Masters', 'Rev Riders', 'Crank Crew', 'Fuel Blaze', 'Drift Dynamos',
+        'Valve Strikers', 'Engine Eagles', 'Boost Brigade', 'Nitro Knights', 'Cam Warriors'],
+    CSE: ['Code Titans', 'Binary Bulls', 'Cyber Wolves', 'Data Dragons', 'Logic Legends',
+        'Algo Aces', 'Kernel Kings', 'Byte Blasters', 'Stack Strikers', 'Cloud Crusaders',
+        'Debug Devils', 'Pixel Panthers', 'Script Sharks', 'Hash Hawks', 'Neural Ninjas'],
+    CVE: ['Concrete Kings', 'Steel Pillars', 'Bridge Builders', 'Geo Titans', 'Truss Masters',
+        'Arch Angels', 'Site Spartans', 'Foundation Force', 'Beam Blazers', 'Survey Stars',
+        'Drain Dynamos', 'Mortar Mavericks', 'Level Leaders', 'Plumb Pros', 'Gravel Guards'],
+    ECE: ['Signal Snipers', 'Circuit Sharks', 'Wave Riders', 'Chip Champions', 'Frequency Force',
+        'Antenna Aces', 'Pulse Pirates', 'Diode Dragons', 'Amplifier Army', 'Radar Rangers',
+        'Oscillator Owls', 'Bandwidth Bulls', 'Transistor Titans', 'Modem Mavericks', 'Relay Rockets'],
+    EEE: ['Volt Vipers', 'Watt Warriors', 'Spark Strikers', 'Current Crushers', 'Power Panthers',
+        'Ohm Owls', 'Dynamo Devils', 'Fuse Fighters', 'Grid Guardians', 'Transformer Titans',
+        'Coil Commanders', 'Amp Avengers', 'Switch Sharks', 'Breaker Bulls', 'Motor Mavericks'],
+    IMT: ['Info Titans', 'Tech Troopers', 'Data Drifters', 'Net Ninjas', 'System Sharks',
+        'Cloud Cobras', 'Query Kings', 'Server Strikers', 'Link Lions', 'Matrix Masters',
+        'Firewall Force', 'Protocol Panthers', 'Cache Crushers', 'Router Rockets', 'Domain Dragons'],
+    MCE: ['Mech Mavericks', 'Robo Rangers', 'Thermo Titans', 'Fluid Force', 'Weld Warriors',
+        'Lathe Lions', 'CAD Crusaders', 'Forge Falcons', 'Turbine Tigers', 'Grind Gladiators',
+        'Piston Pros', 'Drill Demons', 'Press Panthers', 'Alloy Aces', 'Shaft Sharks'],
+    CDS: ['Data Wizards', 'Stat Strikers', 'Model Masters', 'Insight Ions', 'Cluster Kings',
+        'Tensor Titans', 'Feature Force', 'Pipeline Panthers', 'Epoch Eagles', 'Vector Vipers',
+        'Gradient Gurus', 'Matrix Mavericks', 'Neuron Knights', 'Bias Busters', 'Spark Scholars'],
+};
+
+function getTeamName(deptCode, teamIndex) {
+    const names = TEAM_NAMES[deptCode];
+    if (names && teamIndex < names.length) return 'T-' + (teamIndex + 1) + ' | ' + names[teamIndex];
+    return 'Team ' + (teamIndex + 1);
 }
 
 // Single admin password for all roles: sam@admin
@@ -130,24 +165,38 @@ function getBatchAcademicInfo(batchYear) {
 // ===== Initialization =====
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
-    render();
 });
 
 // ===== Data Loading =====
-function loadData() {
+async function loadData() {
+    // Try fetching from Rust backend first
+    try {
+        const resp = await fetch(API_BASE + '/api/data');
+        if (resp.ok) {
+            appData = await resp.json();
+            console.log('✅ Data loaded from Rust backend (' + appData.batches.reduce((s, b) => s + b.students.length, 0) + ' students)');
+        } else {
+            throw new Error('Backend returned ' + resp.status);
+        }
+    } catch (err) {
+        console.warn('⚠️ Backend unreachable, using static data:', err.message);
+        if (typeof STUDENT_DATA !== 'undefined') {
+            appData = STUDENT_DATA;
+        } else {
+            appData = { college: 'GCE Erode', batches: [] };
+        }
+    }
+
+    // Hide splash screen
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) {
             splash.style.opacity = '0';
             setTimeout(() => splash.remove(), 500);
         }
-    }, 600);
+    }, 300);
 
-    if (typeof STUDENT_DATA !== 'undefined') {
-        appData = STUDENT_DATA;
-    } else {
-        appData = { college: 'GCE Erode', batches: [] };
-    }
+    render();
 }
 
 // ===== SHA-256 hash =====
@@ -990,7 +1039,7 @@ function renderTeams(container) {
         card.innerHTML = `
         <div class="team-card-top-accent" style="background: var(--gradient-${color})"></div>
         <div class="team-card-header">
-            <span class="team-card-title">Team ${i + 1}</span>
+            <span class="team-card-title">${getTeamName(deptCode, i)}</span>
             <span class="team-sess-id" style="color:var(--accent-${color}); background:var(--bg-${color}, rgba(0,0,0,0.05));">Session ${sessNum}</span>
         </div>
         <div class="team-card-role-row">
@@ -1003,8 +1052,8 @@ function renderTeams(container) {
             ${team.members.map(m => {
             const moveDropdown = navState.editMode ? `
                     <select class="move-select" onchange="moveStudent('${m.id}', ${i}, parseInt(this.value))">
-                        <option value="${i}">Team ${i + 1}</option>
-                        ${teams.map((_, ti) => ti !== i ? `<option value="${ti}">→ Team ${ti + 1}</option>` : '').join('')}
+                        <option value="${i}">${getTeamName(deptCode, i)}</option>
+                        ${teams.map((_, ti) => ti !== i ? `<option value="${ti}">→ ${getTeamName(deptCode, ti)}</option>` : '').join('')}
                     </select>
                 ` : '';
             return `
@@ -1027,14 +1076,14 @@ function renderTeams(container) {
 
 // ===== Level 5: Session Schedule =====
 
-// Period time slots (no Lab; Periods 3-4 are still morning in Indian college schedules)
+// Period time slots — each option = 3 sessions in that slot
 const PERIOD_TYPES = {
     morning1: { label: 'Morning (Periods 1-2)', shortLabel: 'P1-2', startH: 9, startM: 0, durMins: 100, color: '#2563eb' },
     morning2: { label: 'Morning (Periods 3-4)', shortLabel: 'P3-4', startH: 11, startM: 0, durMins: 90, color: '#0891b2' },
-    afternoon: { label: 'Afternoon (Periods 5-6)', shortLabel: 'P5-6', startH: 13, startM: 45, durMins: 90, color: '#7c3aed' },
-    evening: { label: 'Evening (Periods 7-8)', shortLabel: 'P7-8', startH: 15, startM: 30, durMins: 90, color: '#d97706' },
+    afternoon1: { label: 'Afternoon (Periods 5-6)', shortLabel: 'P5-6', startH: 13, startM: 45, durMins: 90, color: '#7c3aed' },
+    afternoon2: { label: 'Afternoon (Periods 7-8)', shortLabel: 'P7-8', startH: 15, startM: 30, durMins: 90, color: '#d97706' },
 };
-const DAY_SLOTS = { 2: ['morning1', 'morning2'], 3: ['morning1', 'morning2', 'afternoon'] };
+const SESSIONS_PER_SLOT = 3;
 const DAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_NAMES_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -1045,45 +1094,71 @@ function addMins(h, m, mins) {
     return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
 }
 
+/* Fisher-Yates shuffle to randomize presenter order */
+function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
 function generateSessionCalendar(teams, config) {
-    const { startDate, endDate, sessionsPerDay, activeDays, reviewerMap } = config;
+    const { startDate, endDate, periodSlot, presenterOrder, reviewerMap } = config;
     const N = teams.length;
-    const reviewers = reviewerMap ? reviewerMap.reviewers : teams.map((_, i) => (i + 1) % N);
-    const feedbacks = reviewerMap ? reviewerMap.feedbacks : teams.map((_, i) => (i + 2) % N);
-    const slots = DAY_SLOTS[sessionsPerDay] || DAY_SLOTS[2];
-    const sessions = [], todayStr = new Date().toISOString().slice(0, 10);
+    const order = presenterOrder || shuffleArray(Array.from({ length: N }, (_, i) => i));
+    const reviewers = reviewerMap ? reviewerMap.reviewers : {};
+    const feedbacks = reviewerMap ? reviewerMap.feedbacks : {};
+    const pt = PERIOD_TYPES[periodSlot] || PERIOD_TYPES.morning1;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const sessions = [];
     let idx = 0;
     const cur = new Date(startDate + 'T00:00:00'), endD = new Date(endDate + 'T00:00:00');
+    let dayCount = 0;
+
     while (cur <= endD && idx < N) {
         const dow = cur.getDay();
-        if (activeDays.includes(dow)) {
+        if (dow >= 1 && dow <= 5) { // Mon-Fri only
             const dateStr = cur.toISOString().slice(0, 10);
             const isPast = dateStr < todayStr, isToday = dateStr === todayStr;
-            for (let s = 0; s < slots.length && idx < N; s++) {
-                const pk = slots[s], pt = PERIOD_TYPES[pk];
+            // Each day gets SESSIONS_PER_SLOT sessions in the chosen period
+            for (let s = 0; s < SESSIONS_PER_SLOT && idx < N; s++) {
+                const presIdx = order[idx];
+                // Random reviewer and feedback for this session (different from presenter and each other)
+                let revIdx, fbIdx;
+                if (reviewers[idx] !== undefined) {
+                    revIdx = reviewers[idx];
+                    fbIdx = feedbacks[idx];
+                } else {
+                    // Generate random reviewer (not presenter)
+                    do { revIdx = Math.floor(Math.random() * N); } while (revIdx === presIdx);
+                    // Generate random feedback (not presenter, not reviewer)
+                    do { fbIdx = Math.floor(Math.random() * N); } while (fbIdx === presIdx || fbIdx === revIdx);
+                    reviewers[idx] = revIdx;
+                    feedbacks[idx] = fbIdx;
+                }
+
                 sessions.push({
                     sessNum: idx + 1, date: new Date(cur), dateStr,
                     dayName: DAY_NAMES_SHORT[dow], dayFull: DAY_NAMES_FULL[dow],
-                    periodKey: pk,
+                    periodKey: periodSlot,
                     startTime: String(pt.startH).padStart(2, '0') + ':' + String(pt.startM).padStart(2, '0'),
                     endTime: addMins(pt.startH, pt.startM, pt.durMins),
-                    presenterIdx: idx, reviewerIdx: reviewers[idx], feedbackIdx: feedbacks[idx],
-                    revealed: true,
+                    presenterIdx: presIdx, reviewerIdx: revIdx, feedbackIdx: fbIdx,
+                    revealed: isPast || isToday,
+                    slotIndex: s,
                 });
                 idx++;
             }
+            dayCount++;
         }
         cur.setDate(cur.getDate() + 1);
     }
+    // Store the maps back
+    config.reviewerMap = { reviewers, feedbacks };
+    config.presenterOrder = order;
     return sessions;
-}
-
-function buildRandomReviewerMap(N) {
-    const rev = Array.from({ length: N }, (_, i) => (i + 1) % N);
-    const fb = Array.from({ length: N }, (_, i) => (i + 2) % N);
-    for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); if (rev[j] !== i && rev[i] !== j) [rev[i], rev[j]] = [rev[j], rev[i]]; }
-    for (let i = N - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); if (fb[j] !== i && fb[i] !== j && rev[i] !== fb[j] && rev[j] !== fb[i]) [fb[i], fb[j]] = [fb[j], fb[i]]; }
-    return { reviewers: rev, feedbacks: fb };
 }
 
 function renderSessions(container) {
@@ -1095,7 +1170,7 @@ function renderSessions(container) {
     const genAssign = (navState.assignConfig && navState.assignConfig.generatedAssignments) ? navState.assignConfig.generatedAssignments : null;
     const defEnd = new Date(); defEnd.setMonth(defEnd.getMonth() + 3);
     const defEndStr = defEnd.toISOString().slice(0, 10);
-    const savedSpd = cal ? (cal.sessionsPerDay || 2) : 2;
+    const savedSlot = cal ? (cal.periodSlot || 'morning1') : 'morning1';
 
     /* ===== Config Panel ===== */
     const configPanel = `<div class="cal-config-panel">
@@ -1105,19 +1180,26 @@ function renderSessions(container) {
                 <input type="date" id="calStartDate" value="${cal ? cal.startDate : todayStr}"></div>
             <div class="cal-field"><label>End Date</label>
                 <input type="date" id="calEndDate" value="${cal ? cal.endDate : defEndStr}"></div>
-            <div class="cal-field"><label>Sessions per Day</label>
-                <select id="calSessPerDay">
-                    <option value="2" ${savedSpd === 2 ? 'selected' : ''}>2 sessions / day (P1-2 &amp; P3-4 Morning)</option>
-                    <option value="3" ${savedSpd === 3 ? 'selected' : ''}>3 sessions / day (+ P5-6 Afternoon)</option>
+            <div class="cal-field"><label>Period Slot (3 sessions per day)</label>
+                <select id="calPeriodSlot">
+                    <option value="morning1" ${savedSlot === 'morning1' ? 'selected' : ''}>Morning P1-2 (9:00 – 10:40) · 3 sessions</option>
+                    <option value="morning2" ${savedSlot === 'morning2' ? 'selected' : ''}>Morning P3-4 (11:00 – 12:30) · 3 sessions</option>
+                    <option value="afternoon1" ${savedSlot === 'afternoon1' ? 'selected' : ''}>Afternoon P5-6 (13:45 – 15:15) · 3 sessions</option>
+                    <option value="afternoon2" ${savedSlot === 'afternoon2' ? 'selected' : ''}>Afternoon P7-8 (15:30 – 17:00) · 3 sessions</option>
                 </select></div>
         </div>
         <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;">
-            <strong style="color:var(--text-secondary);">Active Days:</strong> Monday – Friday only (Sat &amp; Sun are leave days)
+            <strong style="color:var(--text-secondary);">Active Days:</strong> Monday – Friday only (Sat &amp; Sun are leave days) · 
+            <strong style="color:var(--accent-purple);">3 sessions per day</strong> in the selected period slot ·
+            <strong style="color:var(--accent-orange);">Teams are randomly shuffled</strong>
+        </div>
+        <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:10px;">
+            🔒 <strong>Reviewer &amp; Feedback roles</strong> are only visible on the scheduled day (hidden for future sessions)
         </div>
         <div class="cal-actions">
             <button class="btn-primary" style="width:auto;padding:10px 28px;" onclick="applyCalendarConfig()">📅 Generate Schedule</button>
-            ${cal ? '<button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--gradient-orange);" onclick="randomiseCalendarRoles()">🔀 Randomise Roles</button>' : ''}
-            <span style="font-size:.8rem;color:var(--text-muted);">${N} teams · ${N} sessions needed</span>
+            ${cal ? '<button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--gradient-orange);" onclick="reshuffleSchedule()">🔀 Reshuffle Teams</button>' : ''}
+            <span style="font-size:.8rem;color:var(--text-muted);">${N} teams · ${N} sessions needed · ${Math.ceil(N / SESSIONS_PER_SLOT)} days minimum</span>
         </div>
     </div>`;
 
@@ -1126,34 +1208,31 @@ function renderSessions(container) {
 
     if (cal && cal.sessions && cal.sessions.length > 0) {
         const sessions = cal.sessions;
-        const spd = cal.sessionsPerDay || 2;
-        const slotKeys = DAY_SLOTS[spd] || DAY_SLOTS[2];
+        const pt = PERIOD_TYPES[cal.periodSlot || 'morning1'];
 
         // Group by day
         const byDay = {};
         sessions.forEach(s => { if (!byDay[s.dateStr]) byDay[s.dateStr] = []; byDay[s.dateStr].push(s); });
-        const uniqueDays = [...new Map(sessions.map(s => [s.dateStr, s])).values()];
+        const dayKeys = Object.keys(byDay).sort();
 
-        // Header columns
-        const hdrCells = slotKeys.map(pk => {
-            const pt = PERIOD_TYPES[pk];
-            return `<th class="sched-col-header" style="border-left:3px solid ${pt.color}40;">
-                <div style="color:${pt.color};font-weight:800;font-size:.76rem;">${pt.shortLabel}</div>
-                <div style="font-size:.68rem;color:var(--text-muted);">${pt.label}</div>
-                <div style="font-size:.65rem;color:var(--text-muted);">${String(pt.startH).padStart(2, '0')}:${String(pt.startM).padStart(2, '0')} – ${addMins(pt.startH, pt.startM, pt.durMins)}</div>
-            </th>`;
-        }).join('');
+        // Table rows — each day is a row with 3 session columns
+        const colHeaders = Array.from({ length: SESSIONS_PER_SLOT }, (_, i) =>
+            `<th class="sched-col-header" style="border-left:3px solid ${pt.color}40;">
+                <div style="color:${pt.color};font-weight:800;font-size:.76rem;">Session ${i + 1}</div>
+                <div style="font-size:.68rem;color:var(--text-muted);">${pt.shortLabel}</div>
+            </th>`
+        ).join('');
 
-        // Table rows
-        const tRows = uniqueDays.map(fs => {
-            const daySess = byDay[fs.dateStr];
-            const isToday = fs.dateStr === todayStr, isPast = fs.dateStr < todayStr;
-            const dl = fs.date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-            const cells = slotKeys.map(pk => {
-                const s = daySess.find(x => x.periodKey === pk);
+        const tRows = dayKeys.map(dateStr => {
+            const daySess = byDay[dateStr];
+            const first = daySess[0];
+            const isToday = dateStr === todayStr, isPast = dateStr < todayStr;
+            const dl = first.date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            const cells = Array.from({ length: SESSIONS_PER_SLOT }, (_, si) => {
+                const s = daySess.find(x => x.slotIndex === si);
                 if (!s) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
-                const pt = PERIOD_TYPES[pk];
-                const p = `Team ${s.presenterIdx + 1}`, r = `Team ${s.reviewerIdx + 1}`, fb = `Team ${s.feedbackIdx + 1}`;
+                const p = getTeamName(deptCode, s.presenterIdx), r = getTeamName(deptCode, s.reviewerIdx), fb = getTeamName(deptCode, s.feedbackIdx);
                 const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
                 const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
                 return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
@@ -1162,42 +1241,42 @@ function renderSessions(container) {
                     ${presTopicHTML}
                     ${s.revealed
                         ? `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
-                        : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles on day</span></div>`}
+                        : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles revealed on day</span></div>`}
                 </td>`;
             }).join('');
+
             return `<tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}">
                 <td class="sched-date-cell">
-                    <div class="sched-date-day">${fs.dayFull.slice(0, 3).toUpperCase()}</div>
+                    <div class="sched-date-day">${first.dayFull.slice(0, 3).toUpperCase()}</div>
                     <div class="sched-date-num ${isToday ? 'sched-date-today' : ''}">${dl}</div>
                     ${isToday ? '<div class="sched-today-badge">TODAY</div>' : ''}
                     ${isPast ? '<div class="sched-past-badge">DONE</div>' : ''}
                 </td>${cells}</tr>`;
         }).join('');
 
-        const legend = slotKeys.map(k => `<span style="font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:10px;background:${PERIOD_TYPES[k].color}18;color:${PERIOD_TYPES[k].color};">${PERIOD_TYPES[k].shortLabel} ${PERIOD_TYPES[k].label}</span>`).join('');
         const statusOk = sessions.length >= N
-            ? `<div class="sched-status-ok">✅ All ${N} sessions scheduled across ${uniqueDays.length} working days (Mon–Fri).</div>`
+            ? `<div class="sched-status-ok">✅ All ${N} sessions scheduled across ${dayKeys.length} working days (Mon–Fri). Presenters are randomly ordered.</div>`
             : `<div class="sched-status-warn">⚠️ Only ${sessions.length}/${N} sessions fit. Extend the End Date to accommodate all teams.</div>`;
 
         scheduleHTML = `<div class="rt-section" style="margin-bottom:1.5rem;">
             <div class="rt-section-header">
-                <div class="rt-section-title">📅 Session Timetable — ${sessions.length} sessions</div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;">${legend}</div>
+                <div class="rt-section-title">📅 Session Timetable — ${sessions.length} sessions · ${pt.label}</div>
+                <span style="font-size:.76rem;font-weight:700;padding:3px 10px;border-radius:10px;background:${pt.color}18;color:${pt.color};">${pt.shortLabel} ${pt.label}</span>
             </div>
             <div class="sched-table-wrap">
                 <table class="sched-table">
-                    <thead><tr><th class="sched-date-header">DATE</th>${hdrCells}</tr></thead>
+                    <thead><tr><th class="sched-date-header">DATE</th>${colHeaders}</tr></thead>
                     <tbody>${tRows}</tbody>
                 </table>
             </div>${statusOk}</div>`;
 
         // Day cards
-        const dCards = uniqueDays.map((fs, di) => {
-            const daySess = byDay[fs.dateStr];
-            const isToday = fs.dateStr === todayStr, isPast = fs.dateStr < todayStr;
-            const dl2 = fs.date.toLocaleDateString('en-IN', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+        const dCards = dayKeys.map((dateStr, di) => {
+            const daySess = byDay[dateStr];
+            const first = daySess[0];
+            const isToday = dateStr === todayStr, isPast = dateStr < todayStr;
+            const dl2 = first.date.toLocaleDateString('en-IN', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
             const sItems = daySess.map(s => {
-                const pt = PERIOD_TYPES[s.periodKey];
                 const dayTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
                 const dayTopicHTML = dayTopicObj ? `<div style="margin-top:4px;font-size:.78rem;color:var(--accent-blue);font-weight:600;padding-left:4px;">📝 Topic: ${dayTopicObj.title}</div>` : '';
                 return `<div class="sched-sess-item">
@@ -1206,10 +1285,10 @@ function renderSessions(container) {
                         <div style="font-size:.82rem;font-weight:700;color:var(--text-primary);">${pt.label} &nbsp;·&nbsp; ${s.startTime} – ${s.endTime}</div>
                     </div>
                     <div class="sched-roles-inline">
-                        <span class="sched-chip sched-presenter">🎤 Team ${s.presenterIdx + 1} — Presenter</span>
+                        <span class="sched-chip sched-presenter">🎤 ${getTeamName(deptCode, s.presenterIdx)} — Presenter</span>
                         ${s.revealed
-                        ? `<span class="sched-chip sched-reviewer">🔍 Team ${s.reviewerIdx + 1} — Reviewer</span><span class="sched-chip sched-feedback">💬 Team ${s.feedbackIdx + 1} — Feedback</span>`
-                        : `<span class="sched-chip sched-locked">🔒 Reviewer &amp; Feedback revealed on ${s.dateStr}</span>`}
+                        ? `<span class="sched-chip sched-reviewer">🔍 ${getTeamName(deptCode, s.reviewerIdx)} — Reviewer</span><span class="sched-chip sched-feedback">💬 ${getTeamName(deptCode, s.feedbackIdx)} — Feedback</span>`
+                        : `<span class="sched-chip sched-locked">🔒 Reviewer &amp; Feedback revealed on ${dateStr}</span>`}
                     </div>
                     ${dayTopicHTML}
                 </div>`;
@@ -1228,25 +1307,38 @@ function renderSessions(container) {
         dayCardsHTML = `<div class="rt-section" style="margin-bottom:1.5rem;">
             <div class="rt-section-header">
                 <div class="rt-section-title">📋 Day-wise Session Details</div>
-                <span style="font-size:.8rem;color:var(--text-muted);">${uniqueDays.length} working days</span>
+                <span style="font-size:.8rem;color:var(--text-muted);">${dayKeys.length} working days</span>
             </div>
             <div class="sched-day-cards">${dCards}</div>
         </div>`;
     }
 
-    /* ===== Round-Robin Reference ===== */
+    /* ===== Presenter Order Reference ===== */
     const sessionColors = ['blue', 'green', 'purple', 'orange', 'cyan'];
-    let rrRows = '';
-    for (let s = 0; s < N; s++) {
-        const pt = s, rt = (s + 1) % N, ft = (s + 2) % N, c = sessionColors[s % sessionColors.length];
-        const aud = Array.from({ length: N }, (_, i) => i).filter(i => i !== pt && i !== rt && i !== ft);
-        rrRows += `<tr class="rt-row">
-            <td><span class="rt-sess-badge rt-badge-${c}">${String(s + 1).padStart(2, '0')}</span></td>
-            <td><span class="rt-team-chip rt-presenter">🎤 Team ${pt + 1}</span></td>
-            <td><span class="rt-team-chip rt-reviewer">🔍 Team ${rt + 1}</span></td>
-            <td><span class="rt-team-chip rt-feedback">💬 Team ${ft + 1}</span></td>
-            <td class="rt-aud-cell">${aud.map(n => `<span class="rt-aud-chip">T${n + 1}</span>`).join('') || '<span style="color:var(--text-muted);font-size:.75rem">—</span>'}</td>
-        </tr>`;
+    let orderRows = '';
+    if (cal && cal.sessions && cal.sessions.length > 0) {
+        cal.sessions.forEach((s, i) => {
+            const c = sessionColors[i % sessionColors.length];
+            const p = s.presenterIdx, r = s.reviewerIdx, fb = s.feedbackIdx;
+            orderRows += `<tr class="rt-row">
+                <td><span class="rt-sess-badge rt-badge-${c}">${String(s.sessNum).padStart(2, '0')}</span></td>
+                <td>${s.dateStr} (${s.dayName})</td>
+                <td><span class="rt-team-chip rt-presenter">🎤 ${getTeamName(deptCode, p)}</span></td>
+                <td>${s.revealed ? `<span class="rt-team-chip rt-reviewer">🔍 ${getTeamName(deptCode, r)}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
+                <td>${s.revealed ? `<span class="rt-team-chip rt-feedback">💬 ${getTeamName(deptCode, fb)}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
+            </tr>`;
+        });
+    } else {
+        for (let s = 0; s < N; s++) {
+            const c = sessionColors[s % sessionColors.length];
+            orderRows += `<tr class="rt-row">
+                <td><span class="rt-sess-badge rt-badge-${c}">${String(s + 1).padStart(2, '0')}</span></td>
+                <td>—</td>
+                <td><span class="rt-team-chip rt-presenter">🎤 ${getTeamName(deptCode, s)}</span></td>
+                <td><span class="rt-team-chip sched-locked">🔒</span></td>
+                <td><span class="rt-team-chip sched-locked">🔒</span></td>
+            </tr>`;
+        }
     }
 
     container.innerHTML = `
@@ -1260,14 +1352,14 @@ function renderSessions(container) {
             </svg>
             Session Schedule
         </h2>
-        <p class="page-subtitle">${getDeptShortName(deptCode)} · ${batchYear} Batch · ${N} teams · Mon–Fri only</p>
+        <p class="page-subtitle">${getDeptShortName(deptCode)} · ${batchYear} Batch · ${N} teams · Mon–Fri only · Random order</p>
     </div>
     ${configPanel}
     ${scheduleHTML}
     ${dayCardsHTML}
     <div class="rt-section" style="margin-bottom:1.5rem;">
         <div class="rt-section-header">
-            <div class="rt-section-title">🔄 Round-Robin Role Rotation Reference</div>
+            <div class="rt-section-title">🔄 Session Order Reference</div>
             <div class="rt-legend">
                 <span class="rt-legend-chip rt-presenter">🎤 Presenter</span>
                 <span class="rt-legend-chip rt-reviewer">🔍 Reviewer</span>
@@ -1276,8 +1368,8 @@ function renderSessions(container) {
         </div>
         <div class="rt-table-wrap">
             <table class="rt-table">
-                <thead><tr><th>Session</th><th>🎤 Presenter</th><th>🔍 Reviewer</th><th>💬 Feedback</th><th>👥 Audience</th></tr></thead>
-                <tbody>${rrRows}</tbody>
+                <thead><tr><th>Session</th><th>Date</th><th>🎤 Presenter</th><th>🔍 Reviewer</th><th>💬 Feedback</th></tr></thead>
+                <tbody>${orderRows}</tbody>
             </table>
         </div>
     </div>
@@ -1287,27 +1379,30 @@ function renderSessions(container) {
 function applyCalendarConfig() {
     const startDate = document.getElementById('calStartDate')?.value;
     const endDate = document.getElementById('calEndDate')?.value;
-    const spd = parseInt(document.getElementById('calSessPerDay')?.value || '2');
+    const periodSlot = document.getElementById('calPeriodSlot')?.value || 'morning1';
     if (!startDate || !endDate || endDate < startDate) {
         showToast('⚠️ Please set a valid start and end date.', 'error');
         return;
     }
     const teams = navState.teams;
-    const reviewerMap = (navState.calendarConfig && navState.calendarConfig.reviewerMap)
-        ? navState.calendarConfig.reviewerMap
-        : buildRandomReviewerMap(teams.length);
-    const config = { startDate, endDate, sessionsPerDay: spd, activeDays: [1, 2, 3, 4, 5], reviewerMap };
+    // Generate random presenter order
+    const presenterOrder = shuffleArray(Array.from({ length: teams.length }, (_, i) => i));
+    const config = { startDate, endDate, periodSlot, activeDays: [1, 2, 3, 4, 5], presenterOrder, reviewerMap: null };
     config.sessions = generateSessionCalendar(teams, config);
     navState.calendarConfig = config;
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function randomiseCalendarRoles() {
+function reshuffleSchedule() {
     if (!navState.calendarConfig) return;
-    navState.calendarConfig.reviewerMap = buildRandomReviewerMap(navState.teams.length);
-    navState.calendarConfig.sessions = generateSessionCalendar(navState.teams, navState.calendarConfig);
+    const cal = navState.calendarConfig;
+    // New random order and new random reviewer/feedback
+    cal.presenterOrder = shuffleArray(Array.from({ length: navState.teams.length }, (_, i) => i));
+    cal.reviewerMap = null;
+    cal.sessions = generateSessionCalendar(navState.teams, cal);
     render();
+    showToast('🔀 Teams reshuffled with new random order!', 'success');
 }
 
 function buildTeams(students, teamSize, mode, deptCode, batchYear) {
@@ -1472,7 +1567,7 @@ function exportCSV() {
     let csv = 'Team,Student ID,Name,Gender,Email\n';
     teams.forEach((team, i) => {
         team.members.forEach(m => {
-            csv += `Team ${i + 1},${m.id}, "${m.name}", ${m.gender},${m.email || ''} \n`;
+            csv += `${getTeamName(navState.dept, i)},${m.id}, "${m.name}", ${m.gender},${m.email || ''} \n`;
         });
     });
 
@@ -2075,23 +2170,16 @@ function renderAssessments(container) {
             };
             const cards = cfg.generatedAssignments.map((a, i) =>
                 '<div class="assign-card" style="animation-delay:' + (i * .03) + 's">' +
-                '<div class="assign-card-header" onclick="toggleAssignCard(' + i + ')">' +
+                '<div class="assign-card-header">' +
                 '<div class="assign-team-badge">T' + (i + 1) + '</div>' +
                 '<div class="assign-card-info">' +
-                '<div class="assign-topic-title">' + a.title + '</div>' +
-                '<div class="assign-meta-row">' +
+                '<div class="assign-topic-title" style="font-weight:600; color:var(--text-dark);">' + a.title + '</div>' +
+                '<div class="assign-meta-row" style="margin-top:8px;">' +
                 '<span class="assign-pill" style="background:rgba(37,99,235,.1);color:var(--accent-blue);">' + a.unit + '</span>' +
                 '<span class="assign-pill" style="' + (cColors[a.complexity] || cColors.Medium) + '">' + a.complexity + '</span>' +
                 '<span class="assign-pill" style="background:rgba(124,58,237,.1);color:#7c3aed;">' + a.type + '</span>' +
                 '<span style="font-size:.72rem;color:var(--text-muted);">' + a.co + ' &middot; ' + a.duration + '</span>' +
                 '</div></div>' +
-                '<div class="assign-card-expand" id="assign-expand-' + i + '">&darr;</div>' +
-                '</div>' +
-                '<div class="assign-card-body" id="assign-body-' + i + '">' +
-                '<h4>Learning Objective</h4><p>' + a.objective + '</p>' +
-                '<h4>Assignment Description</h4><p>' + a.description + '</p>' +
-                '<h4>Deliverables</h4><ul>' + a.deliverables.map(d => '<li>' + d + '</li>').join('') + '</ul>' +
-                '<h4>Evaluation Criteria</h4><ol>' + a.criteria.map(c => '<li>' + c + '</li>').join('') + '</ol>' +
                 '</div></div>'
             ).join('');
             resultHTML = '<div class="rt-section" style="margin-top:1.5rem;">' +
@@ -2453,31 +2541,19 @@ function generateAssignments() {
 }
 
 function exportAssignmentsCSV() {
-    const cfg = navState.assignConfig;
-    if (!cfg || !cfg.generatedAssignments) return;
-    const items = cfg.generatedAssignments;
-    if (items.length === 0) return;
-    const header = "Team,Topic Title,Unit,Complexity,Type,CO,Duration,Objective";
-    const rows = items.map((a, i) => {
-        const team = `Team ${i + 1}`;
-        const t = `"${(a.title || '').replace(/"/g, '""')}"`;
-        const u = `"${(a.unit || '').replace(/"/g, '""')}"`;
-        const c = `"${(a.complexity || '').replace(/"/g, '""')}"`;
-        const typ = `"${(a.type || '').replace(/"/g, '""')}"`;
-        const co = `"${(a.co || '').replace(/"/g, '""')}"`;
-        const dur = `"${(a.duration || '').replace(/"/g, '""')}"`;
-        const obj = `"${(a.objective || '').replace(/"/g, '""')}"`;
-        return `${team},${t},${u},${c},${typ},${co},${dur},${obj}`;
+    const cfg = navState.assignConfig || {};
+    const assignments = cfg.generatedAssignments;
+    if (!assignments || !assignments.length) { showToast('⚠️ Please generate assignments first.', 'warning'); return; }
+    const deptCode = navState.dept, batchYear = navState.batch;
+    let csv = 'Assignment ID,Team,Course Code,Course Name,Topic Title,Unit,Complexity,Course Outcome,Duration,Type,Objective\n';
+    assignments.forEach((a, i) => {
+        csv += [a.assessId, 'Team ' + (i + 1), cfg.courseCode || '', '"' + (cfg.courseName || '') + '"', '"' + a.title + '"', a.unit, a.complexity, a.co, a.duration, a.type, '"' + a.objective + '"'].join(',') + '\n';
     });
-    const csvContent = [header, ...rows].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `sam_assignments_${navState.dept}_${navState.batch}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'assignments_' + deptCode + '_' + batchYear + '_' + (cfg.courseCode || 'course') + '.csv'; a.click();
+    URL.revokeObjectURL(url);
 }
 
 // ===== Team Locking =====

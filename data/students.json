@@ -434,7 +434,7 @@
           "batch": 2027
         },
         {
-          "id": "24ATE46L",
+          "id": "25ATE46L",
           "name": "KAVIYARASAN R",
           "gender": "M",
           "email": "ravikaviyarasan172@gmail.com",
@@ -2063,7 +2063,7 @@
           "batch": 2027
         },
         {
-          "id": "23EEE03",
+          "id": "23EEE04",
           "name": "ANUSRI PS",
           "gender": "F",
           "email": "",
@@ -2423,7 +2423,7 @@
           "batch": 2027
         },
         {
-          "id": "23EEE40",
+          "id": "23EEE50",
           "name": "SRI KANTH M",
           "gender": "M",
           "email": "",
@@ -4081,7 +4081,7 @@
           "batch": 2028
         },
         {
-          "id": "24ATE46L",
+          "id": "25ATE46L",
           "name": "KANNAN R",
           "gender": "M",
           "email": "kannan120407@gmail.com",
@@ -4625,7 +4625,7 @@
           "name": "SRIDHARAN P",
           "gender": "M",
           "email": "psridharan222@gmail.com",
-          "cgpa": 6.0,
+          "cgpa": 6,
           "department": "CSE",
           "batch": 2028
         },
@@ -4742,7 +4742,7 @@
           "name": "DHARSHAN G",
           "gender": "M",
           "email": "dharshandharshan112@gmail.com",
-          "cgpa": 6.0,
+          "cgpa": 6,
           "department": "CSE",
           "batch": 2028
         },
@@ -4786,7 +4786,7 @@
           "id": "25CSE69T",
           "name": "VISHWA V",
           "gender": "M",
-          "email": "vishwatvm2006@mail.com",
+          "email": "vishwatvm2006@gmail.com",
           "cgpa": 7.2,
           "department": "CSE",
           "batch": 2028
@@ -6020,7 +6020,7 @@
           "name": "DHARUNESH M",
           "gender": "M",
           "email": "dharun3096@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "EEE",
           "batch": 2028
         },
@@ -6182,7 +6182,7 @@
           "name": "MUGESH M U",
           "gender": "M",
           "email": "mugeshmu2006@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "EEE",
           "batch": 2028
         },
@@ -6551,7 +6551,7 @@
           "name": "DHARSHINI R",
           "gender": "F",
           "email": "dharshiniramakrishnan05@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "IMT",
           "batch": 2028
         },
@@ -6569,7 +6569,7 @@
           "name": "DIVYA K S",
           "gender": "F",
           "email": "divyasaraswati13@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "IMT",
           "batch": 2028
         },
@@ -6578,7 +6578,7 @@
           "name": "DIVYADHARSHINI K",
           "gender": "F",
           "email": "divyadharshini.engi.it@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "IMT",
           "batch": 2028
         },
@@ -6605,7 +6605,7 @@
           "name": "GOKUL K",
           "gender": "M",
           "email": "gmsgokul2006@gmail.com",
-          "cgpa": 7.0,
+          "cgpa": 7,
           "department": "IMT",
           "batch": 2028
         },
@@ -6812,7 +6812,7 @@
           "name": "SATHYA S",
           "gender": "F",
           "email": "sathyavps2006@gmail.com",
-          "cgpa": 7.0,
+          "cgpa": 7,
           "department": "IMT",
           "batch": 2028
         },
@@ -6920,7 +6920,7 @@
           "name": "VAISHALI K",
           "gender": "F",
           "email": "vaishalikubendran@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "IMT",
           "batch": 2028
         },
@@ -7010,7 +7010,7 @@
           "name": "ADITHYA MUGUNTHAN M",
           "gender": "M",
           "email": "adithya2006333@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "MCE",
           "batch": 2028
         },
@@ -7163,7 +7163,7 @@
           "name": "KIRISAKAR M",
           "gender": "M",
           "email": "kirisakar99@gmail.com",
-          "cgpa": 8.0,
+          "cgpa": 8,
           "department": "MCE",
           "batch": 2028
         },
@@ -7361,7 +7361,7 @@
           "name": "SRI MUKESH M",
           "gender": "M",
           "email": "srimukesh3007@gmail.com",
-          "cgpa": 7.0,
+          "cgpa": 7,
           "department": "MCE",
           "batch": 2028
         },
@@ -7451,7 +7451,7 @@
           "name": "VINODHAGAN G",
           "gender": "M",
           "email": "vinodhagang@gmail.com",
-          "cgpa": 7.0,
+          "cgpa": 7,
           "department": "MCE",
           "batch": 2028
         },
@@ -7487,7 +7487,7 @@
           "name": "GOWTHAM S A",
           "gender": "M",
           "email": "gowthumsekar0912@gmail.com",
-          "cgpa": 7.0,
+          "cgpa": 7,
           "department": "MCE",
           "batch": 2028
         },
@@ -7828,7 +7828,7 @@
           "id": "25ATE27",
           "name": "A.Manikandan",
           "gender": "M",
-          "email": "VEERAMANI2008MANI@GMAIL.COM",
+          "email": "veeramani2008mani@gmail.com",
           "cgpa": null,
           "department": "ATE",
           "batch": 2029
