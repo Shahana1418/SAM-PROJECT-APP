@@ -148,7 +148,7 @@ function getBatchAcademicInfo(batchYear) {
 
     // Semester calculation (Aug = odd sem start, Jan = even sem start)
     let semester;
-    if (currentMonth >= 7) {
+    if (currentMonth>= 7) {
         semester = (currentYear - joiningYear) * 2 + 1;
     } else {
         semester = (currentYear - joiningYear - 1) * 2 + 2;
@@ -493,7 +493,7 @@ function renderCollege(container) {
             if (s.gender === 'F') totalFemales++;
         });
         b.departments.forEach(d => {
-            if (d.totalStudents > 0) deptSet.add(d.code);
+            if (d.totalStudents> 0) deptSet.add(d.code);
         });
     });
 
@@ -502,7 +502,7 @@ function renderCollege(container) {
     appData.batches.forEach(b => {
         b.departments.forEach(d => {
             if (!deptTotals[d.code]) deptTotals[d.code] = { code: d.code, name: d.name, students: 0, males: 0, females: 0, batches: 0 };
-            if (d.totalStudents > 0) {
+            if (d.totalStudents> 0) {
                 deptTotals[d.code].students += d.totalStudents;
                 deptTotals[d.code].males += d.males;
                 deptTotals[d.code].females += d.females;
@@ -511,7 +511,7 @@ function renderCollege(container) {
         });
     });
 
-    let activeDepts = Object.values(deptTotals).filter(d => d.students > 0);
+    let activeDepts = Object.values(deptTotals).filter(d => d.students> 0);
 
     // Filter departments if user has department-level restriction (HOD/Faculty)
     if (currentUser && currentUser.dept) {
@@ -626,7 +626,7 @@ function renderDepartmentGrid() {
         card.style.animationDelay = `${i * 0.06} s`;
         card.onclick = () => navigateTo('department', dept.code);
         card.innerHTML = `
-        < div class="dept-card-accent-left" style = "background: var(--gradient-${color})" ></div >
+        <div class="dept-card-accent-left" style="background: var(--gradient-${color})"></div>
             <div class="dept-card-main">
                 <div class="dept-card-body">
                     <div class="dept-card-icon" style="background: var(--gradient-${color})">
@@ -637,7 +637,7 @@ function renderDepartmentGrid() {
                     </div>
                     <div class="dept-card-info">
                         <div class="dept-card-name">${dept.name}</div>
-                        <div class="dept-card-code">${dept.code} · ${dept.batches} batch${dept.batches > 1 ? 'es' : ''}</div>
+                        <div class="dept-card-code">${dept.code} · ${dept.batches} batch${dept.batches> 1 ? 'es' : ''}</div>
                     </div>
                 </div>
                 <div class="dept-card-footer">
@@ -670,7 +670,7 @@ function renderDepartment(container) {
 
     appData.batches.forEach(b => {
         const deptInfo = b.departments.find(d => d.code === deptCode);
-        if (deptInfo && deptInfo.totalStudents > 0) {
+        if (deptInfo && deptInfo.totalStudents> 0) {
             batchesWithDept.push({ year: b.year, ...deptInfo });
             totalStudents += deptInfo.totalStudents;
             totalMales += deptInfo.males;
@@ -681,7 +681,7 @@ function renderDepartment(container) {
     const colors = ['blue', 'green', 'purple', 'orange', 'cyan'];
 
     container.innerHTML = `
-        < div class="page-header" >
+        <div class="page-header">
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
@@ -689,8 +689,8 @@ function renderDepartment(container) {
                 </svg>
                 ${deptName}
             </h2>
-            <p class="page-subtitle">${deptCode} · ${totalStudents} students across ${batchesWithDept.length} batch${batchesWithDept.length > 1 ? 'es' : ''}</p>
-        </div >
+            <p class="page-subtitle">${deptCode} · ${totalStudents} students across ${batchesWithDept.length} batch${batchesWithDept.length> 1 ? 'es' : ''}</p>
+        </div>
 
         <div class="stats-grid">
             <div class="stat-card stat-blue">
@@ -736,7 +736,7 @@ function renderDepartment(container) {
         card.style.animationDelay = `${i * 0.06} s`;
         card.onclick = () => navigateTo('batch', deptCode, batch.year);
         card.innerHTML = `
-        < div class="dept-card-accent-left" style = "background: var(--gradient-${color})" ></div >
+        <div class="dept-card-accent-left" style="background: var(--gradient-${color})"></div>
             <div class="dept-card-main">
                 <div class="dept-card-body">
                     <div class="dept-card-icon" style="background: var(--gradient-${color})">
@@ -782,7 +782,7 @@ function renderBatch(container) {
     const batchInfo = getBatchAcademicInfo(batchYear);
 
     const adminActions = (!batchData.isLocked && currentUser && currentUser.canGenerate) ? `
-        < div class="admin-actions" >
+        <div class="admin-actions">
             <h3 class="section-title">⚡ Admin: Generate Teams</h3>
             <div class="team-controls">
                 <div class="filter-group">
@@ -809,18 +809,18 @@ function renderBatch(container) {
                     Generate Teams
                 </button>
             </div>
-        </div >
+        </div>
         ` : (batchData.isLocked ? `
-        < div class="admin-actions" style = "background:var(--card-bg); border-color:#d97706; padding: 1.5rem; text-align: center;" >
+        <div class="admin-actions" style="background:var(--card-bg); border-color:#d97706; padding: 1.5rem; text-align: center;">
                 <h3 class="section-title" style="margin-bottom:0.5rem; color:#d97706;">🔒 Teams are Locked by Faculty</h3>
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Team generation and editing have been disabled for this batch.</p>
                 <button class="btn-primary" style="width:auto; margin:0 auto; padding:10px 20px; background:var(--gradient-purple);" onclick="navigateTo('teams', '${deptCode}', ${batchYear})">
                     📋 View Teams
                 </button>
-            </div > ` : '');
+            </div> ` : '');
 
     container.innerHTML = `
-        < div class="page-header" >
+        <div class="page-header">
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -831,7 +831,7 @@ function renderBatch(container) {
                 ${getDeptShortName(deptCode)} — ${batchYear} Batch (${batchInfo.yearSuffix} Year)
             </h2>
             <p class="page-subtitle">${students.length} students · ${deptCode} · Joined ${batchInfo.joiningYear} · Passing ${batchInfo.passingYear} · Semester ${batchInfo.semester}</p>
-        </div >
+        </div>
 
         <div class="stats-grid">
             <div class="stat-card stat-blue">
@@ -917,13 +917,13 @@ function renderBatch(container) {
 function renderStudentRows(students) {
     const tbody = document.getElementById('student-tbody');
     tbody.innerHTML = students.map((s, i) => `
-        < tr >
+        < tr>
             <td>${i + 1}</td>
             <td><strong>${s.id}</strong></td>
             <td>${s.name}</td>
             <td><span class="gender-badge gender-${s.gender.toLowerCase()}">${s.gender === 'M' ? '♂ Male' : '♀ Female'}</span></td>
             <td>${s.email || '—'}</td>
-        </tr >
+        </tr>
         `).join('');
 }
 
@@ -970,34 +970,34 @@ function renderTeams(container) {
     if (currentUser) {
         if (currentUser.canLock) {
             adminBtns += `
-        < button class="btn-primary" style = "width:auto;padding:10px 20px;background:var(--card-bg);border:1px solid #d97706;color:#d97706;" onclick = "toggleLockTeams('${deptCode}', ${batchYear})" >
+        < button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--card-bg);border:1px solid #d97706;color:#d97706;" onclick = "toggleLockTeams('${deptCode}', ${batchYear})">
             ${isLocked ? '🔓 Unlock Teams' : '🔒 Lock Teams'}
-                </button >
+                </button>
         `;
         }
 
         if (currentUser.canGenerate && !isLocked) {
             adminBtns += `
-        < button class="btn-primary" style = "${editBtnStyle}" onclick = "toggleEditMode()" >
+        < button class="btn-primary" style="${editBtnStyle}" onclick = "toggleEditMode()">
             ${editBtnLabel}
-                </button >
+                </button>
         `;
         }
     }
 
     adminBtns += `
-        < button class="btn-secondary" style = "width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick = "exportCSV()" >
+        < button class="btn-secondary" style="width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick = "exportCSV()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
             Export CSV
-        </button >
+        </button>
         `;
 
     container.innerHTML = `
-        < div class="page-header" >
+        <div class="page-header">
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -1008,7 +1008,7 @@ function renderTeams(container) {
                 Team Rosters — ${getDeptShortName(deptCode)} · ${batchYear}
             </h2>
             <p class="page-subtitle">${teams.length} teams · ${totalStudents} students · ${numSessions} sessions</p>
-        </div >
+        </div>
 
         <div class="stats-grid">
             <div class="stat-card stat-purple">
@@ -1048,14 +1048,14 @@ function renderTeams(container) {
             <div class="stat-card stat-orange">
                 <div class="stat-info">
                     <span class="stat-label">Total Duration</span>
-                    <span class="stat-value">${hrs > 0 ? hrs + 'h ' : ''}${remMin}m</span>
+                    <span class="stat-value">${hrs> 0 ? hrs + 'h ' : ''}${remMin}m</span>
                     <span class="stat-detail">${perRoundMin} min per session</span>
                 </div>
                 <div class="stat-icon">⏱️</div>
             </div>
         </div>
 
-        <!--Team Rosters-- >
+        <!--Team Rosters-->
         <div class="rt-section">
             <div class="rt-section-header">
                 <div class="rt-section-title">
@@ -1093,7 +1093,7 @@ function renderTeams(container) {
         const card = document.createElement('div');
         card.className = 'team-card';
         card.innerHTML = `
-        < div class="team-card-top-accent" style = "background: var(--gradient-${color})" ></div >
+        <div class="team-card-top-accent" style="background: var(--gradient-${color})"></div>
         <div class="team-card-header">
             <span class="team-card-title">${getTeamName(deptCode, i)}</span>
             <span class="team-sess-id" style="color:var(--accent-${color}); background:var(--bg-${color}, rgba(0,0,0,0.05));">Session ${sessNum}</span>
@@ -1154,7 +1154,7 @@ function addMins(h, m, mins) {
 /* Fisher-Yates shuffle to randomize presenter order */
 function shuffleArray(arr) {
     const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
+    for (let i = a.length - 1; i> 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
     }
@@ -1176,7 +1176,7 @@ function generateSessionCalendar(teams, config) {
 
     while (cur <= endD && idx < N) {
         const dow = cur.getDay();
-        if (dow >= 1 && dow <= 5) { // Mon-Fri only
+        if (dow>= 1 && dow <= 5) { // Mon-Fri only
             const dateStr = cur.toISOString().slice(0, 10);
             const isPast = dateStr < todayStr, isToday = dateStr === todayStr;
             // Each day gets SESSIONS_PER_SLOT sessions in the chosen period
@@ -1230,7 +1230,7 @@ function renderSessions(container) {
     const savedSlot = cal ? (cal.periodSlot || 'morning1') : 'morning1';
 
     /* ===== Config Panel ===== */
-    const configPanel = `< div class="cal-config-panel" >
+    const configPanel = `<div class="cal-config-panel">
         <div class="cal-config-title">⚙️ Schedule Configuration</div>
         <div class="cal-config-grid">
             <div class="cal-field"><label>Start Date</label>
@@ -1258,12 +1258,12 @@ function renderSessions(container) {
             ${cal ? '<button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--gradient-orange);" onclick="reshuffleSchedule()">🔀 Reshuffle Teams</button>' : ''}
             <span style="font-size:.8rem;color:var(--text-muted);">${N} teams · ${N} sessions needed · ${Math.ceil(N / SESSIONS_PER_SLOT)} days minimum</span>
         </div>
-    </div > `;
+    </div> `;
 
     /* ===== Schedule Table & Day Cards ===== */
     let scheduleHTML = '', dayCardsHTML = '';
 
-    if (cal && cal.sessions && cal.sessions.length > 0) {
+    if (cal && cal.sessions && cal.sessions.length> 0) {
         const sessions = cal.sessions;
         const pt = PERIOD_TYPES[cal.periodSlot || 'morning1'];
 
@@ -1274,10 +1274,10 @@ function renderSessions(container) {
 
         // Table rows — each day is a row with 3 session columns
         const colHeaders = Array.from({ length: SESSIONS_PER_SLOT }, (_, i) =>
-            `< th class="sched-col-header" style = "border-left:3px solid ${pt.color}40;" >
+            `< th class="sched-col-header" style="border-left:3px solid ${pt.color}40;">
                 <div style="color:${pt.color};font-weight:800;font-size:.76rem;">Session ${i + 1}</div>
                 <div style="font-size:.68rem;color:var(--text-muted);">${pt.shortLabel}</div>
-            </th > `
+            </th> `
         ).join('');
 
         const tRows = dayKeys.map(dateStr => {
@@ -1291,8 +1291,8 @@ function renderSessions(container) {
                 if (!s) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
                 const p = getTeamName(deptCode, s.presenterIdx), r = getTeamName(deptCode, s.reviewerIdx), fb = getTeamName(deptCode, s.feedbackIdx);
                 const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
-                const presTopicHTML = presTopicObj ? `< div class="sched-topic-row" style = "margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;" >📝 ${presTopicObj.title}</div > ` : '';
-                return `< td class="sched-slot-cell" style = "border-top:3px solid ${pt.color};" >
+                const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div> ` : '';
+                return `< td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
                     <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')}</div>
                     <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
                     ${presTopicHTML}
@@ -1300,23 +1300,23 @@ function renderSessions(container) {
                         ? `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
                         : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles revealed on day</span></div>`
                     }
-                </td > `;
+                </td> `;
             }).join('');
 
-            return `< tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}" >
+            return `< tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}">
         <td class="sched-date-cell">
             <div class="sched-date-day">${first.dayFull.slice(0, 3).toUpperCase()}</div>
             <div class="sched-date-num ${isToday ? 'sched-date-today' : ''}">${dl}</div>
             ${isToday ? '<div class="sched-today-badge">TODAY</div>' : ''}
             ${isPast ? '<div class="sched-past-badge">DONE</div>' : ''}
-        </td>${cells}</tr > `;
+        </td>${cells}</tr> `;
         }).join('');
 
-        const statusOk = sessions.length >= N
-            ? `< div class="sched-status-ok" >✅ All ${N} sessions scheduled across ${dayKeys.length} working days(Mon–Fri).Presenters are randomly ordered.</div > `
-            : `< div class="sched-status-warn" >⚠️ Only ${sessions.length} /${N} sessions fit. Extend the End Date to accommodate all teams.</div > `;
+        const statusOk = sessions.length>= N
+            ? `<div class="sched-status-ok">✅ All ${N} sessions scheduled across ${dayKeys.length} working days(Mon–Fri).Presenters are randomly ordered.</div> `
+            : `<div class="sched-status-warn">⚠️ Only ${sessions.length} /${N} sessions fit. Extend the End Date to accommodate all teams.</div> `;
 
-        scheduleHTML = `< div class="rt-section" style = "margin-bottom:1.5rem;" >
+        scheduleHTML = `<div class="rt-section" style="margin-bottom:1.5rem;">
             <div class="rt-section-header">
                 <div class="rt-section-title">📅 Session Timetable — ${sessions.length} sessions · ${pt.label}</div>
                 <span style="font-size:.76rem;font-weight:700;padding:3px 10px;border-radius:10px;background:${pt.color}18;color:${pt.color};">${pt.shortLabel} ${pt.label}</span>
@@ -1326,7 +1326,7 @@ function renderSessions(container) {
                     <thead><tr><th class="sched-date-header">DATE</th>${colHeaders}</tr></thead>
                     <tbody>${tRows}</tbody>
                 </table>
-            </div>${statusOk}</div > `;
+            </div>${statusOk}</div> `;
 
         // Day cards
         const dCards = dayKeys.map((dateStr, di) => {
@@ -1336,8 +1336,8 @@ function renderSessions(container) {
             const dl2 = first.date.toLocaleDateString('en-IN', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
             const sItems = daySess.map(s => {
                 const dayTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
-                const dayTopicHTML = dayTopicObj ? `< div style = "margin-top:4px;font-size:.78rem;color:var(--accent-blue);font-weight:600;padding-left:4px;" >📝 Topic: ${dayTopicObj.title}</div > ` : '';
-                return `< div class="sched-sess-item" >
+                const dayTopicHTML = dayTopicObj ? `<div style="margin-top:4px;font-size:.78rem;color:var(--accent-blue);font-weight:600;padding-left:4px;">📝 Topic: ${dayTopicObj.title}</div> ` : '';
+                return `<div class="sched-sess-item">
                     <div class="sched-sess-item-header" style="border-left:3px solid ${pt.color};">
                         <div class="sched-sess-item-num" style="background:${pt.color}18;color:${pt.color};">#${String(s.sessNum).padStart(2, '0')}</div>
                         <div style="font-size:.82rem;font-weight:700;color:var(--text-primary);">${pt.label} &nbsp;·&nbsp; ${s.startTime} – ${s.endTime}</div>
@@ -1349,58 +1349,58 @@ function renderSessions(container) {
                         : `<span class="sched-chip sched-locked">🔒 Reviewer &amp; Feedback revealed on ${dateStr}</span>`}
                     </div>
                     ${dayTopicHTML}
-                </div > `;
+                </div> `;
             }).join('');
-            return `< div class="sched-day-card ${isToday ? 'sched-day-today' : ''}" style = "animation-delay:${di * .04}s" >
+            return `<div class="sched-day-card ${isToday ? 'sched-day-today' : ''}" style="animation-delay:${di * .04}s">
                 <div class="sched-day-header">
                     <div><div class="sched-day-name">${dl2}</div>
-                        <div class="sched-day-meta">${daySess.length} session${daySess.length > 1 ? 's' : ''} scheduled</div></div>
+                        <div class="sched-day-meta">${daySess.length} session${daySess.length> 1 ? 's' : ''} scheduled</div></div>
                     ${isToday ? '<span class="sched-day-badge sched-badge-today">TODAY</span>' : ''}
                     ${isPast ? '<span class="sched-day-badge sched-badge-done">COMPLETED</span>' : ''}
                 </div>
                 <div class="sched-sess-list">${sItems}</div>
-            </div > `;
+            </div> `;
         }).join('');
 
-        dayCardsHTML = `< div class="rt-section" style = "margin-bottom:1.5rem;" >
+        dayCardsHTML = `<div class="rt-section" style="margin-bottom:1.5rem;">
             <div class="rt-section-header">
                 <div class="rt-section-title">📋 Day-wise Session Details</div>
                 <span style="font-size:.8rem;color:var(--text-muted);">${dayKeys.length} working days</span>
             </div>
             <div class="sched-day-cards">${dCards}</div>
-        </div > `;
+        </div> `;
     }
 
     /* ===== Presenter Order Reference ===== */
     const sessionColors = ['blue', 'green', 'purple', 'orange', 'cyan'];
     let orderRows = '';
-    if (cal && cal.sessions && cal.sessions.length > 0) {
+    if (cal && cal.sessions && cal.sessions.length> 0) {
         cal.sessions.forEach((s, i) => {
             const c = sessionColors[i % sessionColors.length];
             const p = s.presenterIdx, r = s.reviewerIdx, fb = s.feedbackIdx;
-            orderRows += `< tr class="rt-row" >
+            orderRows += `< tr class="rt-row">
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s.sessNum).padStart(2, '0')}</span></td>
                 <td>${s.dateStr} (${s.dayName})</td>
                 <td><span class="rt-team-chip rt-presenter">🎤 Team ${p + 1}</span></td>
                 <td>${s.revealed ? `<span class="rt-team-chip rt-reviewer">🔍 Team ${r + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
                 <td>${s.revealed ? `<span class="rt-team-chip rt-feedback">💬 Team ${fb + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
-            </tr > `;
+            </tr> `;
         });
     } else {
         for (let s = 0; s < N; s++) {
             const c = sessionColors[s % sessionColors.length];
-            orderRows += `< tr class="rt-row" >
+            orderRows += `< tr class="rt-row">
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s + 1).padStart(2, '0')}</span></td>
                 <td>—</td>
                 <td><span class="rt-team-chip rt-presenter">🎤 Team ${s + 1}</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
-            </tr > `;
+            </tr> `;
         }
     }
 
     container.innerHTML = `
-        < div class="page-header" >
+        <div class="page-header">
         <h2 class="page-title">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -1411,7 +1411,7 @@ function renderSessions(container) {
             Session Schedule
         </h2>
         <p class="page-subtitle">${getDeptShortName(deptCode)} · ${batchYear} Batch · ${N} teams · Mon–Fri only · Random order</p>
-    </div >
+    </div>
         ${configPanel}
     ${scheduleHTML}
     ${dayCardsHTML}
@@ -1486,11 +1486,11 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
         // Rules: team sizes must be 4 or 5, teams divisible by 3, max 15 teams
         let validT = [];
         for (let t = 3; t <= 15; t += 3) {
-            if (n >= 4 * t && n <= 5 * t) validT.push(t);
+            if (n>= 4 * t && n <= 5 * t) validT.push(t);
         }
-        if (validT.length > 0) {
+        if (validT.length> 0) {
             numTeams = Math.max(...validT); // Maximize T → mostly size-4 teams
-        } else if (n > 75) {
+        } else if (n> 75) {
             numTeams = 15;
         } else if (n < 12) {
             numTeams = 3;
@@ -1501,8 +1501,8 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
             for (let t = 3; t <= 15; t += 3) {
                 let base = Math.floor(n / t);
                 let ext = n % t;
-                let p1 = (base < 4) ? (4 - base) * 1000 : ((base > 5) ? (base - 5) * 10 : 0);
-                let p2 = (base + 1 < 4) ? (4 - base) * 1000 : ((base + 1 > 5) ? (base - 4) * 10 : 0);
+                let p1 = (base < 4) ? (4 - base) * 1000 : ((base> 5) ? (base - 5) * 10 : 0);
+                let p2 = (base + 1 < 4) ? (4 - base) * 1000 : ((base + 1> 5) ? (base - 4) * 10 : 0);
                 if (base <= 3) p1 += 50000;
                 if (base + 1 <= 3) p2 += 50000;
                 let penalty = (p1 * (t - ext)) + (p2 * ext) - t * 0.1;
@@ -1526,8 +1526,8 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
     // Prepare gender pairs
     const pairsM = [];
     const pairsF = [];
-    while (males.length >= 2) pairsM.push([males.pop(), males.pop()]);
-    while (females.length >= 2) pairsF.push([females.pop(), females.pop()]);
+    while (males.length>= 2) pairsM.push([males.pop(), males.pop()]);
+    while (females.length>= 2) pairsF.push([females.pop(), females.pop()]);
 
     const leftovers = [...males, ...females];
 
@@ -1536,13 +1536,13 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
         let pairsAdded = 0;
 
         while (pairsAdded < neededPairs) {
-            if (pairsM.length > 0 && pairsF.length > 0) {
+            if (pairsM.length> 0 && pairsF.length> 0) {
                 // Balance genders by alternating pairs
                 if (pairsAdded % 2 === 0) teams[t].members.push(...pairsM.pop());
                 else teams[t].members.push(...pairsF.pop());
-            } else if (pairsM.length > 0) {
+            } else if (pairsM.length> 0) {
                 teams[t].members.push(...pairsM.pop());
-            } else if (pairsF.length > 0) {
+            } else if (pairsF.length> 0) {
                 teams[t].members.push(...pairsF.pop());
             } else {
                 break;
@@ -1552,13 +1552,13 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
     }
 
     // Flatten remaining pairs back into leftovers
-    while (pairsM.length > 0) leftovers.push(...pairsM.pop());
-    while (pairsF.length > 0) leftovers.push(...pairsF.pop());
+    while (pairsM.length> 0) leftovers.push(...pairsM.pop());
+    while (pairsF.length> 0) leftovers.push(...pairsF.pop());
 
     // Fill the remaining spots up to sizes[t] for each team
     for (let t = 0; t < numTeams; t++) {
         let needed = sizes[t] - teams[t].members.length;
-        while (needed > 0 && leftovers.length > 0) {
+        while (needed> 0 && leftovers.length> 0) {
             teams[t].members.push(leftovers.pop());
             needed--;
         }
@@ -1566,7 +1566,7 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
 
     // Safety fallback for math boundary conditions
     let overflowIdx = 0;
-    while (leftovers.length > 0) {
+    while (leftovers.length> 0) {
         teams[overflowIdx % numTeams].members.push(leftovers.pop());
         overflowIdx++;
     }
@@ -1577,13 +1577,13 @@ function buildTeams(students, teamSize, mode, deptCode, batchYear) {
 
 function enforceMinSize(teams, min, max) {
     // Remove empty teams. Teams with 1–2 members have their students redistributed.
-    const ok = teams.filter(t => t.members.length >= min);
+    const ok = teams.filter(t => t.members.length>= min);
     const tooSmall = teams.filter(t => t.members.length < min);
     const orphans = [];
     tooSmall.forEach(t => orphans.push(...t.members));
     shuffle(orphans);
     orphans.forEach(s => {
-        if (ok.length > 0) {
+        if (ok.length> 0) {
             // Add to the smallest existing team (up to max size)
             const smallest = ok.reduce((a, b) => a.members.length <= b.members.length ? a : b);
             smallest.members.push(s);
@@ -1594,7 +1594,7 @@ function enforceMinSize(teams, min, max) {
 }
 
 function shuffle(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
+    for (let i = arr.length - 1; i> 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
@@ -1880,7 +1880,7 @@ const SYLLABUS_DATA = {
  * @returns {Array} - array of assessment objects (length = numTeams)
  */
 function getAutoAssignedAssessments(deptCode, batchYear, numTeams) {
-    const regulation = batchYear >= 2029 ? 'R2025' : 'R2021';
+    const regulation = batchYear>= 2029 ? 'R2025' : 'R2021';
     const topics = (SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
         ? SYLLABUS_DATA[regulation][deptCode]
         : [];
@@ -1904,7 +1904,7 @@ function getAutoAssignedAssessments(deptCode, batchYear, numTeams) {
 
 // ===== Level 6: Assessment Configuration =====
 function getSyllabusPdfPath(deptCode, batchYear) {
-    const isR2025 = batchYear >= 2029; // 2029 batch joins in 2025 (2029 - 4)
+    const isR2025 = batchYear>= 2029; // 2029 batch joins in 2025 (2029 - 4)
     const folder = isR2025 ? 'R2025' : 'R2021';
 
     // Mapping object to filenames based on observed folder structures
@@ -1942,7 +1942,7 @@ function getSyllabusPdfPath(deptCode, batchYear) {
 function renderAssessments(container) {
     const deptCode = navState.dept;
     const batchYear = navState.batch;
-    const isR2025 = batchYear >= 2029;
+    const isR2025 = batchYear>= 2029;
     const regulation = isR2025 ? 'R2025' : 'R2021';
     const admYear = batchYear - 4;
     const teams = navState.teams || [];
@@ -2220,7 +2220,7 @@ function renderAssessments(container) {
         }).join('');
 
         let resultHTML = '';
-        if (cfg.generatedAssignments && cfg.generatedAssignments.length > 0) {
+        if (cfg.generatedAssignments && cfg.generatedAssignments.length> 0) {
             const cColors = {
                 Easy: 'background:rgba(5,150,105,.12);color:#059669',
                 Medium: 'background:rgba(245,158,11,.12);color:#d97706',
@@ -2257,7 +2257,7 @@ function renderAssessments(container) {
         const spec = getSubjectSpec(cfg.courseCode);
         const _labsSource = getLabsGen(deptCode);
         const semLabs = (spec && spec.semester && _labsSource) ? (_labsSource[spec.semester] || []) : [];
-        const showLabDropdown = (semLabs.length > 0 && (cfg.assignType === 'practicals' || savedType === 'practicals'));
+        const showLabDropdown = (semLabs.length> 0 && (cfg.assignType === 'practicals' || savedType === 'practicals'));
         const labDropdownHTML = showLabDropdown ? `
             <div class="wiz-field" id="lab-select-field">
                 <label>&#128203; Select Lab</label>
@@ -2463,7 +2463,7 @@ function generateAssignments() {
 
     // Read checked focus units (checkboxes)
     const cbAll = document.querySelectorAll('.focus-unit-cb');
-    if (cbAll.length > 0) {
+    if (cbAll.length> 0) {
         const sel = Array.from(cbAll).filter(cb => cb.checked).map(cb => parseInt(cb.value));
         cfg.focusUnits = sel.length ? sel : [1, 2, 3, 4, 5];
     } else {
@@ -2487,7 +2487,7 @@ function generateAssignments() {
     const _labsGen = getLabsGen(deptCode);
     if (cfg.assignType === 'practicals' && _labsGen && spec && spec.semester) {
         const semLabs = _labsGen[spec.semester];
-        if (semLabs && semLabs.length > 0) {
+        if (semLabs && semLabs.length> 0) {
             // Read selected lab from dropdown (AU3611, AU3612, or 'all')
             const labSel = document.getElementById('wiz-lab-select');
             const selectedLab = labSel ? labSel.value : (cfg.selectedLab || 'all');
@@ -2512,12 +2512,12 @@ function generateAssignments() {
 
     /* ── For non-practicals: filter SYLLABUS_DATA by focusUnits AND complexity ── */
     if (!curatedList) {
-        if (spec && spec.topics && spec.topics[cfg.assignType] && spec.topics[cfg.assignType].length > 0) {
+        if (spec && spec.topics && spec.topics[cfg.assignType] && spec.topics[cfg.assignType].length> 0) {
             // First Priority: explicitly curated topics in SUBJECTS data matching the assignType
             curatedList = spec.topics[cfg.assignType];
         } else {
             // Second Priority: use generic SYLLABUS_DATA topics
-            const isR2025 = batchYear >= 2029;
+            const isR2025 = batchYear>= 2029;
             const regulation = isR2025 ? 'R2025' : 'R2021';
             let syllTopics = (typeof SYLLABUS_DATA !== 'undefined' &&
                 SYLLABUS_DATA[regulation] && SYLLABUS_DATA[regulation][deptCode])
@@ -2527,13 +2527,13 @@ function generateAssignments() {
             syllTopics = syllTopics.filter(t => useUnits.includes(t.unit));
 
             // Filter by complexity when not 'mixed'
-            if (cfg.complexity !== 'mixed' && syllTopics.length > 0) {
+            if (cfg.complexity !== 'mixed' && syllTopics.length> 0) {
                 const complexFiltered = syllTopics.filter(t => t.complexity === cfg.complexity);
                 // Only apply filter if we get at least one match; otherwise keep all focusUnit topics
-                if (complexFiltered.length > 0) syllTopics = complexFiltered;
+                if (complexFiltered.length> 0) syllTopics = complexFiltered;
             }
 
-            if (syllTopics.length > 0) {
+            if (syllTopics.length> 0) {
                 curatedList = syllTopics.map(t => t.title);
             }
         }
@@ -2541,7 +2541,7 @@ function generateAssignments() {
 
     let pool = [];
 
-    if (curatedList && curatedList.length > 0) {
+    if (curatedList && curatedList.length> 0) {
         const coUnits = [1, 2, 3, 4, 5];
         for (let i = 0; i < curatedList.length; i++) {
             const uIdx = Math.floor(i / curatedList.length * 5);
@@ -2563,21 +2563,21 @@ function generateAssignments() {
             const uTitle = uObj.title || 'Unit ' + u;
             const uDesc = uObj.desc || '';
             let subtopics = [];
-            if (uDesc.trim().length > 10) {
-                subtopics = uDesc.split(/[-—–.,;]+/).map(s => s.trim()).filter(s => s.length > 5 && s.toLowerCase() !== 'and');
+            if (uDesc.trim().length> 10) {
+                subtopics = uDesc.split(/[-—–.,;]+/).map(s => s.trim()).filter(s => s.length> 5 && s.toLowerCase() !== 'and');
             }
             if (subtopics.length === 0) subtopics = [uTitle];
             subtopics.forEach(sub => {
                 allTopics.push({ unitNum: u, title: sub, co: coKeys[(u - 1) % coKeys.length] || 'CO1' });
             });
         });
-        if (allTopics.length > numTeams) {
+        if (allTopics.length> numTeams) {
             const buckets = Array.from({ length: numTeams }, () => []);
             allTopics.forEach((t, i) => {
                 const bIdx = Math.min(Math.floor(i / (allTopics.length / numTeams)), numTeams - 1);
                 buckets[bIdx].push(t);
             });
-            buckets.forEach(b => { if (b.length > 0) pool.push({ unitNum: b[0].unitNum, title: b.map(x => x.title).join(' & '), co: b[0].co }); });
+            buckets.forEach(b => { if (b.length> 0) pool.push({ unitNum: b[0].unitNum, title: b.map(x => x.title).join(' & '), co: b[0].co }); });
         } else {
             pool = allTopics;
         }
