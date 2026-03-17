@@ -269,24 +269,56 @@ function togglePwEye() {
     }
 }
 
+function handleRoleSelection(value) {
+    if (!value) return;
+
+    if (value === 'faculty_view') {
+        if (currentUser && currentUser.role === 'Faculty') {
+            if (navState.dept && navState.batch) {
+                toggleLockTeams(navState.dept, navState.batch);
+            } else {
+                showToast('Please navigate to a Department and Batch to lock teams.', 'warning');
+            }
+        } else {
+            openLoginModal('Faculty');
+            window.autoLockOnLogin = true;
+        }
+    } else if (value === 'hod' || value === 'admin') {
+        openLoginModal('Admin');
+    }
+
+    setTimeout(() => {
+        const sel = document.getElementById('role-selector');
+        if (sel) sel.value = "";
+    }, 100);
+}
+
+function openInstitutionDashboard() {
+    navigateTo('college');
+    showToast('Viewing Institution Dashboard', 'info');
+}
+
 function updateUserBadge() {
     const badge = document.getElementById('user-badge');
-    const facultyBtn = document.getElementById('faculty-login-btn');
-    const adminBtn = document.getElementById('admin-login-btn');
+    const authControls = document.getElementById('auth-controls');
     const logoutBtn = document.getElementById('logout-btn');
 
     if (currentUser) {
         badge.innerHTML = `<span>🔑</span> ${currentUser.role}`;
         badge.style.display = 'inline-flex';
 
-        if (facultyBtn) facultyBtn.style.display = 'none';
-        if (adminBtn) adminBtn.style.display = 'none';
+        if (authControls) authControls.style.display = 'none';
         if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+
+        if (window.autoLockOnLogin && currentUser.role === 'Faculty') {
+            window.autoLockOnLogin = false;
+            if (navState.dept && navState.batch) {
+                setTimeout(() => toggleLockTeams(navState.dept, navState.batch), 500);
+            }
+        }
     } else {
         badge.style.display = 'none';
-
-        if (facultyBtn) facultyBtn.style.display = 'inline-flex';
-        if (adminBtn) adminBtn.style.display = 'inline-flex';
+        if (authControls) authControls.style.display = 'flex';
         if (logoutBtn) logoutBtn.style.display = 'none';
     }
 }

@@ -1067,7 +1067,9 @@ body {
 /* Fallback gradient top accent line */
 .team-card-top-accent {
     position: absolute;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 4px;
     background: var(--gradient-blue);
     z-index: 2;
@@ -1124,8 +1126,15 @@ body {
     font-weight: 700;
 }
 
-.team-gender-ratio .male { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
-.team-gender-ratio .female { background: rgba(236, 72, 153, 0.1); color: var(--accent-pink); }
+.team-gender-ratio .male {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-blue);
+}
+
+.team-gender-ratio .female {
+    background: rgba(236, 72, 153, 0.1);
+    color: var(--accent-pink);
+}
 
 .team-member {
     display: flex;
@@ -1158,11 +1167,20 @@ body {
     font-size: 1rem;
     margin-right: 14px;
     flex-shrink: 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.avatar-m { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05)); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.2); }
-.avatar-f { background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(236, 72, 153, 0.05)); color: var(--accent-pink); border: 1px solid rgba(236, 72, 153, 0.2); }
+.avatar-m {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+    color: var(--accent-blue);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.avatar-f {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(236, 72, 153, 0.05));
+    color: var(--accent-pink);
+    border: 1px solid rgba(236, 72, 153, 0.2);
+}
 
 .member-info {
     flex: 1;
@@ -1271,6 +1289,57 @@ body {
     background: rgba(16, 185, 129, 0.3);
     border-color: rgba(16, 185, 129, 0.5);
     color: #fff;
+}
+
+.auth-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.role-select {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 32px;
+}
+
+.role-select:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.role-select option {
+    background: #1e3a8a;
+    color: #fff;
+}
+
+.dashboard-btn {
+    background: #ffffff;
+    border-color: transparent;
+    color: var(--accent-blue);
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-btn:hover {
+    background: #f8fafc;
+    color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* ===== Batch Cards ===== */
