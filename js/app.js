@@ -558,14 +558,53 @@ function renderCollege(container) {
             </button>
         </div>
 
-        <div id="dept-grid-container" style="display:none; margin-top:3rem;">
+        <!-- Academic Cycles Section -->
+        <div class="section-card academic-cycles-card" style="margin-bottom: 3rem;">
+            <div class="section-header-flex">
+                <div class="section-header-content">
+                    <h3 class="section-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.2rem;">📅</span> Academic Cycles
+                    </h3>
+                    <p class="page-subtitle" style="margin-left: 0; margin-top: 4px;">Define semester cycles to scope teams, sessions and grades.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="btn-primary" onclick="openNewCycleModal()">+ New Cycle</button>
+                    <button class="btn-outline" onclick="viewAllCycles()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        View All
+                    </button>
+                </div>
+            </div>
+            <div class="section-content-area" style="padding-top: 1.5rem;">
+                <!-- Empty State -->
+                <p class="empty-state-text">No active cycle. Create one to scope teams and sessions.</p>
+            </div>
+        </div>
+
+        <div id="dept-grid-container" style="display:none; margin-top:1rem;">
             <h3 class="section-title">Select a Department</h3>
             <div class="dept-grid" id="dept-grid"></div>
         </div>
     `;
 
+
     // Store activeDepts to window so renderDepartmentGrid can access it
     window.currentActiveDepts = activeDepts;
+}
+
+// ===== Academic Cycles Placeholders =====
+function openNewCycleModal() {
+    showToast('New Cycle modal would open here.', 'info');
+}
+
+function viewAllCycles() {
+    showToast('Navigating to all Academic Cycles...', 'info');
 }
 
 function renderDepartmentGrid() {
@@ -584,16 +623,16 @@ function renderDepartmentGrid() {
         const color = colors[i % colors.length];
         const card = document.createElement('div');
         card.className = 'dept-card';
-        card.style.animationDelay = `${i * 0.06}s`;
+        card.style.animationDelay = `${i * 0.06} s`;
         card.onclick = () => navigateTo('department', dept.code);
         card.innerHTML = `
-            <div class="dept-card-accent-left" style="background: var(--gradient-${color})"></div>
+        < div class="dept-card-accent-left" style = "background: var(--gradient-${color})" ></div >
             <div class="dept-card-main">
                 <div class="dept-card-body">
                     <div class="dept-card-icon" style="background: var(--gradient-${color})">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                            <polyline points="9 22 9 12 15 12 15 22"/>
+                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
                         </svg>
                     </div>
                     <div class="dept-card-info">
@@ -608,11 +647,11 @@ function renderDepartmentGrid() {
                         <span class="dept-pill dept-pill-female">♀ ${dept.females}</span>
                     </div>
                     <svg class="dept-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"/>
+                        <polyline points="9 18 15 12 9 6" />
                     </svg>
                 </div>
             </div>
-        `;
+    `;
         grid.appendChild(card);
     });
 
@@ -642,7 +681,7 @@ function renderDepartment(container) {
     const colors = ['blue', 'green', 'purple', 'orange', 'cyan'];
 
     container.innerHTML = `
-            <div class="page-header">
+        < div class="page-header" >
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
@@ -651,7 +690,7 @@ function renderDepartment(container) {
                 ${deptName}
             </h2>
             <p class="page-subtitle">${deptCode} · ${totalStudents} students across ${batchesWithDept.length} batch${batchesWithDept.length > 1 ? 'es' : ''}</p>
-        </div>
+        </div >
 
         <div class="stats-grid">
             <div class="stat-card stat-blue">
@@ -686,7 +725,7 @@ function renderDepartment(container) {
 
         <h3 class="section-title">Select a Batch</h3>
         <div class="batch-grid" id="batch-grid"></div>
-        `;
+    `;
 
     const grid = document.getElementById('batch-grid');
     batchesWithDept.forEach((batch, i) => {
@@ -694,38 +733,38 @@ function renderDepartment(container) {
         const info = getBatchAcademicInfo(batch.year);
         const card = document.createElement('div');
         card.className = 'dept-card';
-        card.style.animationDelay = `${i * 0.06}s`;
+        card.style.animationDelay = `${i * 0.06} s`;
         card.onclick = () => navigateTo('batch', deptCode, batch.year);
         card.innerHTML = `
-            <div class="dept-card-accent-left" style="background: var(--gradient-${color})"></div>
-                <div class="dept-card-main">
-                    <div class="dept-card-body">
-                        <div class="dept-card-icon" style="background: var(--gradient-${color})">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                        </div>
-                        <div class="dept-card-info">
-                            <div class="dept-card-name">${batch.year} Batch — ${info.yearSuffix} Year</div>
-                            <div class="dept-card-code">Joined ${info.joiningYear} · Passing ${info.passingYear} · Sem ${info.semester}</div>
-                        </div>
-                    </div>
-                    <div class="dept-card-footer">
-                        <div class="dept-card-stat-pills">
-                            <span class="dept-pill dept-pill-total">${batch.totalStudents} Students</span>
-                            <span class="dept-pill dept-pill-male">♂ ${batch.males}</span>
-                            <span class="dept-pill dept-pill-female">♀ ${batch.females}</span>
-                            <span class="dept-pill" style="background:rgba(234,88,12,0.08);color:#ea580c">Sem ${info.semester}</span>
-                        </div>
-                        <svg class="dept-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6" />
+        < div class="dept-card-accent-left" style = "background: var(--gradient-${color})" ></div >
+            <div class="dept-card-main">
+                <div class="dept-card-body">
+                    <div class="dept-card-icon" style="background: var(--gradient-${color})">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
                     </div>
+                    <div class="dept-card-info">
+                        <div class="dept-card-name">${batch.year} Batch — ${info.yearSuffix} Year</div>
+                        <div class="dept-card-code">Joined ${info.joiningYear} · Passing ${info.passingYear} · Sem ${info.semester}</div>
+                    </div>
                 </div>
-        `;
+                <div class="dept-card-footer">
+                    <div class="dept-card-stat-pills">
+                        <span class="dept-pill dept-pill-total">${batch.totalStudents} Students</span>
+                        <span class="dept-pill dept-pill-male">♂ ${batch.males}</span>
+                        <span class="dept-pill dept-pill-female">♀ ${batch.females}</span>
+                        <span class="dept-pill" style="background:rgba(234,88,12,0.08);color:#ea580c">Sem ${info.semester}</span>
+                    </div>
+                    <svg class="dept-card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </div>
+            </div>
+    `;
         grid.appendChild(card);
     });
 }
@@ -743,7 +782,7 @@ function renderBatch(container) {
     const batchInfo = getBatchAcademicInfo(batchYear);
 
     const adminActions = (!batchData.isLocked && currentUser && currentUser.canGenerate) ? `
-            <div class="admin-actions">
+        < div class="admin-actions" >
             <h3 class="section-title">⚡ Admin: Generate Teams</h3>
             <div class="team-controls">
                 <div class="filter-group">
@@ -770,18 +809,18 @@ function renderBatch(container) {
                     Generate Teams
                 </button>
             </div>
-        </div>
-            ` : (batchData.isLocked ? `
-            <div class="admin-actions" style="background:var(--card-bg); border-color:#d97706; padding: 1.5rem; text-align: center;">
+        </div >
+        ` : (batchData.isLocked ? `
+        < div class="admin-actions" style = "background:var(--card-bg); border-color:#d97706; padding: 1.5rem; text-align: center;" >
                 <h3 class="section-title" style="margin-bottom:0.5rem; color:#d97706;">🔒 Teams are Locked by Faculty</h3>
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">Team generation and editing have been disabled for this batch.</p>
                 <button class="btn-primary" style="width:auto; margin:0 auto; padding:10px 20px; background:var(--gradient-purple);" onclick="navigateTo('teams', '${deptCode}', ${batchYear})">
                     📋 View Teams
                 </button>
-            </div>` : '');
+            </div > ` : '');
 
     container.innerHTML = `
-            <div class="page-header">
+        < div class="page-header" >
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -792,47 +831,47 @@ function renderBatch(container) {
                 ${getDeptShortName(deptCode)} — ${batchYear} Batch (${batchInfo.yearSuffix} Year)
             </h2>
             <p class="page-subtitle">${students.length} students · ${deptCode} · Joined ${batchInfo.joiningYear} · Passing ${batchInfo.passingYear} · Semester ${batchInfo.semester}</p>
-        </div>
+        </div >
 
-            <div class="stats-grid">
-                <div class="stat-card stat-blue">
-                    <div class="stat-info">
-                        <span class="stat-label">Students</span>
-                        <span class="stat-value">${students.length}</span>
-                        <span class="stat-detail">${deptCode} · ${batchYear}</span>
-                    </div>
-                    <div class="stat-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                        </svg>
-                    </div>
+        <div class="stats-grid">
+            <div class="stat-card stat-blue">
+                <div class="stat-info">
+                    <span class="stat-label">Students</span>
+                    <span class="stat-value">${students.length}</span>
+                    <span class="stat-detail">${deptCode} · ${batchYear}</span>
                 </div>
-                <div class="stat-card stat-green">
-                    <div class="stat-info">
-                        <span class="stat-label">Male</span>
-                        <span class="stat-value">${males}</span>
-                        <span class="stat-detail">${Math.round(males / students.length * 100)}%</span>
-                    </div>
-                    <div class="stat-icon">♂</div>
-                </div>
-                <div class="stat-card stat-purple">
-                    <div class="stat-info">
-                        <span class="stat-label">Female</span>
-                        <span class="stat-value">${females}</span>
-                        <span class="stat-detail">${Math.round(females / students.length * 100)}%</span>
-                    </div>
-                    <div class="stat-icon">♀</div>
-                </div>
-                <div class="stat-card stat-orange">
-                    <div class="stat-info">
-                        <span class="stat-label">Current Semester</span>
-                        <span class="stat-value">Sem ${batchInfo.semester}</span>
-                        <span class="stat-detail">${batchInfo.yearSuffix} Year · ${batchInfo.joiningYear}–${batchInfo.passingYear}</span>
-                    </div>
-                    <div class="stat-icon">📚</div>
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                    </svg>
                 </div>
             </div>
+            <div class="stat-card stat-green">
+                <div class="stat-info">
+                    <span class="stat-label">Male</span>
+                    <span class="stat-value">${males}</span>
+                    <span class="stat-detail">${Math.round(males / students.length * 100)}%</span>
+                </div>
+                <div class="stat-icon">♂</div>
+            </div>
+            <div class="stat-card stat-purple">
+                <div class="stat-info">
+                    <span class="stat-label">Female</span>
+                    <span class="stat-value">${females}</span>
+                    <span class="stat-detail">${Math.round(females / students.length * 100)}%</span>
+                </div>
+                <div class="stat-icon">♀</div>
+            </div>
+            <div class="stat-card stat-orange">
+                <div class="stat-info">
+                    <span class="stat-label">Current Semester</span>
+                    <span class="stat-value">Sem ${batchInfo.semester}</span>
+                    <span class="stat-detail">${batchInfo.yearSuffix} Year · ${batchInfo.joiningYear}–${batchInfo.passingYear}</span>
+                </div>
+                <div class="stat-icon">📚</div>
+            </div>
+        </div>
 
         ${adminActions}
 
@@ -870,7 +909,7 @@ function renderBatch(container) {
                 <tbody id="student-tbody"></tbody>
             </table>
         </div>
-        `;
+    `;
 
     renderStudentRows(students);
 }
@@ -878,14 +917,14 @@ function renderBatch(container) {
 function renderStudentRows(students) {
     const tbody = document.getElementById('student-tbody');
     tbody.innerHTML = students.map((s, i) => `
-            <tr>
+        < tr >
             <td>${i + 1}</td>
             <td><strong>${s.id}</strong></td>
             <td>${s.name}</td>
             <td><span class="gender-badge gender-${s.gender.toLowerCase()}">${s.gender === 'M' ? '♂ Male' : '♀ Female'}</span></td>
             <td>${s.email || '—'}</td>
-        </tr>
-            `).join('');
+        </tr >
+        `).join('');
 }
 
 function filterStudentTable() {
@@ -931,34 +970,34 @@ function renderTeams(container) {
     if (currentUser) {
         if (currentUser.canLock) {
             adminBtns += `
-                <button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--card-bg);border:1px solid #d97706;color:#d97706;" onclick="toggleLockTeams('${deptCode}', ${batchYear})">
-                    ${isLocked ? '🔓 Unlock Teams' : '🔒 Lock Teams'}
-                </button>
-            `;
+        < button class="btn-primary" style = "width:auto;padding:10px 20px;background:var(--card-bg);border:1px solid #d97706;color:#d97706;" onclick = "toggleLockTeams('${deptCode}', ${batchYear})" >
+            ${isLocked ? '🔓 Unlock Teams' : '🔒 Lock Teams'}
+                </button >
+        `;
         }
 
         if (currentUser.canGenerate && !isLocked) {
             adminBtns += `
-                <button class="btn-primary" style="${editBtnStyle}" onclick="toggleEditMode()">
-                    ${editBtnLabel}
-                </button>
-            `;
+        < button class="btn-primary" style = "${editBtnStyle}" onclick = "toggleEditMode()" >
+            ${editBtnLabel}
+                </button >
+        `;
         }
     }
 
     adminBtns += `
-        <button class="btn-secondary" style="width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick="exportCSV()">
+        < button class="btn-secondary" style = "width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick = "exportCSV()" >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
             Export CSV
-        </button>
-    `;
+        </button >
+        `;
 
     container.innerHTML = `
-        <div class="page-header">
+        < div class="page-header" >
             <h2 class="page-title">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -969,7 +1008,7 @@ function renderTeams(container) {
                 Team Rosters — ${getDeptShortName(deptCode)} · ${batchYear}
             </h2>
             <p class="page-subtitle">${teams.length} teams · ${totalStudents} students · ${numSessions} sessions</p>
-        </div>
+        </div >
 
         <div class="stats-grid">
             <div class="stat-card stat-purple">
@@ -1016,15 +1055,15 @@ function renderTeams(container) {
             </div>
         </div>
 
-        <!-- Team Rosters -->
+        <!--Team Rosters-- >
         <div class="rt-section">
             <div class="rt-section-header">
                 <div class="rt-section-title">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                        <path d="M16 3.13a4 4 0 010 7.75" />
                     </svg>
                     Team Rosters
                 </div>
@@ -1054,7 +1093,7 @@ function renderTeams(container) {
         const card = document.createElement('div');
         card.className = 'team-card';
         card.innerHTML = `
-        <div class="team-card-top-accent" style="background: var(--gradient-${color})"></div>
+        < div class="team-card-top-accent" style = "background: var(--gradient-${color})" ></div >
         <div class="team-card-header">
             <span class="team-card-title">${getTeamName(deptCode, i)}</span>
             <span class="team-sess-id" style="color:var(--accent-${color}); background:var(--bg-${color}, rgba(0,0,0,0.05));">Session ${sessNum}</span>
@@ -1085,7 +1124,8 @@ function renderTeams(container) {
                         ${moveDropdown}
                     </div>
                 `;
-        }).join('')}
+        }).join('')
+            }
     `;
         tc.appendChild(card);
     });
@@ -1190,7 +1230,7 @@ function renderSessions(container) {
     const savedSlot = cal ? (cal.periodSlot || 'morning1') : 'morning1';
 
     /* ===== Config Panel ===== */
-    const configPanel = `<div class="cal-config-panel">
+    const configPanel = `< div class="cal-config-panel" >
         <div class="cal-config-title">⚙️ Schedule Configuration</div>
         <div class="cal-config-grid">
             <div class="cal-field"><label>Start Date</label>
@@ -1218,7 +1258,7 @@ function renderSessions(container) {
             ${cal ? '<button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--gradient-orange);" onclick="reshuffleSchedule()">🔀 Reshuffle Teams</button>' : ''}
             <span style="font-size:.8rem;color:var(--text-muted);">${N} teams · ${N} sessions needed · ${Math.ceil(N / SESSIONS_PER_SLOT)} days minimum</span>
         </div>
-    </div>`;
+    </div > `;
 
     /* ===== Schedule Table & Day Cards ===== */
     let scheduleHTML = '', dayCardsHTML = '';
@@ -1234,10 +1274,10 @@ function renderSessions(container) {
 
         // Table rows — each day is a row with 3 session columns
         const colHeaders = Array.from({ length: SESSIONS_PER_SLOT }, (_, i) =>
-            `<th class="sched-col-header" style="border-left:3px solid ${pt.color}40;">
+            `< th class="sched-col-header" style = "border-left:3px solid ${pt.color}40;" >
                 <div style="color:${pt.color};font-weight:800;font-size:.76rem;">Session ${i + 1}</div>
                 <div style="font-size:.68rem;color:var(--text-muted);">${pt.shortLabel}</div>
-            </th>`
+            </th > `
         ).join('');
 
         const tRows = dayKeys.map(dateStr => {
@@ -1251,31 +1291,32 @@ function renderSessions(container) {
                 if (!s) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
                 const p = getTeamName(deptCode, s.presenterIdx), r = getTeamName(deptCode, s.reviewerIdx), fb = getTeamName(deptCode, s.feedbackIdx);
                 const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
-                const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
-                return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
+                const presTopicHTML = presTopicObj ? `< div class="sched-topic-row" style = "margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;" >📝 ${presTopicObj.title}</div > ` : '';
+                return `< td class="sched-slot-cell" style = "border-top:3px solid ${pt.color};" >
                     <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')}</div>
                     <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
                     ${presTopicHTML}
                     ${s.revealed
                         ? `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
-                        : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles revealed on day</span></div>`}
-                </td>`;
+                        : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles revealed on day</span></div>`
+                    }
+                </td > `;
             }).join('');
 
-            return `<tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}">
-                <td class="sched-date-cell">
-                    <div class="sched-date-day">${first.dayFull.slice(0, 3).toUpperCase()}</div>
-                    <div class="sched-date-num ${isToday ? 'sched-date-today' : ''}">${dl}</div>
-                    ${isToday ? '<div class="sched-today-badge">TODAY</div>' : ''}
-                    ${isPast ? '<div class="sched-past-badge">DONE</div>' : ''}
-                </td>${cells}</tr>`;
+            return `< tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}" >
+        <td class="sched-date-cell">
+            <div class="sched-date-day">${first.dayFull.slice(0, 3).toUpperCase()}</div>
+            <div class="sched-date-num ${isToday ? 'sched-date-today' : ''}">${dl}</div>
+            ${isToday ? '<div class="sched-today-badge">TODAY</div>' : ''}
+            ${isPast ? '<div class="sched-past-badge">DONE</div>' : ''}
+        </td>${cells}</tr > `;
         }).join('');
 
         const statusOk = sessions.length >= N
-            ? `<div class="sched-status-ok">✅ All ${N} sessions scheduled across ${dayKeys.length} working days (Mon–Fri). Presenters are randomly ordered.</div>`
-            : `<div class="sched-status-warn">⚠️ Only ${sessions.length}/${N} sessions fit. Extend the End Date to accommodate all teams.</div>`;
+            ? `< div class="sched-status-ok" >✅ All ${N} sessions scheduled across ${dayKeys.length} working days(Mon–Fri).Presenters are randomly ordered.</div > `
+            : `< div class="sched-status-warn" >⚠️ Only ${sessions.length} /${N} sessions fit. Extend the End Date to accommodate all teams.</div > `;
 
-        scheduleHTML = `<div class="rt-section" style="margin-bottom:1.5rem;">
+        scheduleHTML = `< div class="rt-section" style = "margin-bottom:1.5rem;" >
             <div class="rt-section-header">
                 <div class="rt-section-title">📅 Session Timetable — ${sessions.length} sessions · ${pt.label}</div>
                 <span style="font-size:.76rem;font-weight:700;padding:3px 10px;border-radius:10px;background:${pt.color}18;color:${pt.color};">${pt.shortLabel} ${pt.label}</span>
@@ -1285,7 +1326,7 @@ function renderSessions(container) {
                     <thead><tr><th class="sched-date-header">DATE</th>${colHeaders}</tr></thead>
                     <tbody>${tRows}</tbody>
                 </table>
-            </div>${statusOk}</div>`;
+            </div>${statusOk}</div > `;
 
         // Day cards
         const dCards = dayKeys.map((dateStr, di) => {
@@ -1295,8 +1336,8 @@ function renderSessions(container) {
             const dl2 = first.date.toLocaleDateString('en-IN', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
             const sItems = daySess.map(s => {
                 const dayTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
-                const dayTopicHTML = dayTopicObj ? `<div style="margin-top:4px;font-size:.78rem;color:var(--accent-blue);font-weight:600;padding-left:4px;">📝 Topic: ${dayTopicObj.title}</div>` : '';
-                return `<div class="sched-sess-item">
+                const dayTopicHTML = dayTopicObj ? `< div style = "margin-top:4px;font-size:.78rem;color:var(--accent-blue);font-weight:600;padding-left:4px;" >📝 Topic: ${dayTopicObj.title}</div > ` : '';
+                return `< div class="sched-sess-item" >
                     <div class="sched-sess-item-header" style="border-left:3px solid ${pt.color};">
                         <div class="sched-sess-item-num" style="background:${pt.color}18;color:${pt.color};">#${String(s.sessNum).padStart(2, '0')}</div>
                         <div style="font-size:.82rem;font-weight:700;color:var(--text-primary);">${pt.label} &nbsp;·&nbsp; ${s.startTime} – ${s.endTime}</div>
@@ -1308,9 +1349,9 @@ function renderSessions(container) {
                         : `<span class="sched-chip sched-locked">🔒 Reviewer &amp; Feedback revealed on ${dateStr}</span>`}
                     </div>
                     ${dayTopicHTML}
-                </div>`;
+                </div > `;
             }).join('');
-            return `<div class="sched-day-card ${isToday ? 'sched-day-today' : ''}" style="animation-delay:${di * .04}s">
+            return `< div class="sched-day-card ${isToday ? 'sched-day-today' : ''}" style = "animation-delay:${di * .04}s" >
                 <div class="sched-day-header">
                     <div><div class="sched-day-name">${dl2}</div>
                         <div class="sched-day-meta">${daySess.length} session${daySess.length > 1 ? 's' : ''} scheduled</div></div>
@@ -1318,16 +1359,16 @@ function renderSessions(container) {
                     ${isPast ? '<span class="sched-day-badge sched-badge-done">COMPLETED</span>' : ''}
                 </div>
                 <div class="sched-sess-list">${sItems}</div>
-            </div>`;
+            </div > `;
         }).join('');
 
-        dayCardsHTML = `<div class="rt-section" style="margin-bottom:1.5rem;">
+        dayCardsHTML = `< div class="rt-section" style = "margin-bottom:1.5rem;" >
             <div class="rt-section-header">
                 <div class="rt-section-title">📋 Day-wise Session Details</div>
                 <span style="font-size:.8rem;color:var(--text-muted);">${dayKeys.length} working days</span>
             </div>
             <div class="sched-day-cards">${dCards}</div>
-        </div>`;
+        </div > `;
     }
 
     /* ===== Presenter Order Reference ===== */
@@ -1337,29 +1378,29 @@ function renderSessions(container) {
         cal.sessions.forEach((s, i) => {
             const c = sessionColors[i % sessionColors.length];
             const p = s.presenterIdx, r = s.reviewerIdx, fb = s.feedbackIdx;
-            orderRows += `<tr class="rt-row">
+            orderRows += `< tr class="rt-row" >
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s.sessNum).padStart(2, '0')}</span></td>
                 <td>${s.dateStr} (${s.dayName})</td>
                 <td><span class="rt-team-chip rt-presenter">🎤 Team ${p + 1}</span></td>
                 <td>${s.revealed ? `<span class="rt-team-chip rt-reviewer">🔍 Team ${r + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
                 <td>${s.revealed ? `<span class="rt-team-chip rt-feedback">💬 Team ${fb + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
-            </tr>`;
+            </tr > `;
         });
     } else {
         for (let s = 0; s < N; s++) {
             const c = sessionColors[s % sessionColors.length];
-            orderRows += `<tr class="rt-row">
+            orderRows += `< tr class="rt-row" >
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s + 1).padStart(2, '0')}</span></td>
                 <td>—</td>
                 <td><span class="rt-team-chip rt-presenter">🎤 Team ${s + 1}</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
-            </tr>`;
+            </tr > `;
         }
     }
 
     container.innerHTML = `
-    <div class="page-header">
+        < div class="page-header" >
         <h2 class="page-title">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -1370,8 +1411,8 @@ function renderSessions(container) {
             Session Schedule
         </h2>
         <p class="page-subtitle">${getDeptShortName(deptCode)} · ${batchYear} Batch · ${N} teams · Mon–Fri only · Random order</p>
-    </div>
-    ${configPanel}
+    </div >
+        ${configPanel}
     ${scheduleHTML}
     ${dayCardsHTML}
     <div class="rt-section" style="margin-bottom:1.5rem;">
@@ -1390,7 +1431,7 @@ function renderSessions(container) {
             </table>
         </div>
     </div>
-`;
+    `;
 }
 
 function applyCalendarConfig() {
@@ -1849,9 +1890,9 @@ function getAutoAssignedAssessments(deptCode, batchYear, numTeams) {
         const topic = topics[i % topics.length]; // cycle if more than 12 teams
         result.push({
             teamIndex: i,
-            assessId: `ASSESS_${String(i + 1).padStart(3, '0')}`,
-            unit: topic ? `Unit ${topic.unit}` : 'Unit 1',
-            title: topic ? topic.title : `Presentation Topic ${i + 1}`,
+            assessId: `ASSESS_${String(i + 1).padStart(3, '0')} `,
+            unit: topic ? `Unit ${topic.unit} ` : 'Unit 1',
+            title: topic ? topic.title : `Presentation Topic ${i + 1} `,
             co: topic ? topic.co : 'CO1',
             complexity: topic ? topic.complexity : 'Medium',
             duration: '15–20 mins',
@@ -1895,7 +1936,7 @@ function getSyllabusPdfPath(deptCode, batchYear) {
         filename = fileMap[deptCode];
     }
 
-    return `Syllabus/${folder}/${filename}`;
+    return `Syllabus / ${folder}/${filename}`;
 }
 
 function renderAssessments(container) {
