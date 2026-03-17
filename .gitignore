@@ -1,0 +1,8 @@
+node_modules/
+*.bak
+sac_data.txt
+temp_sacs.js
+test.log
+patch_*.py
+sam-backend/
+EOF

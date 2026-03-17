@@ -4356,3 +4356,127 @@ body {
     min-height: 110px;
     justify-content: center;
 }
+/* ===== SAC Section & Filtering ===== */
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--bg-secondary);
+    padding: 5px;
+    border-radius: var(--radius-md);
+    width: fit-content;
+    border: 1px solid var(--border-color);
+    margin: 0 auto 2rem;
+}
+
+.filter-tab {
+    padding: 7px 18px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-tab:hover {
+    color: var(--accent-blue);
+}
+
+.filter-tab.active {
+    background: #fff;
+    color: var(--accent-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+.sac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.sac-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.15rem;
+    transition: var(--transition);
+    animation: slideUp 0.4s ease backwards;
+    box-shadow: var(--shadow-sm);
+}
+
+.sac-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(37, 99, 235, 0.2);
+}
+
+.sac-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sac-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.sac-roll {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.sac-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.sac-action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.sac-action-btn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-sm);
+}
+
+.sac-action-btn.whatsapp:hover {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+}
+
+.sac-action-btn.phone:hover {
+    background: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
+}
+
+.section-header-compact {
+    border-left: 4px solid var(--accent-blue);
+    padding-left: 1.25rem;
+    margin-bottom: 2rem;
+}
