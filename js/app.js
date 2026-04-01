@@ -2113,7 +2113,7 @@ function renderBatch(container) {
 function renderStudentRows(students) {
     const tbody = document.getElementById('student-tbody');
     tbody.innerHTML = students.map((s, i) => `
-        < tr>
+        <tr>
             <td>${i + 1}</td>
             <td><strong>${s.id}</strong></td>
             <td>${s.name}</td>
@@ -2166,23 +2166,23 @@ function renderTeams(container) {
     if (currentUser) {
         if (currentUser.canLock) {
             adminBtns += `
-        < button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--card-bg);border:1px solid #d97706;color:#d97706;" onclick = "toggleLockTeams('${deptCode}', ${batchYear})">
+        <button class="btn-primary" style="width:auto;padding:10px 20px;background:var(--card-bg);border:1px solid #d97706;color:#d97706;" onclick="toggleLockTeams('${deptCode}', ${batchYear})">
             ${isLocked ? '🔓 Unlock Teams' : '🔒 Lock Teams'}
-                </button>
+        </button>
         `;
         }
 
         if (currentUser.canGenerate && !isLocked) {
             adminBtns += `
-        < button class="btn-primary" style="${editBtnStyle}" onclick = "toggleEditMode()">
+        <button class="btn-primary" style="${editBtnStyle}" onclick="toggleEditMode()">
             ${editBtnLabel}
-                </button>
+        </button>
         `;
         }
     }
 
     adminBtns += `
-        < button class="btn-secondary" style="width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick = "exportCSV()">
+        <button class="btn-secondary" style="width:auto;padding:10px 20px;display:flex;align-items:center;gap:6px;" onclick="exportCSV()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
