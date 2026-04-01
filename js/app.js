@@ -2470,10 +2470,10 @@ function renderSessions(container) {
 
         // Table rows — each day is a row with 3 session columns
         const colHeaders = Array.from({ length: SESSIONS_PER_SLOT }, (_, i) =>
-            `< th class="sched-col-header" style="border-left:3px solid ${pt.color}40;">
+            `<th class="sched-col-header" style="border-left:3px solid ${pt.color}40;">
                 <div style="color:${pt.color};font-weight:800;font-size:.76rem;">Session ${i + 1}</div>
                 <div style="font-size:.68rem;color:var(--text-muted);">${pt.shortLabel}</div>
-            </th> `
+            </th>`
         ).join('');
 
         const tRows = dayKeys.map(dateStr => {
@@ -2487,8 +2487,8 @@ function renderSessions(container) {
                 if (!s) return '<td class="sched-empty-cell"><span class="sched-empty">—</span></td>';
                 const p = getTeamName(deptCode, s.presenterIdx), r = getTeamName(deptCode, s.reviewerIdx), fb = getTeamName(deptCode, s.feedbackIdx);
                 const presTopicObj = genAssign && genAssign[s.presenterIdx] ? genAssign[s.presenterIdx] : null;
-                const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div> ` : '';
-                return `< td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
+                const presTopicHTML = presTopicObj ? `<div class="sched-topic-row" style="margin-top:4px;font-size:.72rem;color:var(--accent-blue);font-weight:600;">📝 ${presTopicObj.title}</div>` : '';
+                return `<td class="sched-slot-cell" style="border-top:3px solid ${pt.color};">
                     <div class="sched-sess-num">#${String(s.sessNum).padStart(2, '0')}</div>
                     <div class="sched-role-row"><span class="sched-chip sched-presenter">🎤 ${p}</span></div>
                     ${presTopicHTML}
@@ -2496,16 +2496,16 @@ function renderSessions(container) {
                         ? `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-reviewer">🔍 ${r}</span><span class="sched-chip sched-feedback">💬 ${fb}</span></div>`
                         : `<div class="sched-role-row" style="margin-top:4px;"><span class="sched-chip sched-locked">🔒 Roles revealed on day</span></div>`
                     }
-                </td> `;
+                </td>`;
             }).join('');
 
-            return `< tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}">
+            return `<tr class="${isToday ? 'sched-today-row' : ''} ${isPast ? 'sched-past-row' : ''}">
         <td class="sched-date-cell">
             <div class="sched-date-day">${first.dayFull.slice(0, 3).toUpperCase()}</div>
             <div class="sched-date-num ${isToday ? 'sched-date-today' : ''}">${dl}</div>
             ${isToday ? '<div class="sched-today-badge">TODAY</div>' : ''}
             ${isPast ? '<div class="sched-past-badge">DONE</div>' : ''}
-        </td>${cells}</tr> `;
+        </td>${cells}</tr>`;
         }).join('');
 
         const statusOk = sessions.length >= N
@@ -2574,24 +2574,24 @@ function renderSessions(container) {
         cal.sessions.forEach((s, i) => {
             const c = sessionColors[i % sessionColors.length];
             const p = s.presenterIdx, r = s.reviewerIdx, fb = s.feedbackIdx;
-            orderRows += `< tr class="rt-row">
+            orderRows += `<tr class="rt-row">
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s.sessNum).padStart(2, '0')}</span></td>
                 <td>${s.dateStr} (${s.dayName})</td>
                 <td><span class="rt-team-chip rt-presenter">🎤 Team ${p + 1}</span></td>
                 <td>${s.revealed ? `<span class="rt-team-chip rt-reviewer">🔍 Team ${r + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
                 <td>${s.revealed ? `<span class="rt-team-chip rt-feedback">💬 Team ${fb + 1}</span>` : '<span class="rt-team-chip sched-locked">🔒</span>'}</td>
-            </tr> `;
+            </tr>`;
         });
     } else {
         for (let s = 0; s < N; s++) {
             const c = sessionColors[s % sessionColors.length];
-            orderRows += `< tr class="rt-row">
+            orderRows += `<tr class="rt-row">
                 <td><span class="rt-sess-badge rt-badge-${c}">${String(s + 1).padStart(2, '0')}</span></td>
                 <td>—</td>
                 <td><span class="rt-team-chip rt-presenter">🎤 Team ${s + 1}</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
                 <td><span class="rt-team-chip sched-locked">🔒</span></td>
-            </tr> `;
+            </tr>`;
         }
     }
 
