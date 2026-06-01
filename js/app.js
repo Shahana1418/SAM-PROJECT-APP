@@ -1487,9 +1487,15 @@ async function requestStudentOTP() {
         return;
     }
 
-    // 2. Call Supabase to send OTP
+    // 2. Call Supabase to send OTP (or fallback to Demo Mode)
     if (!window.supabaseClient) {
-        showError('student-email-error', "Supabase client not configured.");
+        console.warn("Demo Mode: Supabase not initialized. Simulating OTP send.");
+        window.currentAuthEmail = email;
+        window.currentAuthStudentData = { ...foundStudent, dept: foundDept, batch: foundBatch };
+        document.getElementById('student-email-error').style.display = 'none';
+        document.getElementById('student-email-step').style.display = 'none';
+        document.getElementById('student-otp-step').style.display = 'block';
+        showToast("DEMO MODE: Enter 123456 to login.", "info");
         return;
     }
 
@@ -1531,7 +1537,20 @@ async function verifyStudentOTP() {
     }
 
     if (!window.supabaseClient) {
-        showError('student-otp-error', "Supabase client not initialized.");
+        if (otp === "123456") {
+            currentUser = {
+                role: 'Student',
+                email: window.currentAuthEmail,
+                ...window.currentAuthStudentData,
+                name: window.currentAuthStudentData.name + " (Demo)"
+            };
+            closeStudentLogin();
+            updateUserBadge();
+            showToast("Demo Logged in successfully!", "success");
+            navigateTo('dashboard');
+        } else {
+            showError('student-otp-error', "Demo Mode: Invalid OTP. Use 123456.");
+        }
         return;
     }
 
@@ -1576,7 +1595,19 @@ async function attemptAlumniLogin() {
     }
 
     if (!window.supabaseClient) {
-        showError('alumni-error', "Supabase client not initialized.");
+        if (email.includes("@")) {
+            currentUser = {
+                role: 'Alumni',
+                email: email,
+                name: "Alumni Member (Demo)"
+            };
+            closeAlumniLogin();
+            updateUserBadge();
+            showToast("Demo Logged in successfully", "success");
+            navigateTo('alumni_dashboard');
+        } else {
+            showError('alumni-error', "Demo Mode: Enter a valid email format.");
+        }
         return;
     }
 
