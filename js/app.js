@@ -1487,40 +1487,40 @@ async function requestStudentOTP() {
         return;
     }
 
-    // 2. Call Supabase to send OTP (or fallback to Demo Mode)
-    if (!window.supabaseClient) {
-        console.warn("Demo Mode: Supabase not initialized. Simulating OTP send.");
-        window.currentAuthEmail = email;
-        window.currentAuthStudentData = { ...foundStudent, dept: foundDept, batch: foundBatch };
-        document.getElementById('student-email-error').style.display = 'none';
-        document.getElementById('student-email-step').style.display = 'none';
-        document.getElementById('student-otp-step').style.display = 'block';
-        showToast("DEMO MODE: Enter 123456 to login.", "info");
-        return;
-    }
-
+    // 2. Call our backend to send OTP
     document.getElementById('student-request-btn').textContent = 'Sending...';
     document.getElementById('student-request-btn').disabled = true;
 
-    const { data, error } = await window.supabaseClient.auth.signInWithOtp({
-        email: email,
-    });
+    try {
+        const resp = await fetch('http://localhost:3000/api/auth/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+        const result = await resp.json();
 
-    document.getElementById('student-request-btn').textContent = 'Request OTP';
-    document.getElementById('student-request-btn').disabled = false;
+        document.getElementById('student-request-btn').textContent = 'Request OTP';
+        document.getElementById('student-request-btn').disabled = false;
 
-    if (error) {
-        showError('student-email-error', "Error sending OTP: " + error.message);
-        return;
+        if (!resp.ok) {
+            showError('student-email-error', result.error || "Error sending OTP.");
+            return;
+        }
+
+        // Keep track of current email and switch UI step
+        window.currentAuthEmail = email;
+        window.currentAuthStudentData = { ...foundStudent, dept: foundDept, batch: foundBatch };
+
+        document.getElementById('student-email-error').style.display = 'none';
+        document.getElementById('student-email-step').style.display = 'none';
+        document.getElementById('student-otp-step').style.display = 'block';
+        showToast(result.message || "OTP sent! Check your email.", "success");
+
+    } catch (err) {
+        document.getElementById('student-request-btn').textContent = 'Request OTP';
+        document.getElementById('student-request-btn').disabled = false;
+        showError('student-email-error', "Cannot reach server. Make sure the backend is running (node server.js).");
     }
-
-    // 3. Keep track of current email and switch UI step
-    window.currentAuthEmail = email;
-    window.currentAuthStudentData = { ...foundStudent, dept: foundDept, batch: foundBatch };
-
-    document.getElementById('student-email-error').style.display = 'none';
-    document.getElementById('student-email-step').style.display = 'none';
-    document.getElementById('student-otp-step').style.display = 'block';
 }
 
 function backToStudentEmail() {
@@ -1536,43 +1536,26 @@ async function verifyStudentOTP() {
         return;
     }
 
-    if (!window.supabaseClient) {
-        if (otp === "123456") {
-            currentUser = {
-                role: 'Student',
-                email: window.currentAuthEmail,
-                ...window.currentAuthStudentData,
-                name: window.currentAuthStudentData.name + " (Demo)"
-            };
-            closeStudentLogin();
-            updateUserBadge();
-            showToast("Demo Logged in successfully!", "success");
-            navigateTo('dashboard');
-        } else {
-            showError('student-otp-error', "Demo Mode: Invalid OTP. Use 123456.");
-        }
-        return;
-    }
-
     document.getElementById('student-verify-btn').textContent = 'Verifying...';
     document.getElementById('student-verify-btn').disabled = true;
 
-    const { data: { session }, error } = await window.supabaseClient.auth.verifyOtp({
-        email: window.currentAuthEmail,
-        token: otp,
-        type: 'email'
-    });
+    try {
+        const resp = await fetch('http://localhost:3000/api/auth/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: window.currentAuthEmail, otp: otp })
+        });
+        const result = await resp.json();
 
-    document.getElementById('student-verify-btn').textContent = 'Verify Login';
-    document.getElementById('student-verify-btn').disabled = false;
+        document.getElementById('student-verify-btn').textContent = 'Verify Login';
+        document.getElementById('student-verify-btn').disabled = false;
 
-    if (error) {
-        showError('student-otp-error', "Invalid OTP: " + error.message);
-        return;
-    }
+        if (!resp.ok) {
+            showError('student-otp-error', result.error || "Invalid OTP.");
+            return;
+        }
 
-    if (session) {
-        // Success
+        // Success — set currentUser from cached student data
         currentUser = {
             role: 'Student',
             email: window.currentAuthEmail,
@@ -1581,7 +1564,12 @@ async function verifyStudentOTP() {
         closeStudentLogin();
         updateUserBadge();
         showToast("Logged in successfully as " + currentUser.name, "success");
-        navigateTo('dashboard'); // Assuming dashboard handles student logic later
+        navigateTo('dashboard');
+
+    } catch (err) {
+        document.getElementById('student-verify-btn').textContent = 'Verify Login';
+        document.getElementById('student-verify-btn').disabled = false;
+        showError('student-otp-error', "Cannot reach server. Make sure the backend is running.");
     }
 }
 
@@ -1594,49 +1582,41 @@ async function attemptAlumniLogin() {
         return;
     }
 
-    if (!window.supabaseClient) {
-        if (email.includes("@")) {
-            currentUser = {
-                role: 'Alumni',
-                email: email,
-                name: "Alumni Member (Demo)"
-            };
-            closeAlumniLogin();
-            updateUserBadge();
-            showToast("Demo Logged in successfully", "success");
-            navigateTo('alumni_dashboard');
-        } else {
-            showError('alumni-error', "Demo Mode: Enter a valid email format.");
-        }
-        return;
-    }
-
     document.getElementById('alumni-login-btn').textContent = 'Loading...';
     document.getElementById('alumni-login-btn').disabled = true;
 
-    const { data: { session, user }, error } = await window.supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: pw
-    });
+    try {
+        const resp = await fetch('http://localhost:3000/api/auth/alumni-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, password: pw })
+        });
+        const result = await resp.json();
 
-    document.getElementById('alumni-login-btn').textContent = 'Login';
-    document.getElementById('alumni-login-btn').disabled = false;
+        document.getElementById('alumni-login-btn').textContent = 'Login';
+        document.getElementById('alumni-login-btn').disabled = false;
 
-    if (error) {
-        showError('alumni-error', "Invalid credentials: " + error.message);
-        return;
-    }
+        if (!resp.ok) {
+            showError('alumni-error', result.error || "Invalid credentials.");
+            return;
+        }
 
-    if (session) {
         currentUser = {
             role: 'Alumni',
-            email: user.email,
-            name: "Alumni Member"
+            email: result.user.email,
+            name: result.user.name,
+            dept: result.user.dept,
+            graduation_year: result.user.graduation_year
         };
         closeAlumniLogin();
         updateUserBadge();
-        showToast("Logged in successfully", "success");
+        showToast("Logged in successfully as " + currentUser.name, "success");
         navigateTo('alumni_dashboard');
+
+    } catch (err) {
+        document.getElementById('alumni-login-btn').textContent = 'Login';
+        document.getElementById('alumni-login-btn').disabled = false;
+        showError('alumni-error', "Cannot reach server. Make sure the backend is running (node server.js).");
     }
 }
 

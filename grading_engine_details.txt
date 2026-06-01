@@ -1,0 +1,199 @@
+SAM Platform Grading/Rubric Engine Analysis
+1. Architecture Summary
+The SAM platform uses a client-side grading engine to evaluate students across three specific roles (Presenter,
+Technical Reviewer, Feedback Strategist) during sessions. Grading is based on a structured rubric assigning 0
+to 3 scale points, which correspond to specific competency levels. Scores are weighted by dimension and
+aggregated to calculate both individual and team totals. All grading metrics, custom overrides, and session
+data are persisted in the browser's localStorage .
+
+2. Extracted Grading Configuration
+Evaluation Roles & Max Marks
+Presenter (P): 40 max marks
+Technical Reviewer (TR): 30 max marks
+Feedback Strategist (FP): 30 max marks
+
+Rubric Dimensions & Weight Percentages
+Presenter (P)
+Product Quality (30%)
+Depth & Authorship (25%)
+Solution Demonstration (20%)
+Responsiveness (15%)
+Improvement (10%)
+Technical Reviewer (TR)
+Gap Identification (25%)
+Questioning (20%)
+Evidence-Based Analysis (20%)
+Improvement Direction (20%)
+Prioritization (15%)
+Feedback Strategist (FP)
+Actionability (20%)
+Product Vision (20%)
+Gap Coverage (20%)
+Feasibility (20%)
+Impact Prioritization (20%)
+
+Competency Levels / Scales
+The app maps raw scores (0-3) to behavioral anchors mapped in RUBRIC_ANCHORS and SCALE_LABELS :
+0 : Observer (red)
+1 : Contributor (orange/amber)
+2 : Practitioner (blue) - Default assigned value
+3 : Engineer (green)
+
+Scoring Formulas and Calculations
+
+Base calculation per dimension: (raw_score / 3) * (weight / 100) * role_max_marks
+Example: Value of 2 on a 20% weight dimension for TR (max 30) = (2/3) * 0.20 * 30 =
+4.0 points
+
+Total Student Score: Sum of all dimension weighted scores.
+Aggregate Level Calculation ( gradeLevel ): Maps percentage calculations to proficiency labels:
+Engineer (>=75%)
+Practitioner (>=50%)
+Contributor (>=25%)
+Observer (<25%)
+
+Constraints & Edge Cases:
+Grading UI is locked and unmodifiable unless block.revealed is set to true.
+Form validations ensure that dimensions are saved correctly per role phase before the entire
+session can be formally _submitted .
+Cycles are implicitly tracked based on session indices: Cycle 1 spans sessions 1-6, while Cycle
+2 spans sessions 7-12.
+
+3. Storage and Data Structures
+LocalStorage Keys
+sam_v721 : Main monolithic JSON object containing gradesData , cyclePerf , scheduleData ,
+teamsData , etc.
+sam_rubric_override : JSON object storing user-customized rubric dimensions and weights.
+sam_rubric_views : Array of saved custom rubric templates/views containing combinations of
+
+overridden weights.
+
+JSON Schema Structure (Grades Data)
+{
+"gradesData": {
+"session_key_example": {
+"P": {
+"student_id_1": { "dims": [2, 3, 1, 2, 2], "total": 28.5, "name": "Student
+Name" }
+},
+"TR": { /* similar */ },
+"FP": { /* similar */ },
+"_submitted": true,
+"_submittedAt": "ISOString",
+"gradedBy": "Faculty Name",
+"assistant": "Optional String",
+"comment_P": "Optional comments for Presenter team",
+"comment_TR": "Optional comments for TR team",
+"comment_FP": "Optional comments for FP team"
+}
+},
+"cyclePerf": {
+"student_id_1": {
+"cycles": {
+"1": {
+
+"totalScore": 50,
+"maxScore": 70,
+"sessions": [
+{ "score": 28.5, "maxScore": 40, "role": "P" },
+{ "score": 21.5, "maxScore": 30, "role": "TR" }
+]
+}
+}
+}
+}
+}
+
+4. Important Functions
+Rendering & Initialization
+renderGradePhases : Renders the UI for inputting scores according to the scheduled members.
+rcRenderRole / buildRoleHTML : Renders the customization interface for rubric items.
+showRubricReference : Displays a read-only matrix of behavioral anchors for faculty during
+
+grading RUBRIC_ANCHORS .
+
+Grading & Score Calculation
+updateStudentTotal : Uses the formula weightedTotal += (v/3)*
+(dim.weight/100)*rb.maxMarks to calculate the individual total for one student.
+updatePhaseTeamTotal : Computes the aggregate score for the entire role team (sum of all
+
+members' totals).
+gradeLevel / dimLevel : Functions mapping percentages or exact scores to proficiency labels.
+
+Customization & Saving
+showRubricCustomizer : Opens the UI to add, replace or modify rubric dimensions and weights. It
+
+utilizes an intermediate _rcWorking global object.
+rcUpdateDim , rcAddDim , rcRemoveDim : Modifies the working state of the custom rubric.
+rcSave , rcSaveAsView : Persists the customized rubric into localStorage
+
+( sam_rubric_override and sam_rubric_views ).
+
+Result Aggregation & Export
+showBatchGradeSummary : Aggregates and displays role scores per student across all sessions in a
+
+cycle, merging specific dimensions.
+recordCyclePerf : Records metrics continuously for a student's cyclic performance using stored
+
+session arrays and max score accumulation.
+showGradeDashboard : Computes and visualizes grading progression, calculating percentages of
+
+graded, submitted, and un-started sessions out of the full batch.
+exportGradesCSV : Iterates logic over gradesData items resolving properties (IDs, SAC labels,
+
+weights, scores, percentages) into CSV-downloadable matrices.
+
+5. Suggested Backend API Schema
+To move this engine to a backend, the following schema structure is recommended:
+
+{
+"SessionGrade": {
+"type": "object",
+"properties": {
+"session_id": { "type": "string", "format": "uuid" },
+"block_index": { "type": "integer" },
+"session_index": { "type": "integer" },
+"graded_by_id": { "type": "string", "format": "uuid" },
+"submitted_at": { "type": "string", "format": "date-time" },
+"evaluations": {
+"type": "array",
+"items": {
+"type": "object",
+"properties": {
+"student_id": { "type": "string", "format": "uuid" },
+"role": { "enum": ["P", "TR", "FP"] },
+"dimension_scores": { "type": "array", "items": { "type": "integer" } },
+"weighted_total": { "type": "number" }
+}
+}
+},
+"comments": {
+"type": "object",
+"properties": {
+"P": { "type": "string", "nullable": true },
+"TR": { "type": "string", "nullable": true },
+"FP": { "type": "string", "nullable": true }
+}
+}
+}
+},
+"RubricConfig": {
+"type": "object",
+"properties": {
+"role": { "enum": ["P", "TR", "FP"] },
+"max_marks": { "type": "integer" },
+"dimensions": {
+"type": "array",
+"items": {
+"type": "object",
+"properties": {
+"name": { "type": "string" },
+"weight_percentage": { "type": "integer" }
+}
+}
+}
+}
+}
+}
+
+
