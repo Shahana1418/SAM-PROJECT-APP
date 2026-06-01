@@ -1423,6 +1423,198 @@ function togglePwEye() {
     }
 }
 
+// === NEW AUTH MODALS & PROCEDURES ===
+
+function openStudentLoginModal() {
+    document.getElementById('student-modal').style.display = 'flex';
+    document.getElementById('student-modal').classList.add('active');
+    document.getElementById('student-email-step').style.display = 'block';
+    document.getElementById('student-otp-step').style.display = 'none';
+    document.getElementById('student-email-error').style.display = 'none';
+    document.getElementById('student-email').value = '';
+    document.getElementById('student-otp').value = '';
+}
+
+function closeStudentLogin() {
+    document.getElementById('student-modal').style.display = 'none';
+    document.getElementById('student-modal').classList.remove('active');
+}
+
+function openAlumniLoginModal() {
+    document.getElementById('alumni-modal').style.display = 'flex';
+    document.getElementById('alumni-modal').classList.add('active');
+    document.getElementById('alumni-email').value = '';
+    document.getElementById('alumni-password').value = '';
+    document.getElementById('alumni-error').style.display = 'none';
+}
+
+function closeAlumniLogin() {
+    document.getElementById('alumni-modal').style.display = 'none';
+    document.getElementById('alumni-modal').classList.remove('active');
+}
+
+async function requestStudentOTP() {
+    const email = document.getElementById('student-email').value.trim();
+    if (!email) {
+        showError('student-email-error', "Email cannot be empty.");
+        return;
+    }
+
+    // 1. Verify if student exists in STUDENT_DATA
+    let foundStudent = null;
+    let foundDept = null;
+    let foundBatch = null;
+
+    for (const batchKey in STUDENT_DATA.batches) {
+        const batch = STUDENT_DATA.batches[batchKey];
+        for (const deptKey in batch.departments) {
+            const deptParams = batch.departments[deptKey];
+            if (deptParams.students) {
+                const s = deptParams.students.find(x => x.email === email);
+                if (s) {
+                    foundStudent = s;
+                    foundDept = deptKey;
+                    foundBatch = batchKey;
+                    break;
+                }
+            }
+        }
+        if (foundStudent) break;
+    }
+
+    if (!foundStudent) {
+        showError('student-email-error', "Email not found in student database.");
+        return;
+    }
+
+    // 2. Call Supabase to send OTP
+    if (!window.supabaseClient) {
+        showError('student-email-error', "Supabase client not configured.");
+        return;
+    }
+
+    document.getElementById('student-request-btn').textContent = 'Sending...';
+    document.getElementById('student-request-btn').disabled = true;
+
+    const { data, error } = await window.supabaseClient.auth.signInWithOtp({
+        email: email,
+    });
+
+    document.getElementById('student-request-btn').textContent = 'Request OTP';
+    document.getElementById('student-request-btn').disabled = false;
+
+    if (error) {
+        showError('student-email-error', "Error sending OTP: " + error.message);
+        return;
+    }
+
+    // 3. Keep track of current email and switch UI step
+    window.currentAuthEmail = email;
+    window.currentAuthStudentData = { ...foundStudent, dept: foundDept, batch: foundBatch };
+
+    document.getElementById('student-email-error').style.display = 'none';
+    document.getElementById('student-email-step').style.display = 'none';
+    document.getElementById('student-otp-step').style.display = 'block';
+}
+
+function backToStudentEmail() {
+    document.getElementById('student-otp-step').style.display = 'none';
+    document.getElementById('student-email-step').style.display = 'block';
+    document.getElementById('student-otp-error').style.display = 'none';
+}
+
+async function verifyStudentOTP() {
+    const otp = document.getElementById('student-otp').value.trim();
+    if (otp.length !== 6) {
+        showError('student-otp-error', "Please enter a 6-digit code.");
+        return;
+    }
+
+    if (!window.supabaseClient) {
+        showError('student-otp-error', "Supabase client not initialized.");
+        return;
+    }
+
+    document.getElementById('student-verify-btn').textContent = 'Verifying...';
+    document.getElementById('student-verify-btn').disabled = true;
+
+    const { data: { session }, error } = await window.supabaseClient.auth.verifyOtp({
+        email: window.currentAuthEmail,
+        token: otp,
+        type: 'email'
+    });
+
+    document.getElementById('student-verify-btn').textContent = 'Verify Login';
+    document.getElementById('student-verify-btn').disabled = false;
+
+    if (error) {
+        showError('student-otp-error', "Invalid OTP: " + error.message);
+        return;
+    }
+
+    if (session) {
+        // Success
+        currentUser = {
+            role: 'Student',
+            email: window.currentAuthEmail,
+            ...window.currentAuthStudentData
+        };
+        closeStudentLogin();
+        updateUserBadge();
+        showToast("Logged in successfully as " + currentUser.name, "success");
+        navigateTo('dashboard'); // Assuming dashboard handles student logic later
+    }
+}
+
+async function attemptAlumniLogin() {
+    const email = document.getElementById('alumni-email').value.trim();
+    const pw = document.getElementById('alumni-password').value.trim();
+
+    if (!email || !pw) {
+        showError('alumni-error', "Please fill in all fields.");
+        return;
+    }
+
+    if (!window.supabaseClient) {
+        showError('alumni-error', "Supabase client not initialized.");
+        return;
+    }
+
+    document.getElementById('alumni-login-btn').textContent = 'Loading...';
+    document.getElementById('alumni-login-btn').disabled = true;
+
+    const { data: { session, user }, error } = await window.supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: pw
+    });
+
+    document.getElementById('alumni-login-btn').textContent = 'Login';
+    document.getElementById('alumni-login-btn').disabled = false;
+
+    if (error) {
+        showError('alumni-error', "Invalid credentials: " + error.message);
+        return;
+    }
+
+    if (session) {
+        currentUser = {
+            role: 'Alumni',
+            email: user.email,
+            name: "Alumni Member"
+        };
+        closeAlumniLogin();
+        updateUserBadge();
+        showToast("Logged in successfully", "success");
+        navigateTo('alumni_dashboard');
+    }
+}
+
+function showError(elId, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
 function handleRoleSelection(value) {
     if (!value) return;
 
@@ -1439,6 +1631,10 @@ function handleRoleSelection(value) {
         }
     } else if (value === 'hod' || value === 'admin') {
         openLoginModal('Admin');
+    } else if (value === 'student_login') {
+        openStudentLoginModal();
+    } else if (value === 'alumni_login') {
+        openAlumniLoginModal();
     }
 
     setTimeout(() => {
@@ -1631,6 +1827,8 @@ function render() {
         case 'teams': renderTeams(main); break;
         case 'sessions': renderSessions(main); break;
         case 'assessments': renderAssessments(main); break;
+        case 'dashboard': renderStudentDashboard(main); break;
+        case 'alumni_dashboard': renderAlumniDashboard(main); break;
     }
 }
 
@@ -1650,6 +1848,62 @@ function renderCollege(container) {
             if (d.totalStudents > 0) deptSet.add(d.code);
         });
     });
+
+    // ===== Student Dashboard =====
+    function renderStudentDashboard(container) {
+        if (!currentUser || currentUser.role !== 'Student') {
+            navigateTo('college');
+            return;
+        }
+
+        container.innerHTML = `
+        <div class="hero-section" style="text-align: left; padding: 40px;">
+            <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 8px;">Welcome, ${currentUser.name}</h1>
+            <p style="color: var(--text-light); font-size: 1.1rem; max-width: 600px;">
+                Department of ${currentUser.dept} • Batch ${currentUser.batch}
+            </p>
+        </div>
+        
+        <div style="padding: 20px 40px; display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid var(--primary-color);">
+                <div class="stat-label">Your Current Status</div>
+                <div class="stat-value" style="font-size: 1.2rem; margin-top: 8px;">Active Student</div>
+            </div>
+            <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid var(--accent-color);">
+                <div class="stat-label">Upcoming Sessions</div>
+                <div class="stat-value" style="font-size: 1.2rem; margin-top: 8px;">Check Timetable</div>
+            </div>
+        </div>
+    `;
+    }
+
+    // ===== Alumni Dashboard =====
+    function renderAlumniDashboard(container) {
+        if (!currentUser || currentUser.role !== 'Alumni') {
+            navigateTo('college');
+            return;
+        }
+
+        container.innerHTML = `
+        <div class="hero-section" style="text-align: left; padding: 40px;">
+            <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 8px;">Welcome back, ${currentUser.name}</h1>
+            <p style="color: var(--text-light); font-size: 1.1rem; max-width: 600px;">
+                Alumni Network Portal
+            </p>
+        </div>
+        
+        <div style="padding: 20px 40px; display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid #10b981;">
+                <div class="stat-label">Mentorship Program</div>
+                <div class="stat-value" style="font-size: 1.2rem; margin-top: 8px;">Join as Mentor</div>
+            </div>
+            <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid #f59e0b;">
+                <div class="stat-label">Networking Events</div>
+                <div class="stat-value" style="font-size: 1.2rem; margin-top: 8px;">View Calendar</div>
+            </div>
+        </div>
+    `;
+    }
 
     // Get unique dept list with total across batches
     const deptTotals = {};

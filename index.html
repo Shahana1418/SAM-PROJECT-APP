@@ -55,6 +55,8 @@
             <div id="auth-controls" class="auth-controls">
                 <select class="role-select" id="role-selector" onchange="handleRoleSelection(this.value)">
                     <option value="" disabled selected>Select View/Login</option>
+                    <option value="student_login">Student Login</option>
+                    <option value="alumni_login">Alumni Login</option>
                     <option value="faculty_view">Faculty View</option>
                     <option value="hod">Head of Department</option>
                     <option value="admin">Principal / Admin</option>
@@ -135,6 +137,75 @@
         </div>
     </div>
 
+    <!-- Student Login Modal -->
+    <div class="modal-overlay" id="student-modal" style="display:none">
+        <div class="modal-card modal-card-auth" style="max-width: 420px; padding: 36px">
+            <div class="modal-header-login"
+                style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; margin-bottom:20px;">
+                <h3 style="margin:0;">Student Login</h3>
+                <p style="color:var(--text-light); font-size:0.88rem; margin:0;" id="student-modal-subtitle">Enter your
+                    registered email address</p>
+            </div>
+
+            <!-- Email Step -->
+            <div id="student-email-step">
+                <input type="email" id="student-email" class="modal-input login-input" placeholder="student@example.com"
+                    onkeypress="if(event.key==='Enter')requestStudentOTP()">
+                <p class="modal-error" id="student-email-error"
+                    style="display:none; margin-top: 12px; margin-bottom: 0;"></p>
+                <div class="login-actions" style="margin-top: 28px;">
+                    <button class="btn-primary" onclick="requestStudentOTP()" style="width:100%;padding:13px 24px;"
+                        id="student-request-btn">Request OTP</button>
+                </div>
+            </div>
+
+            <!-- OTP Step -->
+            <div id="student-otp-step" style="display:none">
+                <div class="pw-wrapper">
+                    <input type="text" id="student-otp" class="modal-input login-input" placeholder="6-digit OTP code"
+                        maxlength="6" style="letter-spacing:10px;text-align:center;font-size:1.2rem;font-weight:bold;"
+                        onkeypress="if(event.key==='Enter')verifyStudentOTP()">
+                </div>
+                <p class="modal-error" id="student-otp-error" style="display:none; margin-top: 12px; margin-bottom: 0;">
+                </p>
+                <div class="login-actions" style="margin-top: 28px; display:flex; gap:12px;">
+                    <button class="btn-secondary" onclick="backToStudentEmail()" style="flex:1;">Back</button>
+                    <button class="btn-primary" onclick="verifyStudentOTP()" style="flex:2;"
+                        id="student-verify-btn">Verify Login</button>
+                </div>
+            </div>
+
+            <button class="modal-close" onclick="closeStudentLogin()">✕</button>
+        </div>
+    </div>
+
+    <!-- Alumni Login Modal -->
+    <div class="modal-overlay" id="alumni-modal" style="display:none">
+        <div class="modal-card modal-card-auth" style="max-width: 420px; padding: 36px">
+            <div class="modal-header-login"
+                style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; margin-bottom:20px;">
+                <h3 style="margin:0;">Alumni Login</h3>
+                <p style="color:var(--text-light); font-size:0.88rem; margin:0;">Enter your alumni credentials</p>
+            </div>
+
+            <div id="alumni-login-step">
+                <input type="email" id="alumni-email" class="modal-input login-input" placeholder="alumni@example.com"
+                    style="margin-bottom:12px;">
+                <div class="pw-wrapper">
+                    <input type="password" id="alumni-password" class="modal-input login-input" placeholder="Password"
+                        onkeypress="if(event.key==='Enter')attemptAlumniLogin()">
+                </div>
+                <p class="modal-error" id="alumni-error" style="display:none; margin-top: 12px; margin-bottom: 0;"></p>
+                <div class="login-actions" style="margin-top: 28px;">
+                    <button class="btn-primary" onclick="attemptAlumniLogin()" style="width:100%;padding:13px 24px;"
+                        id="alumni-login-btn">Login</button>
+                </div>
+            </div>
+
+            <button class="modal-close" onclick="closeAlumniLogin()">✕</button>
+        </div>
+    </div>
+
     <!-- App Scripts (Load after data) -->
     <script src="data/ate_subjects.js?v=2026040101"></script>
     <script src="data/cve_subjects.js?v=2026040101"></script>
@@ -146,6 +217,8 @@
     <script src="data/cds_subjects.js?v=2026040101"></script>
     <script src="data/subjects_data.js?v=2026040101"></script>
     <script src="data/students_data.js?v=2026040101"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase_client.js"></script>
     <script src="js/app.js?v=2026040101"></script>
 </body>
 
