@@ -2,8 +2,8 @@
 // Initialize Supabase Javascript SDK
 
 // ⚠️ USER ACTION REQUIRED: Replace these placeholders with your actual Supabase URL and Anon Key
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://rwbradlholyicdwqdwhwr.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable__S1i5zqg03P5PdX10QwdYw_BhaGb4aU";
 
 let supabase = null;
 
